@@ -1,6 +1,8 @@
 import os
 import subprocess
 import time
+import requests
+
 
 def is_bluestacks_running():
     result = subprocess.run(["tasklist"], capture_output=True, text=True)
@@ -14,7 +16,10 @@ def open_bluestacks_and_install_apk(apk_path):
     bluestacks_path = r"C:\Program Files\BlueStacks_nxt\HD-Player.exe"  # Đường dẫn tới BlueStacks (cập nhật nếu cần)
     adb_path = r"C:\Users\patroids115\Desktop\platform-tools-latest-windows\platform-tools\adb.exe"  # Đường dẫn tới adb.exe
     package_name = "com.facebook.lite"
+    scraperapi_key = "42f9d7378611ac19d3de5de96cc5c7cf" 
 
+    # Cấu hình proxy cho ScraperAPI
+    proxy = f"http://scraperapi:{scraperapi_key}@proxy-server.scraperapi.com:8001"
     # Kiểm tra tệp APK
     if not os.path.exists(apk_path):
         print(f"Không tìm thấy tệp APK tại: {apk_path}")
@@ -45,7 +50,7 @@ def open_bluestacks_and_install_apk(apk_path):
         if "device" not in adb_check.stdout:
             print("Không tìm thấy thiết bị BlueStacks qua ADB. Hãy kiểm tra lại.")
             return
-        
+
         # Cài đặt APK nếu chưa cài
         if not is_app_installed(adb_path, package_name):
             print(f"Đang cài đặt APK từ {apk_path} vào BlueStacks...")
@@ -61,6 +66,14 @@ def open_bluestacks_and_install_apk(apk_path):
         else:
             print("Ứng dụng Facebook Lite đã được cài đặt.")
         
+
+         # Kiểm tra proxy
+        response = requests.get("http://httpbin.org/ip", proxies={"http": proxy, "https": proxy})
+        if response.status_code == 200: 
+            print(f"IP trả về từ proxy: {response.json()['origin']}")
+        else
+            print(f"Lỗi khi kiểm tra proxy: {response.status_code}")
+
         # Mở ứng dụng Facebook Lite
         print("Đang mở ứng dụng Facebook Lite...")
         start_app_command = [adb_path, "shell", "am", "start", "-n", "com.facebook.lite/.MainActivity"]
@@ -128,7 +141,7 @@ def open_bluestacks_and_install_apk(apk_path):
         subprocess.run([adb_path, "shell", "input", "tap", "450", "552"])
         time.sleep(1)
         
-        subprocess.run([adb_path, "shell", "input", "text", "kz46zbc2umb@gmail.com"])
+        subprocess.run([adb_path, "shell", "input", "text", "kz46zbc7umb@gmail.com"])
         time.sleep(1)
 
         # click tiếp
