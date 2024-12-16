@@ -1,0 +1,46 @@
+Tọa độ: (450, 419) => click tạo tài khoản
+Tọa độ: (450, 551) => Tiếp (next)
+Tọa độ: (232, 319) => Họ 
+Tọa độ: (667, 319) => Tên
+Tọa độ: (450, 388) => Tiếp (next)
+Tọa độ: (450, 475) => chọn đăng ký email
+Tọa độ: (449, 307) => nhập email
+Tọa độ: (450, 376) => tiếp 
+
+// có thể là field nhập ngày sinh
+Tọa độ: (43, 343) 
+Tọa độ: (87, 343)
+Tọa độ: (144, 343)
+Tọa độ: (450, 416) => tiếp
+
+// field giới tính
+Tọa độ: (450, 320) nữ 
+Tọa độ: (450, 382) nam 
+Tọa độ: (450, 437) tùy chỉnh
+
+Tọa độ: (450, 550) => tiếp
+
+
+Tọa độ: (449, 327) => nhập mật khẩu
+Tọa độ: (450, 396) => tiếp
+
+Tọa độ: (150, 1285) 1
+Tọa độ: (450, 1285) 2
+Tọa độ: (750, 1285) 3
+Tọa độ: (150, 1375) 4
+Tọa độ: (450, 1375) 5 
+Tọa độ: (750, 1375) 6
+Tọa độ: (150, 1465) 7 
+Tọa độ: (450, 1465) 8
+Tọa độ: (750, 1465) 9
+
+
+Loại: Button, Text: '', Content-Desc: 'Tạo tài khoản mới', Resource-ID: '', Tọa độ: (450, 1492)
+
+Loại: Button, Text: '', Content-Desc: 'Bắt đầu', Resource-ID: '', Tọa độ: (450, 737)
+
+Loại: Text Input, Text: '', Content-Desc: '', Resource-ID: '', Tọa độ: (205, 294)
+
+Loại: Text Input, Text: '', Content-Desc: '', Resource-ID: '', Tọa độ: (640, 294)
+
+Loại: Button, Text: '', Content-Desc: 'Tiếp', Resource-ID: '', Tọa độ: (450, 389)
