@@ -49,3 +49,13 @@
 
 ## check List IP 
 # netstat -aon | findstr LISTENING
+
+
+## Setup Command for adb
+## 1. Nhấn Win + S, tìm Environment Variables hoặc gõ Edit the system environment variables, rồi bấm vào đó.
+## - Trong cửa sổ System Properties, chọn tab Advanced, bấm nút Environment Variables.
+## 2. Chỉnh sửa PATH:
+## - Trong phần System Variables, tìm biến có tên Path và bấm Edit.
+## - Bấm New và thêm đường dẫn đầy đủ đến thư mục chứa adb.exe (ví dụ: C:\platform-tools).
+## 3. Lưu thay đổi:
+## - Nhấn OK trong mọi cửa sổ để lưu lại.
