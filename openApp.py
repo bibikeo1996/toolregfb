@@ -9,6 +9,7 @@ from include.isAppRunning import is_bluestacks_running, is_app_installed
 from include.detectFields import XacDinhLoaiField, NhapTextVaoField
 from include.detectNumPicker import ChonNgayThangNamSinh
 from validate.validate import KiemTraElementCoTonTaiKhong, KiemTraClassCoTonTai
+from validate.proxy import KiemTraProxy
 import include.defined as defined
 # Load biến môi trường từ tệp .env nếu có
 load_dotenv()
@@ -52,16 +53,6 @@ def open_bluestacks_and_install_apk(apk_path):
             print("Không tìm thấy thiết bị BlueStacks qua ADB. Hãy kiểm tra lại.")
             return
 
-         
-        print("Đang kiểm tra kết nối proxy từ ứng dụng di động...")
-        check_proxy_command = [adb_path, "shell", "curl", "http://httpbin.org/ip"]
-        result = subprocess.run(check_proxy_command, capture_output=True, text=True)
-        
-        if result.returncode == 0:
-            print(f"IP trả về từ proxy: {result.stdout}")
-        else:
-            print(f"Lỗi khi kiểm tra proxy: {result.stderr}")   
-
         # Cài đặt APK nếu chưa cài
         if not is_app_installed(adb_path, package_name):
             print(f"Đang cài đặt APK từ {apk_path} vào BlueStacks...")
@@ -76,6 +67,11 @@ def open_bluestacks_and_install_apk(apk_path):
                 return
         else:
             print("Ứng dụng Facebook Lite đã được cài đặt.")
+
+        # if KiemTraProxy(adb_path):
+        #     pass
+        # else:
+        #     return False 
 
         # Mở ứng dụng Facebook Lite
         print("Đang mở ứng dụng Facebook Lite...")
