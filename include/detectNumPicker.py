@@ -17,7 +17,7 @@ def XacDinhToaDo(node):
     return None, None
 
 def ChonNgayThangNamSinh(adb_path, specific_id=None, specific_class=None):
-    speed = "50"  # Default swipe speed
+    speed = "20"  # Default swipe speed
     try:
         # Dump UI from the device
         print(f"Đang nhập ngày tháng năm sinh...")
@@ -71,7 +71,7 @@ def ChonNgayThangNamSinh(adb_path, specific_id=None, specific_class=None):
                 if (specific_id and element_info["resource-id"] == specific_id) or (specific_class and element_class == specific_class):
                     x, y = coordinates
                     if specific_id and element_info["resource-id"] == specific_id and len(interactive_elements) == 0:
-                        MONTH_LIMIT = random.randint(0, 12)
+                        MONTH_LIMIT = random.randint(0, 6)
                         #print(f"Random swipe limit set to Month: {MONTH_LIMIT}")
                         month_count = 0  # Initialize swipe counter
                         
@@ -85,7 +85,7 @@ def ChonNgayThangNamSinh(adb_path, specific_id=None, specific_class=None):
                             month_count += 1  # Increment the swipe counter
 
                     if specific_id and element_info["resource-id"] == specific_id and len(interactive_elements) == 1:
-                        DAY_LIMIT = random.randint(0, 20)
+                        DAY_LIMIT = random.randint(0, 10)
                         #print(f"Random swipe limit set to Day: {DAY_LIMIT}")
                         day_count = 0  # Initialize swipe counter
                         

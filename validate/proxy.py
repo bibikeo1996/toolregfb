@@ -1,7 +1,8 @@
 import subprocess
 
-def KiemTraProxy(adb_path):
+def KiemTraProxy(adb_path, scraperapi_key):
     print("Đang kiểm tra kết nối proxy từ ứng dụng di động...")
+    proxy = f"http://scraperapi:{scraperapi_key}@proxy-server.scraperapi.com:8001"
     check_proxy_command = [adb_path, "shell", "curl", "http://httpbin.org/ip"]
     result = subprocess.run(check_proxy_command, capture_output=True, text=True)
     
