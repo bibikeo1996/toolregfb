@@ -59,3 +59,7 @@
 ## - Bấm New và thêm đường dẫn đầy đủ đến thư mục chứa adb.exe (ví dụ: C:\platform-tools).
 ## 3. Lưu thay đổi:
 ## - Nhấn OK trong mọi cửa sổ để lưu lại.
+
+## Package 
+## pip install python-dotenv
+## pip install requests
