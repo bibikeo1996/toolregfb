@@ -3,7 +3,7 @@ import subprocess
 import re
 import xml.etree.ElementTree as ET
 
-def extract_coordinates(node):
+def XacDinhToaDo(node):
     """Trích xuất tọa độ từ thuộc tính bounds của node."""
     if "bounds" in node.attrib:
         bounds = node.attrib["bounds"]
@@ -60,7 +60,7 @@ def get_text_input_fields():
             element_info["placeholder"] = node.attrib.get("placeholder", "")
 
             # Trích xuất tọa độ
-            coordinates = extract_coordinates(node)
+            coordinates = XacDinhToaDo(node)
             if coordinates:
                 element_info["coordinates"] = coordinates
                 text_input_fields.append(element_info)

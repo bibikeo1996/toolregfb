@@ -2,7 +2,7 @@ import subprocess
 import xml.etree.ElementTree as ET
 import time
 import re
-def extract_coordinates(node):
+def XacDinhToaDo(node):
     """Trích xuất tọa độ từ thuộc tính bounds của node."""
     if "bounds" in node.attrib:
         bounds = node.attrib["bounds"]
@@ -14,7 +14,7 @@ def extract_coordinates(node):
             return center_x, center_y
     return None, None
 
-def detect_field_type(adb_path, field_type="EditText"):
+def XacDinhLoaiField(adb_path, field_type="EditText"):
     # Sử dụng uiautomator để tạo bản dump của giao diện người dùng
     command = [
         adb_path, "shell", "uiautomator", "dump", "/sdcard/window_dump.xml"
@@ -34,13 +34,13 @@ def detect_field_type(adb_path, field_type="EditText"):
     field_coordinates = []
     for elem in root.iter():
         if 'class' in elem.attrib and field_type in elem.attrib['class']:
-            coordinates = extract_coordinates(elem)
+            coordinates = XacDinhToaDo(elem)
             if coordinates:
                 field_coordinates.append(coordinates)
 
     return field_coordinates
 
-def input_text_into_fields(adb_path, field_coordinates, texts):
+def NhapTextVaoField(adb_path, field_coordinates, texts):
     """Nhập văn bản vào các trường nhập liệu tại tọa độ đã cho."""
     if len(field_coordinates) != len(texts):
         print("Số lượng trường nhập liệu và văn bản không khớp.")

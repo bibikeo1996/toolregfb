@@ -3,7 +3,7 @@ import subprocess
 import re
 import xml.etree.ElementTree as ET
 
-def extract_coordinates(node):
+def XacDinhToaDo(node):
     """Trích xuất tọa độ từ thuộc tính bounds của node."""
     if "bounds" in node.attrib:
         bounds = node.attrib["bounds"]
@@ -46,6 +46,7 @@ def get_all_interactive_elements():
             # Phân tích các loại element
             if "class" in node.attrib:
                 element_class = node.attrib["class"]
+                element_info["class"] = element_class  # Add class name to element_info
                 if "EditText" in element_class:
                     element_info["type"] = "Text Input"
                 elif "Button" in element_class:
@@ -65,7 +66,7 @@ def get_all_interactive_elements():
             element_info["resource-id"] = node.attrib.get("resource-id", "")
 
             # Trích xuất tọa độ
-            coordinates = extract_coordinates(node)
+            coordinates = XacDinhToaDo(node)
             if coordinates:
                 element_info["coordinates"] = coordinates
                 interactive_elements.append(element_info)
@@ -74,9 +75,12 @@ def get_all_interactive_elements():
         if interactive_elements:
             print(f"Tìm thấy {len(interactive_elements)} element tương tác:")
             for element in interactive_elements:
-                print(f"Loại: {element['type']}, Text: '{element['text']}', "
-                      f"Content-Desc: '{element['content-desc']}', Resource-ID: '{element['resource-id']}', "
-                      f"Tọa độ: {element['coordinates']}")
+                print(f"Loại: {element['type']}"
+                      f"Class: '{element['class']}'"
+                      f"Text: '{element['text']}'"
+                      f"Content-Desc: '{element['content-desc']}'"
+                      f"Resource-ID: '{element['resource-id']}'"
+                      f"Tọa độ: {element['coordinates']}'")
         else:
             print("Không tìm thấy element tương tác nào.")
         

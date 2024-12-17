@@ -1,68 +1,122 @@
+import os
 import subprocess
-import time
 import re
+import random
+import xml.etree.ElementTree as ET
 
-def swipe_element(adb_path, start, end, duration=300):
-    """Swipe the element based on given coordinates."""
-    command = [
-        adb_path, "shell", "input", "swipe", str(start[0]), str(start[1]), str(end[0]), str(end[1]), str(duration)
-    ]
-    subprocess.run(command, capture_output=True, text=True)
-    print(f"Swiped from {start} to {end}")
+def XacDinhToaDo(node):
+    """Extract coordinates from the bounds attribute of a node."""
+    if "bounds" in node.attrib:
+        bounds = node.attrib["bounds"]
+        match = re.match(r"\[(\d+),(\d+)\]\[(\d+),(\d+)\]", bounds)
+        if match:
+            x1, y1, x2, y2 = map(int, match.groups())
+            center_x = (x1 + x2) // 2
+            center_y = (y1 + y2) // 2
+            return center_x, center_y
+    return None, None
 
-def get_number_picker_values(adb_path, resource_id):
-    """Get all number picker values with the same resource ID."""
-    # Dump UI XML
-    subprocess.run([adb_path, "shell", "uiautomator", "dump", "/sdcard/window_dump.xml"], capture_output=True, text=True)
-    subprocess.run([adb_path, "pull", "/sdcard/window_dump.xml", "./window_dump.xml"], capture_output=True, text=True)
-    
-    # Read and parse the dumped XML
-    with open("window_dump.xml", "r", encoding="utf-8") as file:
-        content = file.read()
-    
-    # Find all values with the specified resource_id
-    matches = re.findall(rf'resource-id="{resource_id}".*?text="([^"]+)"', content)
-    return matches if matches else []
+def ChonNgayThangNamSinh(adb_path, specific_id=None, specific_class=None):
+    speed = "50"  # Default swipe speed
+    try:
+        # Dump UI from the device
+        print(f"Đang nhập ngày tháng năm sinh...")
+        dump_command = [adb_path, "shell", "uiautomator", "dump", "/sdcard/window_dump.xml"]
+        subprocess.run(dump_command, capture_output=True, text=True)
+        
+        # Pull XML file from the device to the computer
+        pull_command = [adb_path, "pull", "/sdcard/window_dump.xml", "./include/window_dump.xml"]
+        subprocess.run(pull_command, capture_output=True, text=True)
+        
+        # Check if the dump file exists
+        if not os.path.exists("./include/window_dump.xml"):
+            print("Không lấy được data.")
+            return []
+        
+        # Parse the XML file
+        #print("Searching for interactive elements...")
+        tree = ET.parse("./include/window_dump.xml")
+        root = tree.getroot()
 
-def format_picker_values(values):
-    """Format picker values into Month, Day, and Year."""
-    if len(values) >= 3:
-        return {"Month": values[0], "Day": values[1], "Year": values[2]}
-    return {"Month": "N/A", "Day": "N/A", "Year": "N/A"}
+        interactive_elements = []  # List to store interactive elements
 
-def swipe_field_until_target(adb_path, resource_id, target_value, swipe_coords):
-    """Swipe a single field until the target value is reached."""
-    while True:
-        # Get the current values of the number picker fields
-        current_values = get_number_picker_values(adb_path, resource_id)
-        if not current_values:
-            print("Error: Could not retrieve current values.")
-            return
+        for node in root.iter("node"):
+            element_info = {}
+            
+            # Analyze element types
+            if "class" in node.attrib:
+                element_class = node.attrib["class"]
+                element_info["class"] = element_class  # Add class name to element_info
+                if "EditText" in element_class:
+                    element_info["type"] = "Text Input"
+                elif "Button" in element_class:
+                    element_info["type"] = "Button"
+                elif "CheckBox" in element_class:
+                    element_info["type"] = "Checkbox"
+                elif "RadioButton" in element_class:
+                    element_info["type"] = "Radio Button"
+                elif node.attrib.get("clickable") == "true":
+                    element_info["type"] = "Clickable Element"
+                elif node.attrib.get("resource-id") == "true":
+                    element_info["type"] = "Resource Id"                    
+                else:
+                    continue  # Skip non-interactive elements
 
-        current_value = current_values[0]  # First field value
-        print(f"Current value: {current_value}, Target: {target_value}")
+            element_info["resource-id"] = node.attrib.get("resource-id", "")
+            
+            # Extract coordinates
+            coordinates = XacDinhToaDo(node)
+            if coordinates:
+                element_info["coordinates"] = coordinates
+                if (specific_id and element_info["resource-id"] == specific_id) or (specific_class and element_class == specific_class):
+                    x, y = coordinates
+                    if specific_id and element_info["resource-id"] == specific_id and len(interactive_elements) == 0:
+                        MONTH_LIMIT = random.randint(0, 12)
+                        #print(f"Random swipe limit set to Month: {MONTH_LIMIT}")
+                        month_count = 0  # Initialize swipe counter
+                        
+                        while month_count < MONTH_LIMIT:
+                            swipe_command = [
+                                adb_path, "shell", "input", "swipe",
+                                str(x), str(y), str(x), str(y + 100), speed
+                            ]
+                            subprocess.run(swipe_command, capture_output=True, text=True)
+                            #print(f"Swiped at coordinates: {coordinates}, swipe {month_count + 1}/{MONTH_LIMIT}.")
+                            month_count += 1  # Increment the swipe counter
 
-        if current_value == target_value:
-            print(f"Field reached target value: {current_value}")
-            break
+                    if specific_id and element_info["resource-id"] == specific_id and len(interactive_elements) == 1:
+                        DAY_LIMIT = random.randint(0, 20)
+                        #print(f"Random swipe limit set to Day: {DAY_LIMIT}")
+                        day_count = 0  # Initialize swipe counter
+                        
+                        while day_count < DAY_LIMIT:
+                            swipe_command = [
+                                adb_path, "shell", "input", "swipe",
+                                str(x), str(y), str(x), str(y + 100), speed
+                            ]
+                            subprocess.run(swipe_command, capture_output=True, text=True)
+                           # print(f"Swiped at coordinates: {coordinates}, swipe {day_count + 1}/{DAY_LIMIT}.")
+                            day_count += 1  # Increment the swipe counter
 
-        # Perform the swipe
-        swipe_element(adb_path, swipe_coords[0], swipe_coords[1])
-        time.sleep(1)  # Wait for swipe and UI update
+                    if specific_id and element_info["resource-id"] == specific_id and len(interactive_elements) == 2:
+                        YEAR_LIMIT = random.randint(10, 15)
+                        #print(f"Random swipe limit set to Year: {YEAR_LIMIT}")
+                        year_count = 0  # Initialize swipe counter
+                        
+                        while year_count < YEAR_LIMIT:
+                            swipe_command = [
+                                adb_path, "shell", "input", "swipe",
+                                str(x), str(y), str(x), str(y + 100), speed
+                            ]
+                            subprocess.run(swipe_command, capture_output=True, text=True)
+                            # print(f"Swiped at coordinates: {coordinates}, swipe {year_count + 1}/{YEAR_LIMIT}.")
+                            year_count += 1  # Increment the swipe counter
 
-def swipe_all_fields(adb_path, resource_id, target_values, swipe_coords_list):
-    """
-    Swipe each field individually (Month, Day, Year) until target values are reached.
-    - swipe_coords_list: List of start/end coordinates for each field swipe.
-    """
-    print("Starting to swipe fields...")
-    for i, target_value in enumerate(target_values):
-        print(f"\nSwiping field {i + 1}: Target Value = {target_value}")
-        swipe_field_until_target(adb_path, resource_id, target_value, swipe_coords_list[i])
+                    # Append the element information after processing
+                    interactive_elements.append(element_info)
 
-    # Final check after swiping all fields
-    final_values = get_number_picker_values(adb_path, resource_id)
-    formatted_values = format_picker_values(final_values)
-    print("\nFinal values:")
-    print(f"Month: {formatted_values['Month']}, Day: {formatted_values['Day']}, Year: {formatted_values['Year']}")
-    print("Swiping complete!")
+        return interactive_elements
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return []

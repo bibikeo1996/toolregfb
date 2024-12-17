@@ -63,3 +63,6 @@
 ## Package 
 ## pip install python-dotenv
 ## pip install requests
+
+## For Test module 
+## pip install setuptools

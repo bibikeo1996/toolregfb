@@ -1,11 +1,14 @@
 import os
 import subprocess
 import time
+import random
 import requests
 from dotenv import load_dotenv
-from include.detectButton import click_button_by_text, wait_for_element
+from include.detectButton import ClickVaoButtonTrungText, DoiElementLoad, ClickVaoClassName
 from include.isAppRunning import is_bluestacks_running, is_app_installed
-from include.detectFields import detect_field_type, input_text_into_fields
+from include.detectFields import XacDinhLoaiField, NhapTextVaoField
+from include.detectNumPicker import ChonNgayThangNamSinh
+from validate.validate import KiemTraElementCoTonTaiKhong, KiemTraClassCoTonTai
 import include.defined as defined
 # Load biến môi trường từ tệp .env nếu có
 load_dotenv()
@@ -78,112 +81,108 @@ def open_bluestacks_and_install_apk(apk_path):
         print("Đang mở ứng dụng Facebook Lite...")
         start_app_command = [adb_path, "shell", "am", "start", "-n", "com.facebook.lite/.MainActivity"]
         subprocess.run(start_app_command)
-        time.sleep(5)  # Đợi ứng dụng khởi động
+        #time.sleep(5)  # Đợi ứng dụng khởi động
 
         # Nhập dữ liệu test
         print("Đang nhập dữ liệu test...")
 
-        if wait_for_element(adb_path, defined.noneOfTheABove):
+        if DoiElementLoad(adb_path, defined.noneOfTheABove):
             pass
         else: 
             pass
-        time.sleep(1)
 
         #tạo tài khoản
-        if wait_for_element(adb_path, defined.createBtn):
+        if DoiElementLoad(adb_path, defined.createBtn):
             pass
-        time.sleep(1)
-        if wait_for_element(adb_path, defined.getStartedBtn):
+
+        if DoiElementLoad(adb_path, defined.getStartedBtn):
             pass
         else:
             pass
-        time.sleep(1)
+
         textFullName = ["John", "Doe"]
-        field_coordinates = detect_field_type(adb_path, "EditText")
-        if input_text_into_fields(adb_path, field_coordinates, textFullName):
+        ToaDoField = XacDinhLoaiField(adb_path, "EditText")
+        if NhapTextVaoField(adb_path, ToaDoField, textFullName):
             pass
         else:
             print("Không thể nhập tất cả các trường.")
             return
+
+        if DoiElementLoad(adb_path, defined.nextBtn):
+            pass
+
+        if KiemTraClassCoTonTai(adb_path, defined.useadifferentnameBtn):
+            ClickVaoClassName(adb_path, "android.widget.RadioButton")
+            DoiElementLoad(adb_path, defined.nextBtn)
+            pass
+        else: 
+            pass
+
+        if (KiemTraElementCoTonTaiKhong(adb_path, element_id="android:id/numberpicker_input")):
+            time.sleep(1)
+            interactive_elements = ChonNgayThangNamSinh(adb_path, specific_id="android:id/numberpicker_input")
+        else:
+            print("Không thể tìm thấy element.")
+            return
+
+        if DoiElementLoad(adb_path, defined.setBtn):
+            pass
+
+        if DoiElementLoad(adb_path, defined.nextBtn):
+            pass    
+
+        ## Chọn giới tính
+        if DoiElementLoad(adb_path, defined.isMale):
+            gender = random.choice([defined.isMale, defined.isFemale])
+            ClickVaoButtonTrungText(adb_path, gender)
+            pass    
+
+        if DoiElementLoad(adb_path, defined.nextBtn):
+            pass
+
+        ## Kiểm tra cho phép Facebook truy cập danh bạ
+        if KiemTraElementCoTonTaiKhong(adb_path, element_id="'com.android.packageinstaller:id/permission_deny_button"):
+            ClickVaoButtonTrungText(adb_path, defined.denyBtn)
+            pass
+
+        ## Kiểm tra cho phép Facebook gọi điện
+        if KiemTraElementCoTonTaiKhong(adb_path, element_id="'com.android.packageinstaller:id/permission_deny_button"):
+            ClickVaoButtonTrungText(adb_path, defined.denyBtn)
+            pass
+
+        if KiemTraElementCoTonTaiKhong(adb_path, text=defined.searchbyEmailBtn):
+            ClickVaoButtonTrungText(adb_path, defined.backBtn)
+            pass
+        else:
+            pass
         time.sleep(1)
 
-        # if wait_for_element(adb_path, defined.setBtn):
-        #     pass
-        # tiếp
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "737"])
-        # time.sleep(1)
-
-        # # Nhập họ tên
-        # subprocess.run([adb_path, "shell", "input", "tap", "205", "294"])
-        # subprocess.run([adb_path, "shell", "input", "text", "Pham"])
-        # time.sleep(1)
-
-        # subprocess.run([adb_path, "shell", "input", "tap", "640", "294"])
-        # subprocess.run([adb_path, "shell", "input", "text", "John"])
-        # time.sleep(1)
-
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "389"])
-
-        # # chọn ngày tháng năm sinh
-        # subprocess.run([adb_path, "shell", "input", "swipe", "116", "826", "116", "926", "300"])
-        # time.sleep(1)
-        # subprocess.run([adb_path, "shell", "input", "swipe", "236", "826", "236", "926", "300"])
-        # time.sleep(1)
-        # subprocess.run([adb_path, "shell", "input", "swipe", "356", "826", "356", "2826", "300"])
-        # time.sleep(1)
-
-        # #click đặt
-        # subprocess.run([adb_path, "shell", "input", "tap", "656", "1078"])
-        # time.sleep(1)
-
-        # # click tiếp
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "418"])
-        # time.sleep(1)
-
-        # # chọn giới tính 
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "309"])
-        # #subprocess.run([adb_path, "shell", "input", "tap", "450", "393"])
-        # time.sleep(1)
-
-        # # click tiếp
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "579"])
-        # time.sleep(1)
-
-
-        # for i in range(3, 0, -1):
-        #     print(f"Đếm lùi: {i} giây")
-        #     time.sleep(1)  # Dừng lại 1 giây mỗi lần
-
-        # print("Deny access dialog")
-        # subprocess.run([adb_path, "shell", "input", "tap", "574", "857"])
-        # time.sleep(1)
-        # # click deny to access dialog
-
-        # # chọn email
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "552"])
-        # time.sleep(1)
+        if ClickVaoButtonTrungText(adb_path, defined.signupWithEmailBtn):
+            pass
         
-        # subprocess.run([adb_path, "shell", "input", "text", "kz46zbc7umb@gmail.com"])
-        # time.sleep(1)
+        # if DoiElementLoad(adb_path, defined.signupWithPhoneBtn):
+        #     pass
 
-        # # click tiếp
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "439"])
-        # time.sleep(1)
+        emailText = ["daylamaitest@gmail.com"]
+        ToaDoField = XacDinhLoaiField(adb_path, "EditText")
+        if NhapTextVaoField(adb_path, ToaDoField, emailText):
+            DoiElementLoad(adb_path, defined.nextBtn)
+            pass
 
-        # #click nhập mật khẩu
-        # subprocess.run([adb_path, "shell", "input", "tap", "423", "323"])
-        # subprocess.run([adb_path, "shell", "input", "text", "matkhau@1123"])
-        # time.sleep(1)
+        if KiemTraElementCoTonTaiKhong(adb_path, text=defined.showPassWordBtn):
+            pass
 
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "418"])
-        # time.sleep(1)
+        passText = ["daylapassconcu"]
+        ToaDoField = XacDinhLoaiField(adb_path, "EditText")
+        if NhapTextVaoField(adb_path, ToaDoField, passText):
+            DoiElementLoad(adb_path, defined.nextBtn)
+            pass
 
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "297"])
-        # time.sleep(1)
+        if DoiElementLoad(adb_path, defined.notnowBtn):
+            pass
 
-        # # đồng ý điều khoản
-        # subprocess.run([adb_path, "shell", "input", "tap", "450", "1471"])
-        # time.sleep(1)
+        if DoiElementLoad(adb_path, defined.iagreeBtn):
+            pass
 
         print("Đã hoàn thành việc nhập dữ liệu test!")
 
