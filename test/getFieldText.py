@@ -16,7 +16,8 @@ def XacDinhToaDo(node):
     return None, None
 
 def get_text_input_fields():
-    adb_path = r"C:\Users\patroids115\Desktop\platform-tools-latest-windows\platform-tools\adb.exe"  # Đường dẫn tới adb.exe
+    # adb_path = r"C:\Users\patroids115\Desktop\platform-tools-latest-windows\platform-tools\adb.exe"  # Đường dẫn tới adb.exe
+    adb_path = r"F:\Projects\platform-tools\adb.exe"  # Đường dẫn tới adb.exe
     
     try:
         # Tạo dump giao diện UI từ thiết bị
