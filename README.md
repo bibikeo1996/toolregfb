@@ -1,68 +1,74 @@
-# toolregfb
+# Tool Reg Facebook
 
-## Cài Python 
+Cài Python 
 
-## Open command line chạy command pip install pyautogui pytest để cài thư viện
+Cài thư viện
+Mở command line và chạy các lệnh sau để cài đặt các thư viện cần thiết:
 
-## Cài ADB https://developer.android.com/studio/releases/platform-tools
+For Code
+```sh
+pip install pyautogui pytest python-dotenv requests
+```
+For Test
+```sh
+pip install setuptools
+```
 
-# RUN APP 
+Cài đặt ADB
+Tải và cài đặt ADB từ đây
+```sh
+https://developer.android.com/studio/releases/platform-tools
+```
+Run index.py
+```sh
+python index.py
+```
 
-# python openApp.py => chạy app 
+Run test thì vào folder Test rồi run 
+```sh
+python locationTest.py => Test chức năng 
+python getLocation.py => Lấy tọa độ 
+```
 
-# python locationTest.py => Test chức năng 
+# Trường hợp Port bị block
+1. Nhấn Windows + R, gõ wf.msc và chạy với quyền admin.
+2. Trong cửa sổ Windows Firewall with Advanced Security, chọn Inbound Rules ở thanh bên trái.
+3. Tạo một quy tắc mới cho cổng 5037:
+- Chọn Inbound Rules, sau đó chọn New Rule....
+- Trong cửa sổ New Inbound Rule Wizard:
+  - Chọn Port và nhấn Next.
+  - Chọn TCP và nhập 5037 vào ô Specific local ports.
+  - Nhấn Next.
+- Chọn Allow the connection và nhấn Next.
+- Chọn tất cả các tùy chọn mạng (Domain, Private, Public), sau đó nhấn Next.
+- Đặt tên cho quy tắc, ví dụ: Allow ADB Port 5037, rồi nhấn Finish.
 
-# python getLocation.py => Lấy tọa độ 
+# Khởi động lại ADB server
+```sh
+adb kill-server
+adb start-server
+```
+Sau đó, thử kiểm tra lại các thiết bị:
+```sh
+adb devices
+```
+Lưu ý:
+```sh
+Nếu hiển thị emulator-5554 device có nghĩa là BlueStacks đã kết nối thành công.
+```
 
-## Trường hợp Port bị block thì vô 
+Kiểm tra danh sách IP
 
-## Window + R gõ wf.msc quyền admin
+```sh
+netstat -aon | findstr LISTENING
+```
 
-## Trong cửa sổ Windows Firewall with Advanced Security, bạn sẽ thấy Inbound Rules và Outbound Rules ở thanh bên trái.
+# Thiết lập biến môi trường cho ADB
 
-## Chọn Inbound Rules (Quy tắc vào), sau đó  tạo một quy tắc mới. 
-
-## Tạo quy tắc cho cổng 5037
-
-## 1. Trong cửa sổ Windows Firewall with Advanced Security, ở bên trái, chọn Inbound Rules.
-## 2. Ở bên phải, chọn New Rule....
-## 3. Trong cửa sổ New Inbound Rule Wizard:
-## - Chọn Port và nhấn Next.
-## - Chọn TCP và nhập 5037 vào ô Specific local ports.
-## - Nhấn Next.
-
-## 4. Chọn Allow the connection và nhấn Next.
-## 5. Chọn tất cả các tùy chọn mạng (Domain, Private, Public), sau đó nhấn Next.
-## 6. Đặt tên cho quy tắc, ví dụ: Allow ADB Port 5037, rồi nhấn Finish.
-
-## restart ADB - tắt mở command line
-
-# Khởi động lại ADB server: Đôi khi ADB có thể gặp sự cố với việc kết nối, vì vậy thử khởi động lạ
-# adb kill-server
-# adb start-server
-
-# Sau đó, thử kiểm tra lại các thiết bị:
-# adb devices
-
-## Show ra Emulator là đã kết nối thành công
-# emulator-5554 device có thể là phiên bản BlueStacks bạn đang sử dụng, và nó đang kết nối thành công.
-
-## check List IP 
-# netstat -aon | findstr LISTENING
-
-
-## Setup Command for adb
-## 1. Nhấn Win + S, tìm Environment Variables hoặc gõ Edit the system environment variables, rồi bấm vào đó.
-## - Trong cửa sổ System Properties, chọn tab Advanced, bấm nút Environment Variables.
-## 2. Chỉnh sửa PATH:
-## - Trong phần System Variables, tìm biến có tên Path và bấm Edit.
-## - Bấm New và thêm đường dẫn đầy đủ đến thư mục chứa adb.exe (ví dụ: C:\platform-tools).
-## 3. Lưu thay đổi:
-## - Nhấn OK trong mọi cửa sổ để lưu lại.
-
-## Package 
-## pip install python-dotenv
-## pip install requests
-
-## For Test module 
-## pip install setuptools
+1. Nhấn Win + S, tìm Environment Variables hoặc gõ Edit the system environment variables, rồi bấm vào đó.
+2. Trong cửa sổ System Properties, chọn tab Advanced, bấm nút Environment Variables.
+3. Chỉnh sửa PATH:
+- Trong phần System Variables, tìm biến có tên Path và bấm Edit.
+- Bấm New và thêm đường dẫn đầy đủ đến thư mục chứa adb.exe (ví dụ: C:\platform-tools).
+4. Lưu thay đổi:
+- Nhấn OK trong mọi cửa sổ để lưu lại.
