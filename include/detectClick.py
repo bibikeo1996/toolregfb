@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 # else:
 #     print(result)
 
-def KiemTraVaClickElement(adb_path, text=None, element_id=None, class_name=None, click=False, timeout=30):
+def KiemTraVaClickElement(adb_path, text=None, element_id=None, class_name=None, click=False, timeout=30, quick_check=False):
     def dump_ui():
         command = [adb_path, "shell", "uiautomator", "dump", "/sdcard/window_dump.xml"]
         subprocess.run(command, capture_output=True, text=True)
@@ -34,13 +34,12 @@ def KiemTraVaClickElement(adb_path, text=None, element_id=None, class_name=None,
         y = (int(coords[1]) + int(coords[3])) // 2
         command = [adb_path, "shell", "input", "tap", str(x), str(y)]
         subprocess.run(command, capture_output=True, text=True)
-        print(f"Clicked on coordinates: ({x}, {y})")
+        print(f"Clicked vào tọa độ: ({x}, {y})")
 
     start_time = time.time()
+    dump_ui()
+    root = parse_xml()
     while time.time() - start_time < timeout:
-        dump_ui()
-        root = parse_xml()
-
         for elem in root.iter('node'):
             if text:
                 for t in text:
@@ -59,8 +58,10 @@ def KiemTraVaClickElement(adb_path, text=None, element_id=None, class_name=None,
                     # Phần này dùng để click
                     click_element(elem.attrib['bounds'])
                 return True
-
-        time.sleep(1)  # Chờ 1 giây trước khi kiểm tra lại
+        if quick_check:
+            return False
+            
+        #time.sleep(1)  # Chờ 1 giây trước khi kiểm tra lại
 
     if text:
         return f"Error: Element with text '{text}' not found within {timeout} seconds."

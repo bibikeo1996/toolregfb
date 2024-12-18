@@ -18,16 +18,16 @@ def xoa_app(adb_path, package_name):
             return
 
         # Xóa dữ liệu và cache trước khi gỡ cài đặt
-        print(f"Đang xóa cache và dữ liệu ứng dụng {package_name}...")
+        # print(f"Đang xóa cache và dữ liệu ứng dụng {package_name}...")
         subprocess.run(
             [adb_path, "shell", "pm", "clear", package_name],
             capture_output=True,
             text=True,
         )
-        print(f"Đã xóa cache và dữ liệu ứng dụng {package_name} thành công")
+        # print(f"Đã xóa cache và dữ liệu ứng dụng {package_name} thành công")
 
         # Thực hiện lệnh gỡ cài đặt
-        print(f"Đang gỡ cài đặt ứng dụng {package_name}...")
+        # print(f"Đang gỡ cài đặt ứng dụng {package_name}...")
         result = subprocess.run(
             [adb_path, "uninstall", package_name], capture_output=True, text=True
         )

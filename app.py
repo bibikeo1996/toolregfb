@@ -50,14 +50,14 @@ def OpenToolRegFaceBook(adb_path, defined):
     if KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True):
         pass
 
-    if KiemTraVaClickElement(adb_path, text=defined.useadifferentnameBtn, click=False):
+    if KiemTraVaClickElement(adb_path, text=defined.useadifferentnameBtn, click=False, quick_check=True):
         KiemTraVaClickElement(adb_path, class_name="android.widget.RadioButton", click=True)
         KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True)
         pass
     else: 
         pass
 
-    if KiemTraVaClickElement(adb_path, element_id="android:id/numberpicker_input", click=False):
+    if KiemTraVaClickElement(adb_path, element_id="android:id/numberpicker_input", click=False, quick_check=True):
         time.sleep(1)
         interactive_elements = ChonNgayThangNamSinh(adb_path, specific_id="android:id/numberpicker_input")
     else:
@@ -80,22 +80,18 @@ def OpenToolRegFaceBook(adb_path, defined):
         pass
 
     ## Kiểm tra cho phép Facebook truy cập danh bạ
-    if KiemTraVaClickElement(adb_path, element_id="com.android.packageinstaller:id/permission_deny_button", click=False):
+    if KiemTraVaClickElement(adb_path, element_id="com.android.packageinstaller:id/permission_deny_button", click=False, quick_check=True):
         KiemTraVaClickElement(adb_path, text=defined.denyBtn, click=True)
         pass
 
-    ## Kiểm tra cho phép Facebook gọi điện
-    if KiemTraVaClickElement(adb_path, element_id="com.android.packageinstaller:id/permission_deny_button", click=False):
+    # Kiểm tra popup khác
+    if KiemTraVaClickElement(adb_path, element_id="com.android.packageinstaller:id/permission_deny_button", click=False, quick_check=True):
         KiemTraVaClickElement(adb_path, text=defined.denyBtn, click=True)
-        pass
 
-    if KiemTraVaClickElement(adb_path, text=defined.searchbyEmailBtn, click=False):
+    # Kiểm tra nút "search by email"
+    if KiemTraVaClickElement(adb_path, text=defined.searchbyEmailBtn, click=False, quick_check=True):
         KiemTraVaClickElement(adb_path, text=defined.backBtn, click=True)
-        pass
-    else:
-        pass
-    time.sleep(1)
-
+        
     if KiemTraVaClickElement(adb_path, text=defined.signupWithEmailBtn, click=True):
         pass
     
@@ -108,7 +104,7 @@ def OpenToolRegFaceBook(adb_path, defined):
         KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True)
         pass
 
-    if KiemTraVaClickElement(adb_path, text=defined.showPassWordBtn, click=True):
+    if KiemTraVaClickElement(adb_path, text=defined.showPassWordBtn, click=True, quick_check=True):
         pass
 
     passText = ["daylapassconcu"]

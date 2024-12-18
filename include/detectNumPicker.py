@@ -48,7 +48,8 @@ def ChonNgayThangNamSinh(adb_path, specific_id=None, specific_class=None):
 
         # Parse the XML file
         # print("Searching for interactive elements...")
-        tree = ET.parse("./include/window_dump.xml")
+        # tree = ET.parse("./include/window_dump.xml")
+        tree = ET.parse("window_dump.xml")
         root = tree.getroot()
 
         interactive_elements = []  # List to store interactive elements

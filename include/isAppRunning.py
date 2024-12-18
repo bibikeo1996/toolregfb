@@ -1,6 +1,9 @@
 import os
+import sys
 import subprocess
 import time
+sys.path.append(os.path.dirname(__file__))
+from countTime import demthoigian
 
 def isBlueStackRunning(bluestacks_path, adb_path, apk_path, package_name):
     result = subprocess.run(["tasklist"], capture_output=True, text=True)
@@ -9,7 +12,7 @@ def isBlueStackRunning(bluestacks_path, adb_path, apk_path, package_name):
     else:
         print("Đang mở BlueStacks...")
         subprocess.Popen([bluestacks_path])
-        time.sleep(12)  # Đợi BlueStacks khởi động (tăng thời gian nếu cần)
+        demthoigian(12)  # Đợi BlueStacks khởi động (tăng thời gian nếu cần)
 
     # Restart ADB server
     print("Đang khởi động lại ADB server...")
