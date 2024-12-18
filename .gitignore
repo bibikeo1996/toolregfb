@@ -57,3 +57,6 @@ openApp-backup.py
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# dump xml file
+.xml
