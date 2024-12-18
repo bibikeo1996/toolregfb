@@ -4,10 +4,10 @@ import time
 import random
 import requests
 from dotenv import load_dotenv
-from include.detectButton import ClickVaoButtonTrungText, DoiElementLoad, ClickVaoClassName
+from include.detectClick import KiemTraVaClickElement
 from include.detectFields import XacDinhLoaiField, NhapTextVaoField
 from include.detectNumPicker import ChonNgayThangNamSinh
-from validate.validate import KiemTraElementCoTonTaiKhong, KiemTraClassCoTonTai
+# from validate.validate import KiemTraVaClickElement, KiemTraClassCoTonTai
 
 load_dotenv()
 
@@ -25,16 +25,16 @@ def OpenToolRegFaceBook(adb_path, defined):
     # Nhập dữ liệu test
     print("Đang nhập dữ liệu test...")
 
-    if DoiElementLoad(adb_path, defined.noneOfTheABove):
+    if KiemTraVaClickElement(adb_path, text=defined.noneOfTheABove, click=True):
         pass
     else: 
         pass
 
     #tạo tài khoản
-    if DoiElementLoad(adb_path, defined.createBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.createBtn, click=True):
         pass
 
-    if DoiElementLoad(adb_path, defined.getStartedBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.getStartedBtn, click=True):
         pass
     else:
         pass
@@ -47,78 +47,78 @@ def OpenToolRegFaceBook(adb_path, defined):
         print("Không thể nhập tất cả các trường.")
         return
 
-    if DoiElementLoad(adb_path, defined.nextBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True):
         pass
 
-    if KiemTraClassCoTonTai(adb_path, defined.useadifferentnameBtn):
-        ClickVaoClassName(adb_path, "android.widget.RadioButton")
-        DoiElementLoad(adb_path, defined.nextBtn)
+    if KiemTraVaClickElement(adb_path, text=defined.useadifferentnameBtn, click=False):
+        KiemTraVaClickElement(adb_path, class_name="android.widget.RadioButton", click=True)
+        KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True)
         pass
     else: 
         pass
 
-    if (KiemTraElementCoTonTaiKhong(adb_path, element_id="android:id/numberpicker_input")):
+    if KiemTraVaClickElement(adb_path, element_id="android:id/numberpicker_input", click=False):
         time.sleep(1)
         interactive_elements = ChonNgayThangNamSinh(adb_path, specific_id="android:id/numberpicker_input")
     else:
         print("Không thể tìm thấy element.")
         return
 
-    if DoiElementLoad(adb_path, defined.setBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.setBtn, click=True):
         pass
 
-    if DoiElementLoad(adb_path, defined.nextBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True):
         pass    
 
     ## Chọn giới tính
-    if DoiElementLoad(adb_path, defined.isMale):
+    if KiemTraVaClickElement(adb_path, text=defined.isMale, click=False):
         gender = random.choice([defined.isMale, defined.isFemale])
-        ClickVaoButtonTrungText(adb_path, gender)
+        KiemTraVaClickElement(adb_path, text=gender, click=True)
         pass    
 
-    if DoiElementLoad(adb_path, defined.nextBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True):
         pass
 
     ## Kiểm tra cho phép Facebook truy cập danh bạ
-    if KiemTraElementCoTonTaiKhong(adb_path, element_id="'com.android.packageinstaller:id/permission_deny_button"):
-        ClickVaoButtonTrungText(adb_path, defined.denyBtn)
+    if KiemTraVaClickElement(adb_path, element_id="com.android.packageinstaller:id/permission_deny_button", click=False):
+        KiemTraVaClickElement(adb_path, text=defined.denyBtn, click=True)
         pass
 
     ## Kiểm tra cho phép Facebook gọi điện
-    if KiemTraElementCoTonTaiKhong(adb_path, element_id="'com.android.packageinstaller:id/permission_deny_button"):
-        ClickVaoButtonTrungText(adb_path, defined.denyBtn)
+    if KiemTraVaClickElement(adb_path, element_id="com.android.packageinstaller:id/permission_deny_button", click=False):
+        KiemTraVaClickElement(adb_path, text=defined.denyBtn, click=True)
         pass
 
-    if KiemTraElementCoTonTaiKhong(adb_path, text=defined.searchbyEmailBtn):
-        ClickVaoButtonTrungText(adb_path, defined.backBtn)
+    if KiemTraVaClickElement(adb_path, text=defined.searchbyEmailBtn, click=False):
+        KiemTraVaClickElement(adb_path, text=defined.backBtn, click=True)
         pass
     else:
         pass
     time.sleep(1)
 
-    if ClickVaoButtonTrungText(adb_path, defined.signupWithEmailBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.signupWithEmailBtn, click=True):
         pass
     
-    # if DoiElementLoad(adb_path, defined.signupWithPhoneBtn):
+    # if KiemTraVaClickElement(adb_path, defined.signupWithPhoneBtn):
     #     pass
 
     emailText = ["daylamaitest@gmail.com"]
     ToaDoField = XacDinhLoaiField(adb_path, "EditText")
     if NhapTextVaoField(adb_path, ToaDoField, emailText):
-        DoiElementLoad(adb_path, defined.nextBtn)
+        KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True)
         pass
 
-    if KiemTraElementCoTonTaiKhong(adb_path, text=defined.showPassWordBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.showPassWordBtn, click=True):
         pass
 
     passText = ["daylapassconcu"]
     ToaDoField = XacDinhLoaiField(adb_path, "EditText")
     if NhapTextVaoField(adb_path, ToaDoField, passText):
-        DoiElementLoad(adb_path, defined.nextBtn)
+        KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True)
         pass
 
-    if DoiElementLoad(adb_path, defined.notnowBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.notnowBtn, click=True):
         pass
 
-    if DoiElementLoad(adb_path, defined.iagreeBtn):
+    if KiemTraVaClickElement(adb_path, text=defined.iagreeBtn, click=True):
         pass

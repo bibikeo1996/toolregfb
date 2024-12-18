@@ -59,4 +59,4 @@ openApp-backup.py
 Thumbs.db
 
 # dump xml file
-.xml
+*.xml
