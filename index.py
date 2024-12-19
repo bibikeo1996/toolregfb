@@ -17,12 +17,15 @@ adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH') 
 package_name = os.getenv('PACKAGE_NAME')
 scraperapi_key = os.getenv('SCRAPERAPI_KEY')
+proxy_host = os.getenv('PROXY_HOST')
+proxy_port = os.getenv('PROXY_PORT')
+
+# if KiemTraProxy(adb_path, scraperapi_key, proxy_host, proxy_port):
+#     pass
+# else:
+#     print("Không thể kết nối proxy server.")
 
 if isBlueStackRunning(bluestacks_path, adb_path, apk_path, package_name):
-    # if KiemTraProxy(adb_path):
-    #     pass
-    # else:
-    #     return False
     OpenToolRegFaceBook(adb_path, defined)
     print("Đã hoàn thành việc nhập dữ liệu test!")
     
