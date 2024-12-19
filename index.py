@@ -6,6 +6,7 @@ from validate.proxy import KiemTraProxy
 from app import OpenToolRegFaceBook
 from include.isAppRunning import isBlueStackRunning
 from include.deleteApp import xoa_app
+# from validate.cookie import run_cookie
 import include.defined as defined
 
 # Load biến môi trường từ tệp .env nếu có
@@ -26,6 +27,8 @@ if isBlueStackRunning(bluestacks_path, adb_path, apk_path, package_name):
     print("Đã hoàn thành việc nhập dữ liệu test!")
     
     # gọi hàm delete app ngay đây
-    xoa_app(adb_path, package_name)
+    # xoa_app(adb_path, package_name)
+    # run_cookie()
+    
 else:
     print("Không thể chạy ứng dụng do một hoặc nhiều điều kiện không thỏa mãn.")
