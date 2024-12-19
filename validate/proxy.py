@@ -1,12 +1,20 @@
-import subprocess
+import requests
+# import json
 
 def KiemTraProxy(adb_path, scraperapi_key):
-    print("Đang kiểm tra kết nối proxy từ ứng dụng di động...")
-    proxy = f"http://scraperapi:{scraperapi_key}@proxy-server.scraperapi.com:8001"
-    check_proxy_command = [adb_path, "shell", "curl", "http://httpbin.org/ip"]
-    result = subprocess.run(check_proxy_command, capture_output=True, text=True)
-    
-    if result.returncode == 0:
-        print(f"IP trả về từ proxy: {result.stdout}")
+    print(f"Đang kiểm tra kết nối với proxy( scraperapi_key:{scraperapi_key}, adb_path: {adb_path} ) từ ứng dụng di động...")
+    payload = {
+        'apiKey': scraperapi_key,
+        'url': 'https://m.facebook.com'
+    }
+
+    # Gửi yêu cầu POST tới ScraperAPI
+    response = requests.post('https://async.scraperapi.com/jobs', json=payload)
+
+    # Kiểm tra kết quả trả về
+    if response.status_code == 200:
+        result = response.json()
+        print("IP trả về từ ScraperAPI: ", result)
+        return True
     else:
-        print(f"Lỗi khi kiểm tra proxy: {result.stderr}")
+        print(f"Có lỗi xảy ra: {response.status_code} - {response.text}")
