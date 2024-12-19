@@ -98,7 +98,7 @@ def OpenToolRegFaceBook(adb_path, defined):
     # if KiemTraVaClickElement(adb_path, defined.signupWithPhoneBtn):
     #     pass
 
-    emailText = ["daylamaitest@gmail.com"]
+    emailText = ["nisob73035@chosenx.com"]
     ToaDoField = XacDinhLoaiField(adb_path, "EditText")
     if NhapTextVaoField(adb_path, ToaDoField, emailText):
         KiemTraVaClickElement(adb_path, text=defined.nextBtn, click=True)
