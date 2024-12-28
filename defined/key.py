@@ -75,6 +75,7 @@ class Action:
     pickname_Btn = os.path.join(base_dir, '..', 'imageAction', 'pickname.png')
     female_Btn = os.path.join(base_dir, '..', 'imageAction', 'female.png')
     male_Btn = os.path.join(base_dir, '..', 'imageAction', 'male.png')
+    defaultClick_btn = os.path.join(base_dir, '..', 'imageAction', 'clickDefault.png')
 
     agree_Btn = os.path.join(base_dir, '..', 'imageAction', 'agree.png')
     allowaccesscamera_Btn = os.path.join(base_dir, '..', 'imageAction', 'allowaccesscamera.png')

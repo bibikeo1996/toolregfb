@@ -29,8 +29,9 @@ def RunLD(index, apk_path, package_name):
     if(isSetup == True):
         TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
         pass
+    time.sleep(1)
 
-    TrangThaiInstance(index, "Đang khởi động")
+
     isStarted = KhoiDongLDPlayer(index)
     if(isStarted == True):
         TrangThaiInstance(index, f"Instance {index} đã khởi động xong", saveText)
@@ -40,6 +41,8 @@ def RunLD(index, apk_path, package_name):
     if(isInstalled == True):
         TrangThaiInstance(index, f"Instance {index} đã cài xong app", saveText)
         pass
+
+    OpenApp(index)    
 
     # InstallAppFile(None, i, apk_path)
     # time.sleep(2)
@@ -53,52 +56,53 @@ def RunLD(index, apk_path, package_name):
     # print(f"Running on index {index}")
     # time.sleep(1.5)
 
-    # buttons = [
-    #     (Action.createbutton_Btn, "Tap", None),
-    #     (Action.getstarted_Btn, "Tap", None),
-    #     (Action.firstname_Btn, "GoText", "HelloWorld"),
-    #     (Action.lastname_Btn, "GoText", "HelloWorld"),
-    #     (Action.nextt_Btn, "Tap", None),
-    #     (Action.selectyourname_Btn, "Tap", None),
-    #     (Action.nextt_Btn, "Tap", None),
-    #     (Action.month_Btn, "SwipeMonth", None),
-    #     (Action.date_Btn, "SwipeDay", None),
-    #     (Action.year_Btn, "SwipeYear", None),
-    #     (Action.sett_Btn, "Tap", None),
-    #     (Action.nextt_Btn, "Tap", None),
-    #     (random.choice([Action.female_Btn, Action.male_Btn]), "Tap", None),
-    #     (Action.deny_Btn, "Tap", None),
-    #     (Action.signupWithEmail_Btn, "Tap", None),
-    #     (Action.clickWhatYourEmail_Btn, "Tap", None),
-    #     (Action.emailfield_Btn, "GoText", "npx58646@msssg.com"),
-    #     (Action.nextt_Btn, "Tap", None),
-    #     (Action.clickcreatepassword_Btn, "Tap", None),
-    #     (Action.passwordField_Btn, "GoText", "!@#!EQWE@DSsa"),
-    #     (Action.nextt_Btn, "Tap", None),
-    #     (Action.notnow_Btn, "Tap", None),
-    #     (Action.agree_Btn, "Tap", None),
-    #     (Action.deny_Btn, "Tap", None),
-    #     (Action.verifycodefield_Btn, "GoText", "verifycode"),
-    #     (Action.ok_Btn, "Tap", None),
-    #     (Action.skip_Btn, "Tap", None),
-    #     (Action.skip_Btn, "Tap", None),
-    #     (Action.skip1_Btn, "Tap", None),
-    # ]
+    buttons = [
+        (Action.createbutton_Btn, "Tap", None),
+        (Action.getstarted_Btn, "Tap", None),
+        (Action.defaultClick_btn, "Tap", None),
+        (Action.firstname_Btn, "GoText", "HelloWorld"),
+        (Action.lastname_Btn, "GoText", "HelloWorld"),
+        (Action.nextt_Btn, "Tap", None),
+        (Action.selectyourname_Btn, "Tap", None),
+        (Action.nextt_Btn, "Tap", None),
+        (Action.month_Btn, "SwipeMonth", None),
+        (Action.date_Btn, "SwipeDay", None),
+        (Action.year_Btn, "SwipeYear", None),
+        (Action.sett_Btn, "Tap", None),
+        (Action.nextt_Btn, "Tap", None),
+        (random.choice([Action.female_Btn, Action.male_Btn]), "Tap", None),
+        (Action.deny_Btn, "Tap", None),
+        (Action.signupWithEmail_Btn, "Tap", None),
+        (Action.clickWhatYourEmail_Btn, "Tap", None),
+        (Action.emailfield_Btn, "GoText", "npx58646@msssg.com"),
+        (Action.nextt_Btn, "Tap", None),
+        (Action.clickcreatepassword_Btn, "Tap", None),
+        (Action.passwordField_Btn, "GoText", "!@#!EQWE@DSsa"),
+        (Action.nextt_Btn, "Tap", None),
+        (Action.notnow_Btn, "Tap", None),
+        (Action.agree_Btn, "Tap", None),
+        (Action.deny_Btn, "Tap", None),
+        (Action.verifycodefield_Btn, "GoText", "verifycode"),
+        (Action.ok_Btn, "Tap", None),
+        (Action.skip_Btn, "Tap", None),
+        (Action.skip_Btn, "Tap", None),
+        (Action.skip1_Btn, "Tap", None),
+    ]
 
-    # for button, action, text in buttons:
-    #     btn_location = TimAnhSauKhiChupVaSoSanh(button, index)
-    #     if btn_location:
-    #         if action == "Tap":
-    #             Tap(index, btn_location[0], btn_location[1])
-    #         elif action == "GoText":
-    #             GoText(index, text, btn_location[0], btn_location[1])
-    #         elif action == "SwipeMonth":
-    #             SwipeMonth(index, btn_location[0], btn_location[1])
-    #         elif action == "SwipeDay":
-    #             SwipeDay(index, btn_location[0], btn_location[1])
-    #         elif action == "SwipeYear":
-    #             SwipeYear(index, btn_location[0], btn_location[1])
-    #         time.sleep(1)
+    for button, action, text in buttons:
+        btn_location = TimAnhSauKhiChupVaSoSanh(button, index)
+        if btn_location:
+            if action == "Tap":
+                Tap(index, btn_location[0], btn_location[1])
+            elif action == "GoText":
+                GoText(index, text, btn_location[0], btn_location[1])
+            elif action == "SwipeMonth":
+                SwipeMonth(index, btn_location[0], btn_location[1])
+            elif action == "SwipeDay":
+                SwipeDay(index, btn_location[0], btn_location[1])
+            elif action == "SwipeYear":
+                SwipeYear(index, btn_location[0], btn_location[1])
+            time.sleep(1)
         
         
 

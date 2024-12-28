@@ -62,7 +62,7 @@ def ThietLapThongSoThietbi(index):
     model = random.choice(manufacturers_and_models[manufacturer])
     resolution = random.choice(resolutions)
     cpu_cores = random.randint(1, 3)
-    ram = random.choice([512, 1024, 2048, 4096])
+    ram = random.choice([2048, 4096])
     imei = generate_imei()
 
     device = {

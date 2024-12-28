@@ -4,7 +4,7 @@ import argparse
 import threading
 
 from include.run import RunLD
-# from include.function import KetNoiPortThietBiTheoPort, OpenLDPlayer, OpenApp, InstallAppFile, UnInstallAppFile
+from include.OpenApp import ADBKillAndStartServer
 # from include.OpenApp import install_apk, start_ldplayer, is_ldplayer_running, KiemTraLD_ChayChua
 from dotenv import load_dotenv
 
@@ -18,7 +18,9 @@ null = None
 
 if __name__ == "__main__":
     try:
-        
+        ADBKillAndStartServer()
+        # time.sleep(1)
+
         # RunLD(0, apk_path, package_name, ld_path_exe)
         def task(i, apk_path, package_name):
             RunLD(i, apk_path, package_name)

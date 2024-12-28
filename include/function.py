@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 from key import KeyCode, Action
 from PIL import Image
 from io import BytesIO
+from mss import mss
 # from adb_shell.auth import Signer
 # from adb_shell.transport import Transport
 
@@ -34,7 +35,7 @@ def OpenLDPlayer(ld_type, index):
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
 
-def OpenApp(ld_type, index):
+def OpenApp(index):
     if ld_path_console:
         try:
             subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
@@ -60,7 +61,6 @@ def UnInstallAppFile(ld_type, index, package_name):
             print(f"Failed to uninstall app: {e}")
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
-
 
 ## So sánh ảnh màn hình với ảnh action để click
 def ChupAnhTrenManhinh(index):
@@ -97,9 +97,9 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, confidence=0.8, max_attempts=
 
                 return (center_x, center_y)
             else:
-                sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
-                sys.stdout.flush()
-                attempts += 1
+                # sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
+                # sys.stdout.flush()
+                # attempts += 1
                 time.sleep(delay)
 
         finally:
