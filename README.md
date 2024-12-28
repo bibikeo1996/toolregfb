@@ -19,15 +19,39 @@ Tải và cài đặt ADB từ đây
 ```sh
 https://developer.android.com/studio/releases/platform-tools
 ```
+Mã nguồn này chạy qua Adb của ldconsole.exe
+Các comment Adb ldconsole.exe thông dụng
+```sh
+launch <--name mnq_name | --index mnq_idx>
+
+reboot <--name mnq_name | --index mnq_idx>
+
+installapp <--name mnq_name | --index mnq_idx> --filename <apk_file_name>
+
+installapp <--name mnq_name | --index mnq_idx> --packagename <apk_package_name>
+
+uninstallapp <--name mnq_name | --index mnq_idx> --packagename <apk_package_name>
+
+runapp <--name mnq_name | --index mnq_idx> --packagename <apk_package_name>
+
+killapp <--name mnq_name | --index mnq_idx> --packagename <apk_package_name>
+
+list
+
+list2
+
+list3 [--index <mnq_idx>]
+
+```
+# Lưu ý phải thêm ldconsole.exe phía trước 
+```sh
+ldconsole.exe launch <--name mnq_name | --index mnq_idx>
+```
+
+
 Run index.py
 ```sh
 python index.py
-```
-
-Run test thì vào folder Test rồi run 
-```sh
-python locationTest.py => Test chức năng 
-python getLocation.py => Lấy tọa độ 
 ```
 
 # Trường hợp Port bị block
@@ -55,7 +79,26 @@ adb devices
 Lưu ý:
 ```sh
 Nếu hiển thị emulator-5554 device có nghĩa là BlueStacks đã kết nối thành công.
+Nếu hiển thị emulator-5556 device có nghĩa là BlueStacks đã kết nối thành công.
+Nếu hiển thị emulator-5558 device có nghĩa là BlueStacks đã kết nối thành công.
 ```
+Nếu không hiển thị như trên thì hãy kiểm tra Thông số kỹ thuật của thiết bị LDplayer nếu bị trùng nó sẽ không hiện
+```sh
+Mở LDMultiPlayer => chọn setting => check Model tab
+```
+# Các lệnh Adb
+```sh
+adb connect 127.0.0.1:{port LD cần check}
+
+adb -s 127.0.0.1:{port LD cần check} root  => chạy 2 lần để xác định đã root hay chưa
+
+adb -s 127.0.0.1:5555 shell => để vô shell
+
+adb -s 127.0.0.1:5555 su => để truy cập với quyền superadmin
+
+cd /data/data/com.facebook.lite/filesPropertiesStore_v02 => file cookie của facebook
+```
+
 
 Kiểm tra danh sách IP
 
