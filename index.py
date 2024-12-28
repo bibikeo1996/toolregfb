@@ -19,9 +19,7 @@ null = None
 if __name__ == "__main__":
     try:
         ADBKillAndStartServer()
-        # time.sleep(1)
-
-        # RunLD(0, apk_path, package_name, ld_path_exe)
+        
         def task(i, apk_path, package_name):
             RunLD(i, apk_path, package_name)
 
@@ -35,7 +33,5 @@ if __name__ == "__main__":
 
         for t in threads:
             t.join()
-
-    # uid|pass|cookie|token|email
     except Exception as e:
         print(f"Lỗi: {e}")

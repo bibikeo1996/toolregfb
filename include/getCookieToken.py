@@ -6,107 +6,110 @@ def getUID(cookie):
     match = re.search(r'c_user=(\d+)', cookie)
     return match.group(1) if match else None
 
-# def KiemTraAdb_ROOT(adb_port):
-#     command = ['adb', '-s', f'127.0.0.1:{adb_port}', 'root']
-#     try:
-#         result = subprocess.run(command, capture_output=True, text=True, check=True)
-#         if "adbd is already running as root" in result.stdout:
-#             return "ADB is running as root."
-#         elif "permission denied" in result.stderr:
-#             return "Permission denied. ADB root access not available."
-#         else:
-#             return "Unexpected output: " + result.stdout + result.stderr
-#     except subprocess.CalledProcessError as e:
-#         return f"Command failed: {e}"
+# ldconsole.exe adb --index 0 --command "shell su -c 'ls /data/data/com.facebook.lite/files/'"
+# pull file ldconsole.exe adb --index 0 --command "shell su -c 'cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/'"
 
-# def ChayAdbCommand(command, adb_port):
-#     adb_command = ['adb', '-s', f'127.0.0.1:{adb_port}', 'shell'] + command.split()
-#     try:
-#         result = subprocess.run(adb_command, capture_output=True, text=True, check=True)
-#         return result.stdout
-#     except subprocess.CalledProcessError as e:
-#         return f"Command failed: {e}"
 
-# def KeofileTuRootVeLocal(adb_port):
-#     command = "cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/"
-#     ChayAdbCommand(command, adb_port)
-#     pull_command = ['adb', '-s', f'127.0.0.1:{adb_port}', 'pull', '/sdcard/PropertiesStore_v02', f'./authorFiles/PropertiesStore_v02_{adb_port}']
-#     try:
-#         subprocess.run(pull_command, check=True)
-#     except subprocess.CalledProcessError as e:
-#         print(f"Command failed: {e}")
-#     delete_command = "rm /sdcard/PropertiesStore_v02"
-#     ChayAdbCommand(delete_command, adb_port)
+def getAdbData(index):
+    result_data = {
+        "uid": None,
+        "cookie": None,
+        "token": None
+    }
 
-def KiemTraAdb_ROOT(index):
-    command = ['ldconsole.exe', 'adb', '--index', f'{index}', '--command', 'root']
-    try:
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
-        print(result)
-        if "adbd is already running as root" in result.stdout:
-            return "ADB is running as root."
-        elif "permission denied" in result.stderr:
-            return "Permission denied. ADB root access not available."
-        else:
-            return "Unexpected output: " + result.stdout + result.stderr
-    except subprocess.CalledProcessError as e:
-        return f"Command failed: {e}"
+    def XuLyAdbCommand(index):
+        # print(f"Starting XuLyAdbCommand with index: {index}")
 
-def ChayAdbCommand(command, index):
-    adb_command = ['ldconsole.exe', 'adb', '--index', f'{index}', '--command'] + command.split()
-    try:
-        result = subprocess.run(adb_command, capture_output=True, text=True, check=True)
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        return f"Command failed: {e}"
+        # Kiểm tra ADB root
+        command = ['ldconsole.exe', 'adb', '--index', f'{index}', '--command', 'root']
+        try:
+            result = subprocess.run(command, capture_output=True, text=True, check=True)
+            if "adbd is already running as root" in result.stdout:
+                # print("ADB is running as root.")
+                pass
+            elif "permission denied" in result.stderr:
+                print("Permission denied. ADB root access not available.")
+                return None
+            else:
+                print("Unexpected output: " + result.stdout + result.stderr)
+                return None
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed: {e}")
+            return None
 
-def KeofileTuRootVeLocal(index):
-    command = "cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/"
-    ChayAdbCommand(command, index)
-    pull_command = ['ldconsole.exe', 'adb', '--index', f'{index}', '--command', 'pull', '/sdcard/PropertiesStore_v02', f'./authorFiles/PropertiesStore_v02_{index}']
-    try:
-        subprocess.run(pull_command, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Command failed: {e}")
-    delete_command = "rm /sdcard/PropertiesStore_v02"
-    ChayAdbCommand(delete_command, index)
+        # Lệnh 1: Copy file từ root vào SD card
+        adb_command = f"ldconsole.exe adb --index {index} --command \"shell su -c 'cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/'\""
+        try:
+            result = subprocess.run(adb_command, capture_output=True, text=True, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed: {e}")
+            return None
 
-def getCookie(index):
-    local_file_path = f'./authorFiles/PropertiesStore_v02_{index}'
-    try:
-        with open(local_file_path, 'r', encoding='latin-1') as file:
-            data = file.read()
-            json_array_data = re.search(r'\[.*\]', data)
-            if json_array_data:
-                json_array_string = json_array_data.group(0)
-                cookies = json.loads(json_array_string)
-                return "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
-    except FileNotFoundError as e:
-        print(f"File not found: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        # Lệnh 2: Pull file từ SD card về local
+        pull_command = [
+            'ldconsole.exe', 
+            'adb', 
+            '--index', str(index), 
+            '--command', 
+            f'pull /sdcard/PropertiesStore_v02 include/authorFiles/PropertiesStore_v02_{index}'
+        ]
 
-def getToken(index):
-    local_file_path = f'./authorFiles/PropertiesStore_v02_{index}'
-    try:
-        with open(local_file_path, 'r', encoding='latin-1') as file:
-            data = file.read()
-            access_token_match = re.search(r'"access_token":"(.*?)"', data)
-            return access_token_match.group(1) if access_token_match else None
-    except FileNotFoundError as e:
-        print(f"File not found: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        try:
+            subprocess.run(['adb', 'devices'])
+            result = subprocess.run(pull_command, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as e:
+            return None
 
-if __name__ == "__main__":
-    adb_ports = [5555]  # Add your adb_ports here
-    for adb_port in adb_ports:
-        print(f"Running on adb_port {adb_port}")
-        KiemTraAdb_ROOT(adb_port)
-        KeofileTuRootVeLocal(adb_port)
-        cookie = getCookie(adb_port)
-        token = getToken(adb_port)
-        c_user = getUID(cookie)
-        print(f"Cookie for adb_port {adb_port}: {cookie}")
-        print(f"Token for adb_port {adb_port}: {token}")
-        print(f"Uid for adb_port {adb_port}: {c_user}")
+        #Lệnh 3: Xóa file từ SD card
+        delete_command = "rm /sdcard/PropertiesStore_v02"
+        adb_delete_command = ['ldconsole.exe', 'adb', '--index', f'{index}', '--command', "shell", "su", "-c"] + delete_command.split()
+        try:
+            subprocess.run(adb_delete_command, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Delete command failed: {e}")
+            return None
+
+        return "All commands executed successfully."
+
+    def getCookie(index):
+        local_file_path = f'include/authorFiles/PropertiesStore_v02_{index}'
+        try:
+            with open(local_file_path, 'r', encoding='latin-1') as file:
+                data = file.read()
+                json_array_data = re.search(r'\[.*\]', data)
+                if json_array_data:
+                    json_array_string = json_array_data.group(0)
+                    cookies = json.loads(json_array_string)
+                    return "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
+        except FileNotFoundError as e:
+            print(f"File not found: {e}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+        return None, None
+
+    def getToken(index):
+        local_file_path = f'include/authorFiles/PropertiesStore_v02_{index}'
+        try:
+            with open(local_file_path, 'r', encoding='latin-1') as file:
+                data = file.read()
+                access_token_match = re.search(r'"access_token":"(.*?)"', data)
+                return access_token_match.group(1) if access_token_match else None
+        except FileNotFoundError as e:
+            print(f"File not found: {e}")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
+    # Execute the commands
+    XuLyAdbCommand(index)
+    result_data = {
+        "uid": getUID(getCookie(index)),
+        "cookie": getCookie(index),
+        "token":  getToken(index)
+    }
+    return json.dumps(result_data)
+
+    
+# if __name__ == "__main__":
+#     print(f"Running on adb_port {0}")
+#     print(getAdbData(0))

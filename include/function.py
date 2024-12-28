@@ -26,30 +26,12 @@ adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH')
 package_name = os.getenv('PACKAGE_NAME')
 
-def OpenLDPlayer(ld_type, index):
-    if ld_path_console:
-        try:
-            subprocess.run([ld_path_console, 'launch', '--index', str(index)], check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to launch LDPlayer: {e}")
-    else:
-        print("LD_PATH_CONSOLE environment variable is not set.")
-
 def OpenApp(index):
     if ld_path_console:
         try:
             subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Failed to open app: {e}")
-    else:
-        print("LD_PATH_CONSOLE environment variable is not set.")
-
-def InstallAppFile(ld_type, index, file_name):
-    if ld_path_console:
-        try:
-            subprocess.run([ld_path_console, 'installapp', '--index', str(index), '--filename', file_name], check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to install APK: {e}")
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
 
@@ -118,35 +100,8 @@ def KetNoiPortThietBiTheoPort(adb_port):
     else:
         print(f"Kết nối thất bại: {result.stdout}")
         return False
+
 # Xử lý hành động của user 
-
-# def GoText(index, text, x=None, y=None):
-#     if x is not None and y is not None:
-#         # Tap vào vị trí trước khi nhập văn bản
-#         Tap(index, x, y)
-    
-#     if isinstance(text, int):
-#         # Nếu text là một mã key event
-#         cmdCommand = f"shell input keyevent {text}"
-#         command = f"adb -s 127.0.0.1:{index} {cmdCommand}"
-#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#         if result.returncode == 0:
-#             print(f"Đã gửi sự kiện: {text} trên index {index}")
-#         else:
-#             print(f"Lỗi khi gửi sự kiện: {result.stderr}")
-#     else:
-#         # Nếu text là một đoạn văn bản, gửi từng ký tự dưới dạng key event
-#         for char in text:
-#             keycode = getattr(KeyCode, f"KEYCODE_{char.upper()}", None)
-#             if keycode is not None:
-#                 cmdCommand = f"shell input keyevent {keycode}"
-#                 command = f"adb -s 127.0.0.1:{index} {cmdCommand}"
-#                 result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#                 if result.returncode != 0:
-#                     print(f"Lỗi khi gửi sự kiện: {result.stderr}")
-#             else:
-#                 print(f"Không tìm thấy mã key event cho ký tự: {char}")
-
 def GoText(index, text, x=None, y=None):
     if x is not None and y is not None:
         # Tap vào vị trí trước khi nhập văn bản
@@ -232,58 +187,6 @@ def SwipeYear(adb_port, tap_x=None, tap_y=None):
             print(f"Error performing swipe action: {result.stderr}")
         count += 1
 
-# def SwipeMonth(adb_port, tap_x=None, tap_y=None):
-#     duration = 20
-
-#     if tap_x is not None and tap_y is not None:
-#         Tap(adb_port, tap_x, tap_y)
-    
-#     swipe_count = random.randint(1, 12)
-#     count = 0  # Initialize swipe counter
-
-#     while count < swipe_count:
-#         cmdCommand = f"shell input swipe {tap_x} {tap_y} {tap_x} {tap_y + 100} {duration}"
-#         command = f"adb -s 127.0.0.1:{adb_port} {cmdCommand}"
-#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#         if result.returncode != 0:
-#             print(f"Error performing swipe action: {result.stderr}")
-            
-#         count += 1
-
-# def SwipeDay(adb_port, tap_x=None, tap_y=None):
-#     duration = 20
-
-#     if tap_x is not None and tap_y is not None:
-#         Tap(adb_port, tap_x, tap_y)
-    
-#     swipe_count = random.randint(1, 30)
-#     count = 0  # Initialize swipe counter
-
-#     while count < swipe_count:
-#         cmdCommand = f"shell input swipe {tap_x} {tap_y} {tap_x} {tap_y + 100} {duration}"
-#         command = f"adb -s 127.0.0.1:{adb_port} {cmdCommand}"
-#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#         if result.returncode != 0:
-#            print(f"Error performing swipe action: {result.stderr}")
-#         count += 1
-
-# def SwipeYear(adb_port, tap_x=None, tap_y=None):
-#     duration = 20
-
-#     if tap_x is not None and tap_y is not None:
-#         Tap(adb_port, tap_x, tap_y)
-    
-#     swipe_count = random.randint(15, 50)
-#     count = 0  # Initialize swipe counter
-
-#     while count < swipe_count:
-#         cmdCommand = f"shell input swipe {tap_x} {tap_y} {tap_x} {tap_y - 100} {duration}"
-#         command = f"adb -s 127.0.0.1:{adb_port} {cmdCommand}"
-#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#         if result.returncode != 0:
-#             print(f"Error performing swipe action: {result.stderr}")
-#         count += 1        
-
 def Tap(index, x, y):
     # Lệnh thực hiện tap thông qua ldconsole.exe với index
     cmdCommand = f"shell input tap {x} {y}"
@@ -297,3 +200,11 @@ def Tap(index, x, y):
         print(f"Đã tap tại vị trí: ({x}, {y}) trên LDPlayer index {index}")
     else:
         print(f"Lỗi khi thực hiện tap: {result.stderr}")
+        
+def KiemTraDangKyThanhCong(index, x=None, y=None):
+    if x is not None and y is not None:
+        return True
+    else:
+        print("Đăng ký không thành công!")
+        return False
+        

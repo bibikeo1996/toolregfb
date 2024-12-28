@@ -89,11 +89,14 @@ class Action:
     emailfield_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfield.png')
 
     statusContent_Btn = os.path.join(base_dir, '..', 'imageAction', 'statusContent.png')
-    successReg_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg.png')
-    successReg2_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg2.png')
     postFirstStatus_Btn = os.path.join(base_dir, '..', 'imageAction', 'postFirstStatus.png')
     signupWithEmail_Btn = os.path.join(base_dir, '..', 'imageAction', 'signupWithEmail.png')
     clickWhatYourEmail_Btn = os.path.join(base_dir, '..', 'imageAction', 'clickWhatsyouremail.png')
     chat_Btn = os.path.join(base_dir, '..', 'imageAction', 'chat.png')
     whatvideo_Btn = os.path.join(base_dir, '..', 'imageAction', 'whatvideo.png')
     verifycodefield_Btn = os.path.join(base_dir, '..', 'imageAction', 'verifycode.png')
+
+    successReg_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg.png')
+    successReg2_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg2.png')
+    successReg3_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg3.png')
+
