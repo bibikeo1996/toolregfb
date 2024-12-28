@@ -37,18 +37,21 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+.imageDownloaded/
 
 # Environment variables
 .env
 
-# Backup files
+# Folder
 backup/
-openApp\ copy\ 2.py
-openApp\ copy.py
-openApp-backup.py
+include/authorFiles/
+test/
 
 # APK files
 *.apk
+
+# Excel file
+*.xlsx
 
 # IDE files
 .vscode/
