@@ -31,58 +31,58 @@ def RunLD(index, apk_path, package_name):
     fieldFirstName = 'Tim'
     fieldLastName = 'Xiao'
 
-    isSetup = ThietLapThongSoThietbi(index)
-    if(isSetup == True):
-        TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
-        pass
-    time.sleep(1)
+    # isSetup = ThietLapThongSoThietbi(index)
+    # if(isSetup == True):
+    #     TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
+    #     pass
+    # time.sleep(1)
 
 
-    isStarted = KhoiDongLDPlayer(index)
-    if(isStarted == True):
-        TrangThaiInstance(index, f"Instance {index} đã khởi động xong", saveText)
-        pass
+    # isStarted = KhoiDongLDPlayer(index)
+    # if(isStarted == True):
+    #     TrangThaiInstance(index, f"Instance {index} đã khởi động xong", saveText)
+    #     pass
 
-    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path)
-    if(isInstalled == True):
-        TrangThaiInstance(index, f"Instance {index} đã cài xong app", saveText)
-        pass
+    # isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path)
+    # if(isInstalled == True):
+    #     TrangThaiInstance(index, f"Instance {index} đã cài xong app", saveText)
+    #     pass
 
-    OpenApp(index) 
+    # OpenApp(index) 
 
-    time.sleep(1.5)
+    # time.sleep(1.5)
 
     buttons = [
-        (Action.createbutton_Btn, "Tap", None),
-        (Action.getstarted_Btn, "Tap", None),
-        (Action.defaultClick_btn, "Tap", None),
-        (Action.firstname_Btn, "GoText", fieldFirstName),
-        (Action.lastname_Btn, "GoText", fieldLastName),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.selectyourname_Btn, "Tap", None),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.month_Btn, "SwipeMonth", None),
-        (Action.date_Btn, "SwipeDay", None),
-        (Action.year_Btn, "SwipeYear", None),
-        (Action.sett_Btn, "Tap", None),
-        (Action.nextt_Btn, "Tap", None),
-        (random.choice([Action.female_Btn, Action.male_Btn]), "Tap", None),
-        (Action.deny_Btn, "Tap", None),
-        (Action.signupWithEmail_Btn, "Tap", None),
-        (Action.clickWhatYourEmail_Btn, "Tap", None),
-        (Action.emailfield_Btn, "GoText", emailText),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.clickcreatepassword_Btn, "Tap", None),
-        (Action.passwordField_Btn, "GoText", passText),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.notnow_Btn, "Tap", None),
-        (Action.agree_Btn, "Tap", None),
-        (Action.deny_Btn, "Tap", None),
-        (Action.verifycodefield_Btn, "GoText", "verifycode"),
-        (Action.ok_Btn, "Tap", None),
-        (Action.skip_Btn, "Tap", None),
-        (Action.skip_Btn, "Tap", None),
-        (Action.skip1_Btn, "Tap", None),
+        # (Action.createbutton_Btn, "Tap", None),
+        # (Action.getstarted_Btn, "Tap", None),
+        # (Action.defaultClick_btn, "Tap", None),
+        # (Action.firstname_Btn, "GoText", fieldFirstName),
+        # (Action.lastname_Btn, "GoText", fieldLastName),
+        # (Action.nextt_Btn, "Tap", None),
+        # (Action.selectyourname_Btn, "Tap", None),
+        # (Action.nextt_Btn, "Tap", None),
+        # (Action.month_Btn, "SwipeMonth", None),
+        # (Action.date_Btn, "SwipeDay", None),
+        # (Action.year_Btn, "SwipeYear", None),
+        # (Action.sett_Btn, "Tap", None),
+        # (Action.nextt_Btn, "Tap", None),
+        # (random.choice([Action.female_Btn, Action.male_Btn]), "Tap", None),
+        # (Action.deny_Btn, "Tap", None),
+        # (Action.signupWithEmail_Btn, "Tap", None),
+        # (Action.clickWhatYourEmail_Btn, "Tap", None),
+        # (Action.emailfield_Btn, "GoText", emailText),
+        # (Action.nextt_Btn, "Tap", None),
+        # (Action.clickcreatepassword_Btn, "Tap", None),
+        # (Action.passwordField_Btn, "GoText", passText),
+        # (Action.nextt_Btn, "Tap", None),
+        # (Action.notnow_Btn, "Tap", None),
+        # (Action.agree_Btn, "Tap", None),
+        # (Action.deny_Btn, "Tap", None),
+        # (Action.verifycodefield_Btn, "GoText", "verifycode"),
+        # (Action.ok_Btn, "Tap", None),
+        # (Action.skip_Btn, "Tap", None),
+        # (Action.skip_Btn, "Tap", None),
+        # (Action.skip1_Btn, "Tap", None),
         # (Action.successReg_Btn, "KiemTraDangKyThanhCong", None),
         # (Action.successReg2_Btn, "KiemTraDangKyThanhCong", None),
         (Action.successReg3_Btn, "KiemTraDangKyThanhCong", None),
@@ -113,6 +113,7 @@ def RunLD(index, apk_path, package_name):
                     token = CookieToken.get("token")
                     account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
                     # uid|pass|cookie|token|email
+                    print(account)
                     pass
             time.sleep(1)
         
