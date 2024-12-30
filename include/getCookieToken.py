@@ -10,18 +10,18 @@ def getUID(cookie):
 # pull file ldconsole.exe adb --index 0 --command "shell su -c 'cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/'"
 
 
-def getAdbData(index):
+def getAdbData(index, ld_path_console):
     result_data = {
         "uid": None,
         "cookie": None,
         "token": None
     }
 
-    def XuLyAdbCommand(index):
+    def XuLyAdbCommand(index, ld_path_console):
         # print(f"Starting XuLyAdbCommand with index: {index}")
 
         # Kiểm tra ADB root
-        command = ['ldconsole.exe', 'adb', '--index', f'{str(index)}', '--command', 'root']
+        command = [ld_path_console, 'adb', '--index', f'{str(index)}', '--command', 'root']
         try:
             result = subprocess.run(command, capture_output=True, text=True, check=True)
             if "adbd is already running as root" in result.stdout:
@@ -38,7 +38,7 @@ def getAdbData(index):
             return None
 
         # Lệnh 1: Copy file từ root vào SD card
-        adb_command = f"ldconsole.exe adb --index {str(index)} --command \"shell su -c 'cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/'\""
+        adb_command = f"{ld_path_console} adb --index {str(index)} --command \"shell su -c 'cp /data/data/com.facebook.lite/files/PropertiesStore_v02 /sdcard/'\""
         try:
             result = subprocess.run(adb_command, capture_output=True, text=True, check=True)
         except subprocess.CalledProcessError as e:
@@ -47,7 +47,7 @@ def getAdbData(index):
 
         # Lệnh 2: Pull file từ SD card về local
         pull_command = [
-            'ldconsole.exe', 
+            ld_path_console, 
             'adb', 
             '--index', str(index), 
             '--command', 
@@ -62,7 +62,7 @@ def getAdbData(index):
 
         #Lệnh 3: Xóa file từ SD card
         delete_command = "rm /sdcard/PropertiesStore_v02"
-        adb_delete_command = ['ldconsole.exe', 'adb', '--index', f'{str(index)}', '--command', "shell", "su", "-c"] + delete_command.split()
+        adb_delete_command = [ld_path_console, 'adb', '--index', f'{str(index)}', '--command', "shell", "su", "-c"] + delete_command.split()
         try:
             subprocess.run(adb_delete_command, check=True)
         except subprocess.CalledProcessError as e:
@@ -101,7 +101,7 @@ def getAdbData(index):
             print(f"An error occurred: {e}")
 
     # Execute the commands
-    XuLyAdbCommand(index)
+    XuLyAdbCommand(index, ld_path_console)
     result_data = {
         "uid": getUID(getCookie(index)),
         "cookie": getCookie(index),

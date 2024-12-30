@@ -20,7 +20,7 @@ def generate_imei():
     return "".join(map(str, imei))
 
 
-def ThietLapThongSoThietbi(index):
+def ThietLapThongSoThietbi(index, ld_path_console):
     resolutions = [
         (1080, 1920),
         (900, 1600),
@@ -77,7 +77,7 @@ def ThietLapThongSoThietbi(index):
     try:
         # Command to set LDPlayer properties using ldconsole.exe modify
         modify_command = [
-            "ldconsole.exe",
+            ld_path_console,
             "modify",
             "--index",
             f"{index}",

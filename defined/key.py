@@ -51,7 +51,8 @@ class KeyCode:
     KEYCODE_SEMICOLON = 74
     KEYCODE_APOSTROPHE = 75
     KEYCODE_SLASH = 76
-    KEYCODE_AT = 77
+    KEYCODE_AT = 77         # Ký tự @
+    KEYCODE_PERIOD = 56     # Ký tự .
     KEYCODE_NUM = 78
     KEYCODE_HEADSETHOOK = 79
     KEYCODE_FOCUS = 80
@@ -65,8 +66,10 @@ class Action:
     createbutton_Btn = os.path.join(base_dir, '..', 'imageAction', 'createaccount.png')
     getstarted_Btn = os.path.join(base_dir, '..', 'imageAction', 'getstarted.png')
     firstname_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname2.png')
+    firstname3_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname3.png')
     lastname_Btn = os.path.join(base_dir, '..', 'imageAction', 'lastname.png')
     nextt_Btn = os.path.join(base_dir, '..', 'imageAction', 'next.png')
+    setDate_Btn = os.path.join(base_dir, '..', 'imageAction', 'setdate.png')
     month_Btn = os.path.join(base_dir, '..', 'imageAction', 'month.png')
     date_Btn = os.path.join(base_dir, '..', 'imageAction', 'date.png')
     year_Btn = os.path.join(base_dir, '..', 'imageAction', 'year.png')
@@ -87,6 +90,7 @@ class Action:
     clickcreatepassword_Btn = os.path.join(base_dir, '..', 'imageAction', 'clickcreatepassword.png')
     deny_Btn = os.path.join(base_dir, '..', 'imageAction', 'deny.png')
     emailfield_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfield.png')
+    emailfieldv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfieldv2.png')
 
     statusContent_Btn = os.path.join(base_dir, '..', 'imageAction', 'statusContent.png')
     postFirstStatus_Btn = os.path.join(base_dir, '..', 'imageAction', 'postFirstStatus.png')

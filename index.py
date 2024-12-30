@@ -17,21 +17,24 @@ package_name = os.getenv('PACKAGE_NAME')
 null = None
 
 if __name__ == "__main__":
-    try:
-        ADBKillAndStartServer()
+    try:    
+        try:
+            ADBKillAndStartServer()
 
-        def task(i, apk_path, package_name):
-            RunLD(i, apk_path, package_name)
+            def task(i, apk_path, package_name, ld_path_console):
+                RunLD(i, apk_path, package_name, ld_path_console)
 
-        threads = []
-        i = 1
-        for i in range(4):
-            t = threading.Thread(target=task, args=(i, apk_path, package_name))
-            threads.append(t)
-            t.start()
-            time.sleep(1)  # Delay of 1 second before starting the next thread
+            threads = []
+            i = 0
+            for i in range(1):
+                t = threading.Thread(target=task, args=(i, apk_path, package_name, ld_path_console))
+                threads.append(t)
+                t.start()
+                time.sleep(1)  # Delay of 1 second before starting the next thread
 
-        for t in threads:
-            t.join()
-    except Exception as e:
-        print(f"Lỗi: {e}")
+            for t in threads:
+                t.join()
+        except Exception as e:
+            print(f"Lỗi: {e}")
+    except KeyboardInterrupt:
+        print("Đã dừng.")        
