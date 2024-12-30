@@ -115,3 +115,11 @@ netstat -aon | findstr LISTENING
 - Bấm New và thêm đường dẫn đầy đủ đến thư mục chứa adb.exe (ví dụ: C:\platform-tools).
 4. Lưu thay đổi:
 - Nhấn OK trong mọi cửa sổ để lưu lại.
+
+- pip install opencv-python
+- pip install opencv-python-headless
+- pip install adb-shell
+- pip install adbutils
+- pip install mss
+- pip install psutil
+- pip install tabulate

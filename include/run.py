@@ -11,7 +11,7 @@ import adb_shell
 import json
 
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "defined"))
 from dotenv import load_dotenv
 from key import KeyCode, Action
 from PIL import Image
@@ -19,36 +19,52 @@ from io import BytesIO
 
 
 ## import function
-from include.function import Tap, SwipeMonth, SwipeDay, SwipeYear, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, TrangThaiInstance
+from include.function import (
+    Tap,
+    SwipeMonth,
+    SwipeDay,
+    SwipeYear,
+    GoText,
+    TimAnhSauKhiChupVaSoSanh,
+    KetNoiPortThietBiTheoPort,
+    OpenApp,
+    UnInstallAppFile,
+    KiemTraDangKyThanhCong,
+)
+from include.OpenApp import (
+    KiemTraDaCaiAppFaceBookLiteChua,
+    KhoiDongLDPlayer,
+    TrangThaiInstance,
+)
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
 
 saveText = {}
+
+
 def RunLD(index, apk_path, package_name):
-    emailText = 'npx58646@msssg.com'
-    passText = '9dVhsUax@'
-    fieldFirstName = 'Tim'
-    fieldLastName = 'Xiao'
+    emailText = "npx58646@msssg.com"
+    passText = "9dVhsUax@"
+    fieldFirstName = "Tim"
+    fieldLastName = "Xiao"
 
-    # isSetup = ThietLapThongSoThietbi(index)
-    # if(isSetup == True):
-    #     TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
-    #     pass
-    # time.sleep(1)
+    isSetup = ThietLapThongSoThietbi(index)
+    if isSetup == True:
+        TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
+        pass
+    time.sleep(1)
 
+    isStarted = KhoiDongLDPlayer(index)
+    if isStarted == True:
+        TrangThaiInstance(index, f"Instance {index} đã khởi động xong", saveText)
+        pass
 
-    # isStarted = KhoiDongLDPlayer(index)
-    # if(isStarted == True):
-    #     TrangThaiInstance(index, f"Instance {index} đã khởi động xong", saveText)
-    #     pass
+    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path)
+    if isInstalled == True:
+        TrangThaiInstance(index, f"Instance {index} đã cài xong app", saveText)
+        pass
 
-    # isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path)
-    # if(isInstalled == True):
-    #     TrangThaiInstance(index, f"Instance {index} đã cài xong app", saveText)
-    #     pass
-
-    # OpenApp(index) 
+    OpenApp(index)
 
     # time.sleep(1.5)
 
@@ -85,39 +101,44 @@ def RunLD(index, apk_path, package_name):
         # (Action.skip1_Btn, "Tap", None),
         # (Action.successReg_Btn, "KiemTraDangKyThanhCong", None),
         # (Action.successReg2_Btn, "KiemTraDangKyThanhCong", None),
-        (Action.successReg3_Btn, "KiemTraDangKyThanhCong", None),
+        # (Action.successReg3_Btn, "KiemTraDangKyThanhCong", None),
     ]
 
-    for button, action, text in buttons:
-        btn_location = TimAnhSauKhiChupVaSoSanh(button, index)
-        if btn_location:
-            if action == "Tap":
-                Tap(index, btn_location[0], btn_location[1])
-            elif action == "GoText":
-                GoText(index, text, btn_location[0], btn_location[1])
-            elif action == "SwipeMonth":
-                SwipeMonth(index, btn_location[0], btn_location[1])
-            elif action == "SwipeDay":
-                SwipeDay(index, btn_location[0], btn_location[1])
-            elif action == "SwipeYear":
-                SwipeYear(index, btn_location[0], btn_location[1])
-            elif action == "KiemTraDangKyThanhCong":
-                isSuccess = KiemTraDangKyThanhCong(index, btn_location[0], btn_location[1])
-                if(isSuccess == True):
-                    TrangThaiInstance(index, f"Instance {index} đã đăng ký thành công", saveText)
-                    ## Format Data
-                    TrangThaiInstance(index, f"Instance {index} đang lấy Cookie", saveText)
-                    CookieToken = json.loads(getAdbData(index))
-                    uid = CookieToken.get("uid")
-                    cookie = CookieToken.get("cookie")
-                    token = CookieToken.get("token")
-                    account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
-                    # uid|pass|cookie|token|email
-                    print(account)
-                    pass
-            time.sleep(1)
-        
-        
+    # for button, action, text in buttons:
+    #     btn_location = TimAnhSauKhiChupVaSoSanh(button, index)
+    #     if btn_location:
+    #         if action == "Tap":
+    #             Tap(index, btn_location[0], btn_location[1])
+    #         elif action == "GoText":
+    #             GoText(index, text, btn_location[0], btn_location[1])
+    #         elif action == "SwipeMonth":
+    #             SwipeMonth(index, btn_location[0], btn_location[1])
+    #         elif action == "SwipeDay":
+    #             SwipeDay(index, btn_location[0], btn_location[1])
+    #         elif action == "SwipeYear":
+    #             SwipeYear(index, btn_location[0], btn_location[1])
+    #         elif action == "KiemTraDangKyThanhCong":
+    #             isSuccess = KiemTraDangKyThanhCong(
+    #                 index, btn_location[0], btn_location[1]
+    #             )
+    #             if isSuccess == True:
+    #                 TrangThaiInstance(
+    #                     index, f"Instance {index} đã đăng ký thành công", saveText
+    #                 )
+    #                 ## Format Data
+    #                 TrangThaiInstance(
+    #                     index, f"Instance {index} đang lấy Cookie", saveText
+    #                 )
+    #                 CookieToken = json.loads(getAdbData(index))
+    #                 uid = CookieToken.get("uid")
+    #                 cookie = CookieToken.get("cookie")
+    #                 token = CookieToken.get("token")
+    #                 account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+    #                 # uid|pass|cookie|token|email
+    #                 print(account)
+    #                 pass
+    #         time.sleep(1)
+
 
 # if __name__ == "__main__":
 #     RunLD(5555)

@@ -1,6 +1,7 @@
 import random
 import subprocess
 
+
 def calculate_luhn_check_digit(imei):
     sum_digits = 0
     for i in range(14):
@@ -12,10 +13,12 @@ def calculate_luhn_check_digit(imei):
         sum_digits += digit
     return (10 - (sum_digits % 10)) % 10
 
+
 def generate_imei():
     imei = [random.randint(0, 9) for _ in range(14)]
     imei.append(calculate_luhn_check_digit(imei))
-    return ''.join(map(str, imei))
+    return "".join(map(str, imei))
+
 
 def ThietLapThongSoThietbi(index):
     resolutions = [
@@ -25,37 +28,34 @@ def ThietLapThongSoThietbi(index):
         (540, 960),
         (1440, 2560),  # Additional common phone resolutions
         (1080, 2400),
-        (720, 1520)
+        (720, 1520),
     ]
 
     manufacturers_and_models = {
         "samsung": [
-            "SM-S908B", "SM-S908N",
-            "SM-S901B", "SM-S901N",
-            "SM-S906B", "SM-S906N",
-            "SM-G977B", "SM-G977N",
-            "SM-G973F", "SM-G973N",
-            "SM-G975F", "SM-G975N",
-            "SM-G970F", "SM-G970N",
-            "SM-N970F", "SM-N970N",
-            "SM-N975F", "SM-N975N",
-            "SM-N960F", "SM-N960N",
-            "SM-G965F", "SM-G965N",
-            "SM-G960F", "SM-G960N",
-            "SM-A908B", "SM-A908N"
+            "SM-S9180",
+            "SM-X910N",
+            "SM-X810N",
+            "SM-X710N",
+            "SM-S906B",
+            "SM-S906N",
+            "SM-S9280",
+            "SM-S9260",
+            "SM-S9210",
+            "SM-S9160",
+            "SM-S9110",
+            "SM-N9860",
+            "SM-N9810",
         ],
-        "Xiaomi": ["M2102K1G", "M2011K2G", "M1910F4G", "M2102J20SG"],
-        "Redmi": ["M2101K7AG", "M2101K9G", "2201116PG", "M2101K6G"],
-        "Google phone": ["GB7N6", "G1F8F", "GVU6C", "GLU0G"],
-        "ROG": ["ZS676KS", "I003D", "ZS660KL"],
-        "OnePlus": ["DN2101", "LE2100", "LE2113", "LE2123"],
-        "SONY": ["XQ-AT52", "XQ-BT52", "XQ-DQ52"],
-        "AQUOS": ["SH-51B", "SH-01K", "SH-41A"],
-        "vivo": ["V2145", "V2130", "V2150", "V2135"],
-        "OPPO": ["CPH2023", "CPH2197", "CPH2357", "CPH2239", "CPH2389"],
-        "HUAWEI": ["MSC-AL09", "BAL-AL00", "OXF-AN00", "LGE-AN10", "LGE-AN00"],
-        "blackshark": ["SHARK KTUS-H0"],
-        "asus": ["ASUS_I001DA"],
+        "Xiaomi": ["23116PN5BC", "23127PN0CC", "2304FPN6DG", "2210132C", "2211133C", "2203121C", "MI 9"],
+        "Redmi": ["23133RKC6C", "2311DRK48C", "22127RK46C", "23078RKD5C", "22081212C"],
+        "Google phone": ["G576D", "GFE4J", "G82U8"],
+        "ROG": ["ASUS_AI2401_A", "ROG Phone 7 Ultimate", "ASUS_AI2205_A", "ASUS AI2201_B"],
+        "OnePlus": ["PJD110", "PHB110", "NE210", "HD1910", "HD1900", "GM1910", "GM1900"],
+        "SONY": ["XQ-BE42", "XQ-AQ05", "SO-41B", "SO-02L", "SOV44"],
+        "AQUOS": ["A208SH", "SH-M24", "SHG07"],
+        "vivo": ["V2329A", "V2307A", "V2218A", "V2217A", "V2324A", "V2309A", "V2266A", "V2229A", "V2242A", "V2241A", "V2339A", "V2338A"],
+        "OPPO": ["PJJ110", "PJH110", "PHW110", "PHM110", "PHY110", "PHZ110", "PGEM10", "PGFM10"],
     }
 
     manufacturer = random.choice(list(manufacturers_and_models.keys()))
@@ -71,19 +71,28 @@ def ThietLapThongSoThietbi(index):
         "resolution": f"{resolution[0]}x{resolution[1]}",
         "cpu_cores": cpu_cores,
         "ram": ram,
-        "imei": imei
+        "imei": imei,
     }
 
     try:
         # Command to set LDPlayer properties using ldconsole.exe modify
         modify_command = [
-            "ldconsole.exe", "modify", "--index", f"{index}",
-            "--cpu", f"{device['cpu_cores']}",
-            "--memory", f"{device['ram']}",
-            "--imei", f"{device['imei']}",
-            "--manufacturer", f"{device['manufacturer']}",
-            "--model", f"{device['model']}",
-            "--pnumber", "13812345678"  # Example phone number
+            "ldconsole.exe",
+            "modify",
+            "--index",
+            f"{index}",
+            "--cpu",
+            f"{device['cpu_cores']}",
+            "--memory",
+            f"{device['ram']}",
+            "--imei",
+            f"{device['imei']}",
+            "--manufacturer",
+            f"{device['manufacturer']}",
+            "--model",
+            f"{device['model']}",
+            "--pnumber",
+            "13812345678",  # Example phone number
         ]
         subprocess.run(modify_command, check=True)
         # print(f"{index} Modify command:", " ".join(modify_command))
