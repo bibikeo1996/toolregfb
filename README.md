@@ -88,8 +88,11 @@ Mở LDMultiPlayer => chọn setting => check Model tab
 ```
 # Các lệnh ldconsole.exe
 ```sh
-{ld_path_console} adb --index {index} --command "shell input keyevent {keycode}
-{ld_path_console} adb --index {index} --command "shell pm grant {com.facebook.lite} {android.permission.READ_CONTACTS}
+{ld_path_console} adb --index {index} --command "shell input keyevent {keycode}"
+{ld_path_console} adb --index {index} --command "shell pm grant {com.facebook.lite} {android.permission.READ_CONTACTS}"
+{ld_path_console} adb --index {index} --command root
+{ld_path_console} adb --index {index} --command shell
+{ld_path_console} adb --index {index} --command su
 {ld_path_console} launch --index {index}
 etc
 ```
