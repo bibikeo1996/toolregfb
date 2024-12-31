@@ -188,7 +188,9 @@ def RunLD(index, apk_path, package_name, ld_path_console):
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
     if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])                                        
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)                                              
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
     if(pos != None):
