@@ -86,6 +86,14 @@ Nếu không hiển thị như trên thì hãy kiểm tra Thông số kỹ thu�
 ```sh
 Mở LDMultiPlayer => chọn setting => check Model tab
 ```
+# Các lệnh ldconsole.exe
+```sh
+{ld_path_console} adb --index {index} --command "shell input keyevent {keycode}
+{ld_path_console} adb --index {index} --command "shell pm grant {com.facebook.lite} {android.permission.READ_CONTACTS}
+{ld_path_console} launch --index {index}
+etc
+```
+
 # Các lệnh Adb
 ```sh
 adb connect 127.0.0.1:{port LD cần check}
@@ -125,3 +133,5 @@ netstat -aon | findstr LISTENING
 - pip install tabulate
 - pip install selenium
 - pip install webdriver-manager
+- pip install pandas
+- pip install openpyxl

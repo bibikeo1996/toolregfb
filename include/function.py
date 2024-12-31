@@ -8,6 +8,7 @@ import random
 import string
 import requests
 import threading
+import pandas as pd
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
@@ -98,6 +99,15 @@ def KetNoiPortThietBiTheoPort(adb_port):
     else:
         print(f"Kết nối thất bại: {result.stdout}")
         return False
+
+def DocFileExcel(file_path):
+    df = pd.read_excel(file_path)
+    # print(df)
+    emails = df['email'].tolist()
+    passwords = df['password'].tolist()
+    first_names = df['name'].tolist()
+    last_names = df['first name'].tolist()
+    return emails, passwords, first_names, last_names
 
 def CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name):
     permissions = [

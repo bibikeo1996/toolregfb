@@ -19,7 +19,7 @@ from io import BytesIO
 
 
 ## import function
-from include.function import Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
+from include.function import DocFileExcel, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
 from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
@@ -27,8 +27,13 @@ from include.getCookieToken import getAdbData
 
 # from include.OpenApp import openBrave
 # from include.OpenApp import getMailCode
+# file_path = 'D:\\Workspace\\toolregfb\\data.xlsx'
+# emails, passwords, first_names, last_names = DocFileExcel(file_path)
 
-saveText = {}
+# for i in range(len(emails)):
+#     # RunLD(i, 'apk_path', 'package_name', 'ld_path_console', emails[i], passwords[i], first_names[i], last_names[i])
+#     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
+
 def RunLD(index, apk_path, package_name, ld_path_console):
     emailText = 'dyland.wolfram@moonapps.org'
     passText = '9dVhsUax@'
@@ -45,170 +50,173 @@ def RunLD(index, apk_path, package_name, ld_path_console):
     # verifycode = getMailCode(cookie_mi, cookie_phpsessid)
     # print("Mã xác nhận:" ,verifycode)
 
-    isSetup = ThietLapThongSoThietbi(index, ld_path_console)
-    if(isSetup == True):
-        pass
 
-    isStarted = KhoiDongLDPlayer(index, ld_path_console)
-    if(isStarted == True):
-        pass
+    # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
 
-    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
-    if(isInstalled == True):
-        pass
+    # isSetup = ThietLapThongSoThietbi(index, ld_path_console)
+    # if(isSetup == True):
+    #     pass
+
+    # isStarted = KhoiDongLDPlayer(index, ld_path_console)
+    # if(isStarted == True):
+    #     pass
+
+    # isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
+    # if(isInstalled == True):
+    #     pass
+
+    # # DemThoiGian(1)
+
+    # CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
     # DemThoiGian(1)
 
-    CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+    # OpenApp(index)
 
-    DemThoiGian(1)
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    OpenApp(index)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1]) 
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1]) 
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(1)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
-    if(pos != None):
-        GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])              
 
-    DemThoiGian(1)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
-    if(pos != None):
-        GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])              
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
+    #     pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    #     if(pos != None):
+    #         Tap(index, ld_path_console, pos[0], pos[1])
+    #     else:
+    #         pass
+    # else:
+    #     pass
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
-        pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
-        if(pos != None):
-            Tap(index, ld_path_console, pos[0], pos[1])
-        else:
-            pass
-    else:
-        pass
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     ChonNgayThangNamSinh(index, ld_path_console)
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
-    if(pos != None):
-        ChonNgayThangNamSinh(index, ld_path_console)
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.signupWithEmail_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.signupWithEmail_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.clickWhatYourEmail_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])   
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.clickWhatYourEmail_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])   
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.emailfield_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     GoText(index, ld_path_console, emailText, pos[0], pos[1])
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.emailfield_Btn, index, ld_path_console)
-    if(pos != None):
-        GoText(index, ld_path_console, emailText, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.clickcreatepassword_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.clickcreatepassword_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     GoText(index, ld_path_console, passText, pos[0], pos[1])        
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console)
-    if(pos != None):
-        GoText(index, ld_path_console, passText, pos[0], pos[1])        
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     GoText(index, ld_path_console, verifycode, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
-    if(pos != None):
-        GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])  
 
-    DemThoiGian(2)
+    # DemThoiGian(2)
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])  
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    # DemThoiGian(2)                                              
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])
-
-    DemThoiGian(2)                                              
-
-    pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
-    if(pos != None):
-        isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
-        if(isSuccess == True):
-            CookieToken = json.loads(getAdbData(index, ld_path_console))
-            uid = CookieToken.get("uid")
-            cookie = CookieToken.get("cookie")
-            token = CookieToken.get("token")
-            account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
-            print(account)
-            print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
-            DemThoiGian(3)
-            RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
+    #     if(isSuccess == True):
+    #         CookieToken = json.loads(getAdbData(index, ld_path_console))
+    #         uid = CookieToken.get("uid")
+    #         cookie = CookieToken.get("cookie")
+    #         token = CookieToken.get("token")
+    #         account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+    #         print(account)
+    #         print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
+    #         DemThoiGian(3)
+    #         RebootVaXoaCache(index, ld_path_console, ld_path_instance)
 
         
 
