@@ -20,7 +20,7 @@ from io import BytesIO
 
 ## import function
 from include.function import Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, TrangThaiInstance
+from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
@@ -32,8 +32,9 @@ saveText = {}
 def RunLD(index, apk_path, package_name, ld_path_console):
     emailText = 'dyland.wolfram@moonapps.org'
     passText = '9dVhsUax@'
-    fieldFirstName = 'Hwee'
-    fieldLastName = 'Oh'
+    fieldFirstName = 'John'
+    fieldLastName = 'Tran'
+    verifycode = '123456'
     # data = openBrave()
     # emailText = data.get("emailText")
     # passText = data.get("passText")
@@ -46,89 +47,163 @@ def RunLD(index, apk_path, package_name, ld_path_console):
 
     isSetup = ThietLapThongSoThietbi(index, ld_path_console)
     if(isSetup == True):
-        TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
         pass
-    time.sleep(1)
 
-
-    isStarted = KhoiDongLDPlayer(index)
+    isStarted = KhoiDongLDPlayer(index, ld_path_console)
     if(isStarted == True):
-        TrangThaiInstance(index, f"Instance {index} đã khởi động xong", saveText)
         pass
 
-    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path)
+    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
     if(isInstalled == True):
-        TrangThaiInstance(index, f"Instance {index} đã cài xong app", saveText)
         pass
 
-    OpenApp(index) 
+    DemThoiGian(1)
 
-    # time.sleep(1)
+    OpenApp(index)
 
-    buttons = [
-        (Action.createbutton_Btn, "Tap", None),
-        (Action.getstarted_Btn, "Tap", None),
-        # (Action.defaultClick_btn, "Tap", None),
-        (Action.firstname3_Btn, "GoText", fieldFirstName),
-        (Action.lastname_Btn, "GoText", fieldLastName),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.selectyourname_Btn, "Tap", None, True),  # Thỉnh thoảng hiện
-        (Action.nextt_Btn, "Tap", None),
-        (Action.setDate_Btn, "ChonNgayThangNamSinh", None),
-        (Action.sett_Btn, "Tap", None),
-        (Action.nextt_Btn, "Tap", None),
-        (random.choice([Action.female_Btn, Action.male_Btn]), "Tap", None),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.deny_Btn, "Tap", None, True),  # Thỉnh thoảng hiện
-        (Action.signupWithEmail_Btn, "Tap", None),
-        (Action.clickWhatYourEmail_Btn, "Tap", None),
-        (Action.emailfield_Btn, "GoText", emailText),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.clickcreatepassword_Btn, "Tap", None),
-        (Action.passwordField_Btn, "GoText", passText),
-        (Action.nextt_Btn, "Tap", None),
-        (Action.notnow_Btn, "Tap", None),
-        (Action.agree_Btn, "Tap", None),
-        (Action.deny_Btn, "Tap", None),
-        (Action.verifycodefield_Btn, "GoText", "verifycode"),
-        (Action.ok_Btn, "Tap", None),
-        (Action.skip_Btn, "Tap", None),
-        (Action.skip_Btn, "Tap", None),
-        (Action.skip1_Btn, "Tap", None),
-        # (Action.successReg_Btn, "KiemTraDangKyThanhCong", None),
-        # (Action.successReg2_Btn, "KiemTraDangKyThanhCong", None),
-        (Action.successReg3_Btn, "KiemTraDangKyThanhCong", None),
-    ]
+    pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
 
-    for button, action, text, *optional in buttons:
-        thinhthoang = optional[0] if optional else False  # Kiểm tra xem có phải "thỉnh thoảng hiện" không
-        btn_location = TimAnhSauKhiChupVaSoSanh(button, index)
+    DemThoiGian(2)
 
-        if btn_location:
-            if action == "Tap":
-                Tap(index, btn_location[0], btn_location[1])
-            elif action == "GoText":
-                GoText(index, text, btn_location[0], btn_location[1])
-            elif action == "ChonNgayThangNamSinh":
-                ChonNgayThangNamSinh(index, ld_path_console)
-            elif action == "KiemTraDangKyThanhCong":
-                isSuccess = KiemTraDangKyThanhCong(index, btn_location[0], btn_location[1])
-                if isSuccess:
-                    TrangThaiInstance(index, f"Instance {index} đã đăng ký thành công", saveText)
-                    TrangThaiInstance(index, f"Instance {index} đang lấy Cookie", saveText)
-                    CookieToken = json.loads(getAdbData(index, ld_path_console))
-                    uid = CookieToken.get("uid")
-                    cookie = CookieToken.get("cookie")
-                    token = CookieToken.get("token")
-                    account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
-                    print(account)
-            time.sleep(1)
-        elif thinhthoang:
-            # Nếu button "thỉnh thoảng hiện" không tồn tại, bỏ qua
-            print(f"Button {button} không tồn tại, bỏ qua.")
-            continue
+    pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1]) 
 
-        
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
+    if(pos != None):
+        GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
+
+    DemThoiGian(1)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
+    if(pos != None):
+        GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])              
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+        pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+        if(pos != None):
+            Tap(index, ld_path_console, pos[0], pos[1])
+        else:
+            pass
+    else:
+        pass
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+    if(pos != None):
+        ChonNgayThangNamSinh(index, ld_path_console)
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.signupWithEmail_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.clickWhatYourEmail_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])   
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.emailfield_Btn, index, ld_path_console)
+    if(pos != None):
+        GoText(index, ld_path_console, emailText, pos[0], pos[1])
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.clickcreatepassword_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)    
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console)
+    if(pos != None):
+        GoText(index, ld_path_console, passText, pos[0], pos[1])        
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
+    if(pos != None):
+        GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])  
+
+    DemThoiGian(2)
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])                                        
+
+    pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
+    if(pos != None):
+        isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
+        if(isSuccess == True):
+            CookieToken = json.loads(getAdbData(index, ld_path_console))
+            uid = CookieToken.get("uid")
+            cookie = CookieToken.get("cookie")
+            token = CookieToken.get("token")
+            account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+            print(account)
+            print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
+            DemThoiGian(3)
+            RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+
         
 
 # if __name__ == "__main__":

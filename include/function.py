@@ -43,12 +43,12 @@ def UnInstallAppFile(ld_type, index, package_name):
         print("LD_PATH_CONSOLE environment variable is not set.")
 
 ## So sánh ảnh màn hình với ảnh action để click
-def ChupAnhTrenManhinh(index):
+def ChupAnhTrenManhinh(index, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
-    command_screencap = f'ldconsole.exe adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
+    command_screencap = f'{ld_path_console} adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
     subprocess.run(command_screencap, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     local_screenshot_path = f"./screenshot{index}.png"
-    command_pull = f'ldconsole.exe adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
+    command_pull = f'{ld_path_console} adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
     subprocess.run(command_pull, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if not os.path.exists(local_screenshot_path):
         raise FileNotFoundError(f"File {local_screenshot_path} không tồn tại. Quá trình pull ảnh có thể đã gặp lỗi.")
@@ -58,14 +58,14 @@ def ChupAnhTrenManhinh(index):
 
     return screenshot, local_screenshot_path
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, confidence=0.8, max_attempts=2, delay=1):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=1):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
 
     attempts = 0
     while attempts < max_attempts:
-        screenshot, local_screenshot_path = ChupAnhTrenManhinh(index)
+        screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, ld_path_console)
         try:
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
@@ -100,74 +100,98 @@ def KetNoiPortThietBiTheoPort(adb_port):
         return False
 
 # Xử lý hành động của user 
-# Hàm gửi sự kiện keyevent
-def CommandGoText(index, keycode, delay):
-    command = f'ldconsole.exe adb --index {index} --command "shell input keyevent {keycode}"'
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    if result.returncode != 0:
-        print(f"Lỗi khi gửi sự kiện {keycode}: {result.stderr}")
-    else:
-        print(f"Đã gửi sự kiện {keycode} thành công.")
-    time.sleep(delay)  # Độ trễ sau mỗi lệnh
+# def processButton(button, action, text, index, ld_path_console, saveText, emailText, passText):
+#     thinhthoang = False
+#     if len(button) == 4:
+#         thinhthoang = button[3]
+#     btn_location = TimAnhSauKhiChupVaSoSanh(button[0], index)
 
-# Hàm GoText
-def GoText(index, text, x=None, y=None):
-    # Nếu có tọa độ, thực hiện tap vào vị trí đó
+#     if btn_location:
+#         if action == "Tap":
+#             Tap(index, btn_location[0], btn_location[1])
+#         elif action == "GoText":
+#             GoText(index, text, btn_location[0], btn_location[1])
+#         elif action == "ChonNgayThangNamSinh":
+#             ChonNgayThangNamSinh(index, ld_path_console)
+#         elif action == "KiemTraDangKyThanhCong":
+#             isSuccess = KiemTraDangKyThanhCong(index, btn_location[0], btn_location[1])
+#             if isSuccess:
+#                 TrangThaiInstance(index, f"Instance {index} đã đăng ký thành công", saveText)
+#                 TrangThaiInstance(index, f"Instance {index} đang lấy Cookie", saveText)
+#                 CookieToken = json.loads(getAdbData(index, ld_path_console))
+#                 uid = CookieToken.get("uid")
+#                 cookie = CookieToken.get("cookie")
+#                 token = CookieToken.get("token")
+#                 account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+#                 print(account)
+#         time.sleep(1)
+#     elif thinhthoang:
+#         # Nếu button "thỉnh thoảng hiện" không tồn tại, bỏ qua
+#         print(f"Button {button[0]} không tồn tại, bỏ qua.")
+
+# def CommandGoText(index, ld_path_console, keycode):
+#     command = f'{ld_path_console} adb --index {str(index)} --command "shell input keyevent {keycode}"'
+#     print(f"{index} Modify command:", " ".join(command))
+#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
+#     if result.returncode != 0:
+#         print(f"Lỗi khi gửi sự kiện {keycode}: {result.stderr}")
+#     else:
+#         print(f"Đã gửi sự kiện {keycode} thành công.")
+#     time.sleep(0.5)  # Độ trễ sau mỗi lệnh
+
+# def GoText(index, text, x, y, ld_path_console):
+#     # Nếu có tọa độ, thực hiện tap vào vị trí đó
+#     if x is not None and y is not None:
+#         Tap(index, x, y)
+
+#     if isinstance(text, int):
+#         # Nếu text là một mã key event
+#         command = f'{ld_path_console} adb --index {index} --command "shell input keyevent {text}"'
+#         # print(f"Command: {command}")
+#         # print(f"{index} Modify command:", " ".join(command))
+#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
+#         if result.returncode != 0:
+#             print(f"Lỗi khi gửi sự kiện: {result.stderr}")
+#     else:
+#         # Nếu text là một đoạn văn bản, gửi từng ký tự dưới dạng key event
+#         for char in text:
+#             keycode = getattr(KeyCode, f"KEYCODE_{char.upper()}", None)
+#             if keycode is not None:
+#                 CommandGoText(index, ld_path_console, keycode)
+#             else:
+#                 print(f"Không tìm thấy mã key event cho ký tự: {char}")
+
+#     print("Tất cả các sự kiện đã được gửi.")
+
+def GoText(index, ld_path_console, text, x, y):
     if x is not None and y is not None:
-        Tap(index, x, y)
-
+        # Tap vào vị trí trước khi nhập văn bản
+        Tap(index, ld_path_console, x, y)
+        
     if isinstance(text, int):
-        # Nếu text là một mã key event
-        command = f'ldconsole.exe adb --index {index} --command "shell input keyevent {text}"'
+        # Nếu text là một mã key event (sử dụng ldconsole)
+        command = f'{ld_path_console} adb --index {index} --command "shell input keyevent {text}"'
         print(f"Command: {command}")
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        if result.returncode == 0:
-            print(f"Đã gửi sự kiện: {text} trên index {index}")
-        else:
+        if result.returncode != 0:
             print(f"Lỗi khi gửi sự kiện: {result.stderr}")
     else:
-        # Nếu text là một đoạn văn bản, gửi từng ký tự dưới dạng key event
-        for char in text:
-            keycode = getattr(KeyCode, f"KEYCODE_{char.upper()}", None)
-            if keycode is not None:
-                CommandGoText(index, keycode, delay=0.0000001)
-            else:
-                print(f"Không tìm thấy mã key event cho ký tự: {char}")
-
-    print("Tất cả các sự kiện đã được gửi.")
-
-def Tap(index, x, y, max_attempts=2, delay=1):
-    """
-    Thực hiện lệnh tap qua ldconsole.exe với index, thử tối đa max_attempts lần.
-    
-    :param index: Index của LDPlayer
-    :param x: Tọa độ X
-    :param y: Tọa độ Y
-    :param max_attempts: Số lần thử tối đa (mặc định 5)
-    :param delay: Thời gian chờ giữa các lần thử (mặc định 1 giây)
-    :return: True nếu tap thành công, False nếu không thành công sau max_attempts lần
-    """
-    cmdCommand = f"shell input tap {x} {y}"
-    command = f'ldconsole.exe adb --index {index} --command "{cmdCommand}"'
-
-    for attempt in range(1, max_attempts + 1):
+        # Nếu text là một đoạn văn bản, gửi toàn bộ văn bản dưới dạng input text
+        command = f'{ld_path_console} adb --index {index} --command "shell input text \\"{text}\\""'
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-
-        if result.returncode == 0:
-            sys.stdout.write(f"\rĐã tap tại vị trí: ({x}, {y}) trên LDPlayer index {index} (Lần thử {attempt})\n")
-            sys.stdout.flush()
-            return True  # Thành công
+        if result.returncode != 0:
+            print(f"Lỗi khi gửi văn bản: {result.stderr}")
         else:
-            sys.stdout.write(f"\rThử tap tại vị trí ({x}, {y}), lần {attempt}/{max_attempts}... ")
-            sys.stdout.flush()
-            time.sleep(delay)
+            # Thêm độ trễ sau khi gửi lệnh
+            time.sleep(0.005)  # Độ trễ 50ms
 
-    sys.stdout.write(f"\nKhông thể thực hiện tap tại vị trí: ({x}, {y}) trên LDPlayer index {index} sau {max_attempts} lần thử.\n")
-    sys.stdout.flush()
-    return False  # Thất bại
-
-        
-def KiemTraDangKyThanhCong(index, x=None, y=None):
+def Tap(index, ld_path_console, x, y):
+    print(f"Tap at {x}, {y}")
+    command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return True
+     
+def KiemTraDangKyThanhCong(index, x, y):
     if x is not None and y is not None:
         return True
     else:

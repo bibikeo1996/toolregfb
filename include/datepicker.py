@@ -32,7 +32,7 @@ def XuatToaDo(file_path, resource_id):
 
     return coordinates_list
 
-def VuotChon(index, x, y, direction="up", duration=20, times=1):
+def VuotChon(index, ld_path_console, x, y, direction="up", duration=20, times=1):
     for _ in range(times):
         if direction == "up":
             x_end, y_end = x, y - random.randint(100, 200)
@@ -42,7 +42,7 @@ def VuotChon(index, x, y, direction="up", duration=20, times=1):
             raise ValueError("Direction must be 'up' or 'down'")
 
         command = (
-            f'ldconsole.exe adb --index {index} --command "shell input swipe {x} {y} {x_end} {y_end} {duration}"'
+            f'{ld_path_console} adb --index {index} --command "shell input swipe {x} {y} {x_end} {y_end} {duration}"'
         )
         print(f"Executing command: {command}")
         os.system(command)
@@ -78,7 +78,7 @@ def ChonNgayThangNamSinh(index, ld_path_console):
             delay = random.uniform(min_delay, max_delay)
 
             # print(f"Swiping {name}: direction={direction}, times={times}, delay={delay:.2f}s")
-            VuotChon(index, x, y, direction=direction, times=times)
+            VuotChon(index, ld_path_console, x, y, direction=direction, times=times)
             time.sleep(delay)
 
 def DumpMap(ld_path_console, dump_file_path="./include/map/datePickerLocation.xml"):
@@ -93,17 +93,17 @@ def DumpMap(ld_path_console, dump_file_path="./include/map/datePickerLocation.xm
             "window_dump.xml",
         ]
         
-        print("Đang dump UI từ thiết bị...")
+        # print("Đang dump UI từ thiết bị...")
         result = subprocess.run(dump_command, capture_output=True, text=True)
         if result.returncode != 0:
             print(f"Error while dumping UI: {result.stderr}")
             return False
-        pull_command = f"ldconsole.exe adb --index 0 --command \"pull /sdcard/window_dump.xml ./include/map/datePickerLocation.xml\""
+        pull_command = f"{ld_path_console} adb --index 0 --command \"pull /sdcard/window_dump.xml ./include/map/datePickerLocation.xml\""
         pull_result = subprocess.run(pull_command, capture_output=True, text=True)
         if pull_result.returncode != 0:
             print(f"Error while pulling XML file: {pull_result.stderr}")
             return False
-        print(f"File XML đã được dump và kéo về thành công: {dump_file_path}")
+        # print(f"File XML đã được dump và kéo về thành công: {dump_file_path}")
         return True
         
     except Exception as e:
@@ -112,4 +112,4 @@ def DumpMap(ld_path_console, dump_file_path="./include/map/datePickerLocation.xm
 
 
 # if __name__ == "__main__":
-#     ChonNgayThangNamSinh(0)
+#     DumpMap(0)

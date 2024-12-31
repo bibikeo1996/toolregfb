@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 ld_path_console = os.getenv('LD_PATH_CONSOLE')
 ld_path_exe = os.getenv('LD_PATH_EXE')
+ld_path_instance = os.getenv('LD_PATH_INSTANCE')
 adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH')
 package_name = os.getenv('PACKAGE_NAME')
@@ -25,7 +26,7 @@ if __name__ == "__main__":
                 RunLD(i, apk_path, package_name, ld_path_console)
 
             threads = []
-            i = 0
+            i = 1
             for i in range(1):
                 t = threading.Thread(target=task, args=(i, apk_path, package_name, ld_path_console))
                 threads.append(t)
