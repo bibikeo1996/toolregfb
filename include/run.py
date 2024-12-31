@@ -25,12 +25,24 @@ from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
 
+# from include.OpenApp import openBrave
+# from include.OpenApp import getMailCode
+
 saveText = {}
 def RunLD(index, apk_path, package_name, ld_path_console):
     emailText = 'dyland.wolfram@moonapps.org'
     passText = '9dVhsUax@'
     fieldFirstName = 'Hwee'
     fieldLastName = 'Oh'
+    # data = openBrave()
+    # emailText = data.get("emailText")
+    # passText = data.get("passText")
+    # fieldFirstName = data.get("fieldFirstName")
+    # fieldLastName = data.get("fieldLastName")
+    # cookie_mi = data.get("MI")
+    # cookie_phpsessid = data.get("PHPSESSID")
+    # verifycode = getMailCode(cookie_mi, cookie_phpsessid)
+    # print("Mã xác nhận:" ,verifycode)
 
     isSetup = ThietLapThongSoThietbi(index, ld_path_console)
     if(isSetup == True):

@@ -123,3 +123,5 @@ netstat -aon | findstr LISTENING
 - pip install mss
 - pip install psutil
 - pip install tabulate
+- pip install selenium
+- pip install webdriver-manager
