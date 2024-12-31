@@ -19,7 +19,7 @@ from io import BytesIO
 
 
 ## import function
-from include.function import Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong
+from include.function import Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
 from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
@@ -56,6 +56,10 @@ def RunLD(index, apk_path, package_name, ld_path_console):
     isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
     if(isInstalled == True):
         pass
+
+    # DemThoiGian(1)
+
+    CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
     DemThoiGian(1)
 

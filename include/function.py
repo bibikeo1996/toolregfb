@@ -99,6 +99,29 @@ def KetNoiPortThietBiTheoPort(adb_port):
         print(f"Kết nối thất bại: {result.stdout}")
         return False
 
+def CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name):
+    permissions = [
+        "android.permission.MANAGE_EXTERNAL_STORAGE",
+        "android.permission.READ_CONTACTS",
+        "android.permission.READ_CALENDAR",
+        "android.permission.READ_PHONE_STATE",
+        "android.permission.READ_CALL_LOG",
+        "android.permission.CAMERA",
+        # "android.permission.WRITE_CALL_LOG",
+        # "android.permission.ACCESS_FINE_LOCATION",
+        # "android.permission.ACCESS_COARSE_LOCATION",
+        # "android.permission.RECORD_AUDIO",
+        # "android.permission.READ_EXTERNAL_STORAGE",
+        # "android.permission.WRITE_EXTERNAL_STORAGE"
+    ]
+    
+    for permission in permissions:
+        command = f'{ld_path_console} adb --index {index} --command "shell pm grant {package_name} {permission}"'
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        print(f"Đang cấp quyền {permission}: {result.stderr}")
+        if result.returncode != 0:
+            print(f"Failed to grant {permission}: {result.stderr}")
+
 # Xử lý hành động của user 
 # def processButton(button, action, text, index, ld_path_console, saveText, emailText, passText):
 #     thinhthoang = False
