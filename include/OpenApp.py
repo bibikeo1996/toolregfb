@@ -102,7 +102,8 @@ def DemThoiGian(seconds):
         sys.stdout.write(f"\rThời gian đợi: {remaining} giây")
         sys.stdout.flush()
         time.sleep(1)
-    sys.stdout.write("")
+    sys.stdout.write("\n")
+    sys.stdout.flush()
 
 # TrangThaiInstance(index, f"Instance {index} đã setup xong", saveText)
 # def TrangThaiInstance(index, text, saveText={}):
