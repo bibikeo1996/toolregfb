@@ -207,19 +207,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     DemThoiGian(2)
     
+
+    ## từ khúc button agree tốn khá nhiều giây khoản > 20s
+
     pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    DemThoiGian(20)
     
-    ## cần tạo function để check verify code sau đó mới chạy tiếp 
+    ## cần tạo function để check verify code sau đó mới chạy tiếp chỗ này bắt buộc phải có verify code mới được xử lý code bên dưới 
 
     # pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
     # if(pos != None):
     #     GoText(index, ld_path_console, verifycode, pos[0], pos[1])
 
-    DemThoiGian(20)
+    DemThoiGian(5)
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
     if(pos != None):
