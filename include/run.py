@@ -36,10 +36,10 @@ from include.quitInstance import RebootVaXoaCache
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    emailText = 'dyland.wolfram@moonapps.org'
+    emailText = 'nelay69535@matmayer.com'
     passText = '9dVhsUax@'
-    fieldFirstName = 'John'
-    fieldLastName = 'Tran'
+    fieldFirstName = 'Henry'
+    fieldLastName = 'DauBui'
     verifycode = '123456'
     # data = openBrave()
     # emailText = data.get("emailText")
@@ -70,9 +70,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
-    DemThoiGian(1)
+    DemThoiGian(2)
 
     OpenApp(index)
+    
+    DemThoiGian(2)
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
     if(pos != None):
@@ -127,6 +129,12 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     DemThoiGian(2)
     
+    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)
+    
     pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])
@@ -145,13 +153,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.clickWhatYourEmail_Btn, index, ld_path_console)
-    if(pos != None):
-        Tap(index, ld_path_console, pos[0], pos[1])   
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.clickWhatYourEmail_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     Tap(index, ld_path_console, pos[0], pos[1])   
 
-    DemThoiGian(2)    
+    # DemThoiGian(2)    
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.emailfield_Btn, index, ld_path_console)
+    pos = TimAnhSauKhiChupVaSoSanh(Action.emailfieldv2_Btn, index, ld_path_console)
     if(pos != None):
         GoText(index, ld_path_console, emailText, pos[0], pos[1])
 
@@ -204,12 +212,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         Tap(index, ld_path_console, pos[0], pos[1])
 
     DemThoiGian(2)
+    
+    ## cần tạo function để check verify code sau đó mới chạy tiếp 
 
-    pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
-    if(pos != None):
-        GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+    # pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
+    # if(pos != None):
+    #     GoText(index, ld_path_console, verifycode, pos[0], pos[1])
 
-    DemThoiGian(2)
+    DemThoiGian(20)
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
     if(pos != None):
@@ -221,19 +231,19 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)
+    DemThoiGian(5)
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])  
 
-    DemThoiGian(2)
+    DemThoiGian(5)
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])
 
-    DemThoiGian(2)                                              
+    DemThoiGian(5)                                              
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
     if(pos != None):
@@ -247,7 +257,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             print(account)
             print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
             DemThoiGian(3)
-            # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+            RebootVaXoaCache(index, ld_path_console, ld_path_instance)
 
 
 if __name__ == "__main__":
