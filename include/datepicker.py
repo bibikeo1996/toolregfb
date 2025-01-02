@@ -18,21 +18,6 @@ def XacDinhToaDo(node):
             return center_x, center_y
     return None, None
 
-# def XuatToaDo(file_path, resource_id):
-#     """Extract coordinates for all nodes with the specified resource-id."""
-#     tree = ET.parse(file_path)
-#     root = tree.getroot()
-
-#     coordinates_list = []
-
-#     for node in root.iter("node"):
-#         if "resource-id" in node.attrib and node.attrib["resource-id"] == resource_id:
-#             coordinates = XacDinhToaDo(node)
-#             if coordinates != (None, None):
-#                 coordinates_list.append(coordinates)
-
-#     return coordinates_list
-
 def XuatToaDo(file_path, resource_id):
     """Extract coordinates for all nodes with the specified resource-id."""
     try:
@@ -73,7 +58,7 @@ def VuotChon(index, ld_path_console, x, y, direction="up", duration=20, times=1)
             raise ValueError("Direction must be 'up' or 'down'")
 
         command = f'{ld_path_console} adb --index {index} --command "shell input swipe {x} {y} {x_end} {y_end} {duration}"'
-        print(f"Executing command: {command}")
+        # print(f"Executing command: {command}")
         os.system(command)
 
 def ChonNgayThangNamSinh(index, ld_path_console):
@@ -104,8 +89,8 @@ def ChonNgayThangNamSinh(index, ld_path_console):
         },
         "col 3": {
             "direction": "up",
-            "min_swipes": 10,
-            "max_swipes": 15,
+            "min_swipes": 15,
+            "max_swipes": 20,
             "min_delay": 1,
             "max_delay": 1,
         },
@@ -130,7 +115,7 @@ def ChonNgayThangNamSinh(index, ld_path_console):
 
 def DumpMap(ld_path_console, dump_file_path="include/map/datePickerLocation.xml"):
     try:
-        print(f"Creating directories for {dump_file_path}")
+        # print(f"Creating directories for {dump_file_path}")
         os.makedirs(os.path.dirname(dump_file_path), exist_ok=True)
         dump_command = f'{ld_path_console} adb --index 0 --command "shell uiautomator dump"'
         # print(dump_command)
@@ -145,13 +130,29 @@ def DumpMap(ld_path_console, dump_file_path="include/map/datePickerLocation.xml"
             print(f"Error while pulling XML file: {pull_result.stderr}")
             return False
 
-        print(f"File XML has been successfully dumped and pulled to: {dump_file_path}")
+        # print(f"File XML has been successfully dumped and pulled to: {dump_file_path}")
         return True
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
 
+
+
+# def XuatToaDo(file_path, resource_id):
+#     """Extract coordinates for all nodes with the specified resource-id."""
+#     tree = ET.parse(file_path)
+#     root = tree.getroot()
+
+#     coordinates_list = []
+
+#     for node in root.iter("node"):
+#         if "resource-id" in node.attrib and node.attrib["resource-id"] == resource_id:
+#             coordinates = XacDinhToaDo(node)
+#             if coordinates != (None, None):
+#                 coordinates_list.append(coordinates)
+
+#     return coordinates_list
 
 # if __name__ == "__main__":
 #     DumpMap(0)

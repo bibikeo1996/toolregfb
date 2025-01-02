@@ -133,6 +133,41 @@ def CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name):
             print(f"Failed to grant {permission}: {result.stderr}")
 
 # Xử lý hành động của user 
+def GoText(index, ld_path_console, text, x, y):
+    if x is not None and y is not None:
+        # Tap vào vị trí trước khi nhập văn bản
+        Tap(index, ld_path_console, x, y)
+        
+    if isinstance(text, int):
+        # Nếu text là một mã key event (sử dụng ldconsole)
+        command = f'{ld_path_console} adb --index {index} --command "shell input keyevent {text}"'
+        print(f"Command: {command}")
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Lỗi khi gửi sự kiện: {result.stderr}")
+    else:
+        # Nếu text là một đoạn văn bản, gửi toàn bộ văn bản dưới dạng input text
+        command = f'{ld_path_console} adb --index {index} --command "shell input text \\"{text}\\""'
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"Lỗi khi gửi văn bản: {result.stderr}")
+        else:
+            # Thêm độ trễ sau khi gửi lệnh
+            time.sleep(0.005)  # Độ trễ 50ms
+
+def Tap(index, ld_path_console, x, y):
+    # print(f"Tap at {x}, {y}")
+    command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return True
+     
+def KiemTraDangKyThanhCong(index, x, y):
+    if x is not None and y is not None:
+        return True
+    else:
+        print("Đăng ký không thành công!")
+        return False
+
 # def processButton(button, action, text, index, ld_path_console, saveText, emailText, passText):
 #     thinhthoang = False
 #     if len(button) == 4:
@@ -195,39 +230,4 @@ def CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name):
 #                 print(f"Không tìm thấy mã key event cho ký tự: {char}")
 
 #     print("Tất cả các sự kiện đã được gửi.")
-
-def GoText(index, ld_path_console, text, x, y):
-    if x is not None and y is not None:
-        # Tap vào vị trí trước khi nhập văn bản
-        Tap(index, ld_path_console, x, y)
-        
-    if isinstance(text, int):
-        # Nếu text là một mã key event (sử dụng ldconsole)
-        command = f'{ld_path_console} adb --index {index} --command "shell input keyevent {text}"'
-        print(f"Command: {command}")
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"Lỗi khi gửi sự kiện: {result.stderr}")
-    else:
-        # Nếu text là một đoạn văn bản, gửi toàn bộ văn bản dưới dạng input text
-        command = f'{ld_path_console} adb --index {index} --command "shell input text \\"{text}\\""'
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        if result.returncode != 0:
-            print(f"Lỗi khi gửi văn bản: {result.stderr}")
-        else:
-            # Thêm độ trễ sau khi gửi lệnh
-            time.sleep(0.005)  # Độ trễ 50ms
-
-def Tap(index, ld_path_console, x, y):
-    print(f"Tap at {x}, {y}")
-    command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    return True
-     
-def KiemTraDangKyThanhCong(index, x, y):
-    if x is not None and y is not None:
-        return True
-    else:
-        print("Đăng ký không thành công!")
-        return False
         
