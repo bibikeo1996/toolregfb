@@ -24,6 +24,7 @@ from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, D
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
+from include.quitInstance import RebootVaXoaCache
 
 # from include.OpenApp import openBrave
 # from include.OpenApp import getMailCode
@@ -34,7 +35,7 @@ from include.getCookieToken import getAdbData
 #     # RunLD(i, 'apk_path', 'package_name', 'ld_path_console', emails[i], passwords[i], first_names[i], last_names[i])
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
-def RunLD(index, apk_path, package_name, ld_path_console):
+def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     emailText = 'dyland.wolfram@moonapps.org'
     passText = '9dVhsUax@'
     fieldFirstName = 'John'
@@ -120,7 +121,13 @@ def RunLD(index, apk_path, package_name, ld_path_console):
 
     DemThoiGian(2)
     
-    pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+    pos = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])
+
+    DemThoiGian(2)
+    
+    pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])
 
@@ -155,6 +162,18 @@ def RunLD(index, apk_path, package_name, ld_path_console):
         Tap(index, ld_path_console, pos[0], pos[1])
 
     DemThoiGian(2)    
+    
+    pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console)
+    if(pos != None):
+        pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console)
+        if(pos != None):
+            Tap(index, ld_path_console, pos[0], pos[1])
+        else:
+            pass
+    else:
+        pass
+    
+    DemThoiGian(2)
 
     pos = TimAnhSauKhiChupVaSoSanh(Action.clickcreatepassword_Btn, index, ld_path_console)
     if(pos != None):
@@ -165,15 +184,21 @@ def RunLD(index, apk_path, package_name, ld_path_console):
     pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console)
     if(pos != None):
         GoText(index, ld_path_console, passText, pos[0], pos[1])        
+        
+    DemThoiGian(2)   
+     
+    pos = TimAnhSauKhiChupVaSoSanh(Action.nextt_Btn, index, ld_path_console)
+    if(pos != None):
+        Tap(index, ld_path_console, pos[0], pos[1])    
 
-    DemThoiGian(2)
-
+    DemThoiGian(2)   
+     
     pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])
 
     DemThoiGian(2)
-
+    
     pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
     if(pos != None):
         Tap(index, ld_path_console, pos[0], pos[1])

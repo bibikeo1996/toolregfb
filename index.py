@@ -22,13 +22,13 @@ if __name__ == "__main__":
         try:
             ADBKillAndStartServer()
 
-            def task(i, apk_path, package_name, ld_path_console):
-                RunLD(i, apk_path, package_name, ld_path_console)
+            def task(i, apk_path, package_name, ld_path_console, ld_path_instance):
+                RunLD(i, apk_path, package_name, ld_path_console, ld_path_instance)
 
             threads = []
             i = 1
             for i in range(1):
-                t = threading.Thread(target=task, args=(i, apk_path, package_name, ld_path_console))
+                t = threading.Thread(target=task, args=(i, apk_path, package_name, ld_path_console, ld_path_instance))
                 threads.append(t)
                 t.start()
                 time.sleep(5)  # Delay of 1 second before starting the next thread

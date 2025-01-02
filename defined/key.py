@@ -91,6 +91,10 @@ class Action:
     deny_Btn = os.path.join(base_dir, '..', 'imageAction', 'deny.png')
     emailfield_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfield.png')
     emailfieldv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfieldv2.png')
+    
+    doyouhaveaccount_Btn = os.path.join(base_dir, '..', 'imageAction', 'doyouhaveaccount.png')
+    continuecreate_Btn = os.path.join(base_dir, '..', 'imageAction', 'continueCreate.png')
+    
 
     statusContent_Btn = os.path.join(base_dir, '..', 'imageAction', 'statusContent.png')
     postFirstStatus_Btn = os.path.join(base_dir, '..', 'imageAction', 'postFirstStatus.png')
