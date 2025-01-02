@@ -23,13 +23,14 @@ def getMailCode(mi_value, phpsessid_value):
     try:
         options = webdriver.ChromeOptions()
         options.binary_location = brave_path
+        options.add_argument('--ignore-certificate-errors')
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(url)
         driver.add_cookie({"name": "MI", "value": mi_value})
         driver.add_cookie({"name": "PHPSESSID", "value": phpsessid_value})
         driver.refresh()
         #get mail code
-        confirmation_code_element = driver.find_element(By.CLASS_NAME, "predmet")
+        confirmation_code_element = driver.find_element(By.XPATH, "//td[contains(text(), 'FB-')]")
         confirmation_code_text = confirmation_code_element.text
         confirmation_code = confirmation_code_text.split(" ")[0]
         return confirmation_code
@@ -40,8 +41,8 @@ def getMailCode(mi_value, phpsessid_value):
     finally:
         # input("Nhấn Enter để đóng trình duyệt...")
         driver.quit()
-def main():
-    data = getDataInFileEmails(1)
+def main(index):
+    data = getDataInFileEmails(index)
     mi = data["mi"]
     phpsessid = data["phpsessid"]
     print("MI values:", mi)
@@ -49,4 +50,4 @@ def main():
     code = getMailCode(mi, phpsessid)
     print("Code:", code)
 
-main()
+main(1)
