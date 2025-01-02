@@ -93,6 +93,7 @@ Mở LDMultiPlayer => chọn setting => check Model tab
 {ld_path_console} adb --index {index} --command root
 {ld_path_console} adb --index {index} --command shell
 {ld_path_console} adb --index {index} --command su
+{ld_path_console} adb --index {index} --command "shell uiautomator dump"
 {ld_path_console} launch --index {index}
 etc
 ```
