@@ -20,7 +20,7 @@ from io import BytesIO
 
 ## import function
 from include.function import DocFileExcel, XuLyNextButton, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian, TrangThaiInstance
+from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
