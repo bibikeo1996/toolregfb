@@ -236,6 +236,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if(is282 != None):
                 issue282_done = True
                 print(f"Email: {emailText} bị dính 282")
+                DemThoiGian(2)
                 RebootVaXoaCache(index, ld_path_console, ld_path_instance)
 
         # Kiểm tra verifycode nếu chưa hoàn thành
