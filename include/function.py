@@ -164,7 +164,7 @@ def GoText(index, ld_path_console, text, x, y):
             print(f"Lỗi khi gửi văn bản: {result.stderr}")
         else:
             # Thêm độ trễ sau khi gửi lệnh
-            time.sleep(0.005)  # Độ trễ 50ms
+            time.sleep(0.05)  # Độ trễ 50ms
 
 def Tap(index, ld_path_console, x, y):
     # print(f"Tap at {x}, {y}")

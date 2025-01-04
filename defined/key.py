@@ -107,4 +107,5 @@ class Action:
     successReg_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg.png')
     successReg2_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg2.png')
     successReg3_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg3.png')
+    issue282_Btn = os.path.join(base_dir, '..', 'imageAction', 'err282.png')
 

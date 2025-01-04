@@ -37,25 +37,21 @@ from data.getCode import getDataInFileEmails
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    # data = getDataInFileEmails(3)
-    # emailText = data["email"]
-    # passText = data["passWord"]
-    # fieldFirstName = data["firstName"]
-    # fieldLastName = data["lastName"]
-    # mi = data["mi"]
-    # phpsessid = data["phpsessid"]
-
-    emailText = "kavif45498@myweblaw.com"
-    passText = "9dVhsUax@"
-    fieldFirstName = "Yen"
-    fieldLastName = "Pham"
+    data = getDataInFileEmails(3)
+    emailText = data["email"]
+    passText = data["passWord"]
+    fieldFirstName = data["firstName"]
+    fieldLastName = data["lastName"]
     mi = data["mi"]
     phpsessid = data["phpsessid"]
+
+    # emailText = "kavif45498@myweblaw.com"
+    # passText = "9dVhsUax@"
+    # fieldFirstName = "Yen"
+    # fieldLastName = "Pham"
+    # mi = data["mi"]
+    # phpsessid = data["phpsessid"]
     # print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
-
-
-    
-
 
     # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
 
@@ -234,17 +230,25 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if(pos != None):
                 Tap(index, ld_path_console, pos[0], pos[1])                    
 
+        ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
+        if not issue282_done:
+            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(is282 != None):
+                issue282_done = True
+                print(f"Email: {emailText} bị dính 282")
+                RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+
         # Kiểm tra verifycode nếu chưa hoàn thành
         if not verifycode_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
             if pos is not None:
 
                 ## Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                # verifycode = getMailCode(mi, phpsessid)
-                # if verifycode is None:
-                #     print("Không lấy được mã code == Reboot và xóa cache")
-                #     # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
-                #     return
+                verifycode = getMailCode(mi, phpsessid)
+                if verifycode is None:
+                    print("Không lấy được mã code == Reboot và xóa cache")
+                    # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+                    return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
                 verifycode_done = True
 
@@ -282,6 +286,3 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
             doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done):
             break
-
-# if __name__ == "__main__":
-#     RunLD(5555)
