@@ -273,8 +273,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     print(account)
                     print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
                     DemThoiGian(3)
-                    RebootVaXoaCache(index, ld_path_console, ld_path_instance)
                     successReg_done = True
+                    RebootVaXoaCache(index, ld_path_console, ld_path_instance)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
         if (createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
