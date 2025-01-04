@@ -37,20 +37,20 @@ from data.getCode import getDataInFileEmails
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    data = getDataInFileEmails(3)
-    emailText = data["email"]
-    passText = data["passWord"]
-    fieldFirstName = data["firstName"]
-    fieldLastName = data["lastName"]
-    mi = data["mi"]
-    phpsessid = data["phpsessid"]
-
-    # emailText = "test"
-    # passText = "tdmsadmad"
-    # fieldFirstName = "Testlon"
-    # fieldLastName = "asdadada"
+    # data = getDataInFileEmails(3)
+    # emailText = data["email"]
+    # passText = data["passWord"]
+    # fieldFirstName = data["firstName"]
+    # fieldLastName = data["lastName"]
     # mi = data["mi"]
     # phpsessid = data["phpsessid"]
+
+    emailText = "kavif45498@myweblaw.com"
+    passText = "9dVhsUax@"
+    fieldFirstName = "Yen"
+    fieldLastName = "Pham"
+    mi = data["mi"]
+    phpsessid = data["phpsessid"]
     # print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
 
 
@@ -124,6 +124,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
             if pos is not None:
                 GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
+                print("Đã nhập firstname")
                 firstname_done = True
 
         # Kiểm tra lastname nếu chưa hoàn thành
@@ -131,7 +132,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
             if pos is not None:
                 GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
-                TrangThaiInstance(index, f"Instance {index} đã nhập last name", saveText)
+                print("Đã nhập lastname")
                 lastname_done = True
 
         # Kiểm tra nextt nếu chưa hoàn thành
@@ -239,11 +240,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if pos is not None:
 
                 ## Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                verifycode = getMailCode(mi, phpsessid)
-                if verifycode is None:
-                    print("Không lấy được mã code == Reboot và xóa cache")
-                    # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
-                    return
+                # verifycode = getMailCode(mi, phpsessid)
+                # if verifycode is None:
+                #     print("Không lấy được mã code == Reboot và xóa cache")
+                #     # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+                #     return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
                 verifycode_done = True
 
