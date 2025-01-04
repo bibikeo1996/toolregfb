@@ -63,3 +63,6 @@ Thumbs.db
 
 # dump xml file
 *.xml
+
+# No upload PNG
+*.png

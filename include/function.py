@@ -8,6 +8,7 @@ import random
 import string
 import requests
 import threading
+import shutil
 import pandas as pd
 
 
@@ -44,13 +45,18 @@ def UnInstallAppFile(ld_type, index, package_name):
         print("LD_PATH_CONSOLE environment variable is not set.")
 
 ## So sánh ảnh màn hình với ảnh action để click
-def ChupAnhTrenManhinh(index, ld_path_console):
+def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
     command_screencap = f'{ld_path_console} adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
     subprocess.run(command_screencap, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     local_screenshot_path = f"./screenshot{index}.png"
     command_pull = f'{ld_path_console} adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
     subprocess.run(command_pull, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    file_name = os.path.basename(filename)
+    secondary_screenshot_path = f"./screenshot/{file_name}-{index}.png"
+    shutil.copy(local_screenshot_path, secondary_screenshot_path)
+
     if not os.path.exists(local_screenshot_path):
         raise FileNotFoundError(f"File {local_screenshot_path} không tồn tại. Quá trình pull ảnh có thể đã gặp lỗi.")
     screenshot = cv2.imread(local_screenshot_path, cv2.IMREAD_GRAYSCALE)
@@ -59,14 +65,14 @@ def ChupAnhTrenManhinh(index, ld_path_console):
 
     return screenshot, local_screenshot_path
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=1):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=1):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
 
     attempts = 0
     while attempts < max_attempts:
-        screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, ld_path_console)
+        screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
         try:
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
