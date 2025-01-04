@@ -65,4 +65,4 @@ Thumbs.db
 *.xml
 
 # No upload PNG
-*.png
+#*.png
