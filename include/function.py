@@ -65,13 +65,13 @@ def ChupAnhTrenManhinh(index, filename, ld_path_console):
 
     return screenshot, local_screenshot_path
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=1):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=1, check_attempt=False):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
 
     attempts = 0
-    while attempts < max_attempts:
+    while True:
         screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
         try:
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
@@ -85,16 +85,20 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
                 return (center_x, center_y)
             else:
-                sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
-                sys.stdout.flush()
-                attempts += 1
-                time.sleep(delay)
+                if check_attempt:
+                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
+                    sys.stdout.flush()
+                    attempts += 1
+                    if attempts >= max_attempts:
+                        print("Không tìm thấy hình sau nhiều lần thử.")
+                        return None
+                    time.sleep(delay)
 
         finally:
             if os.path.exists(local_screenshot_path):
                 os.remove(local_screenshot_path)
 
-    print("Không tìm thấy hình sau nhiều lần thử.")
+    # print("Không tìm thấy hình sau nhiều lần thử.")
     return None
 
 def KetNoiPortThietBiTheoPort(adb_port):
@@ -174,6 +178,14 @@ def KiemTraDangKyThanhCong(index, x, y):
     else:
         print("Đăng ký không thành công!")
         return False
+
+def XuLyNextButton(index, ld_path_console, actionURL):
+    pos = TimAnhSauKhiChupVaSoSanh(actionURL, index, ld_path_console)
+    if pos is not None:
+        Tap(index, ld_path_console, pos[0], pos[1])
+        return True
+    return False
+
 
 # def processButton(button, action, text, index, ld_path_console, saveText, emailText, passText):
 #     thinhthoang = False
