@@ -61,14 +61,14 @@ def input_data(file_path, email, passWord, firstName, lastName, mi, phpsessid):
     print(data.head())
     # Create a new DataFrame with the specified columns
     if 'Email' not in data.columns:
-      new_data = pd.DataFrame(columns=['Email', 'Pass Word', 'FirstName', 'LastName', 'MI', 'PHPSESSID'])
+      new_data = pd.DataFrame(columns=['Email', 'PassWord', 'FirstName', 'LastName', 'MI', 'PHPSESSID'])
     else:
       new_data = data
     
     # Append the new data to the DataFrame
     new_row = pd.DataFrame({
       'Email': [email],
-      'Pass Word': [passWord],
+      'PassWord': [passWord],
       'FirstName': [firstName],
       'LastName': [lastName],
       'MI': [mi],

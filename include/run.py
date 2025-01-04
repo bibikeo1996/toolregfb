@@ -27,7 +27,8 @@ from include.getCookieToken import getAdbData
 from include.quitInstance import RebootVaXoaCache
 
 # from include.OpenApp import openBrave
-# from include.OpenApp import getMailCode
+from data.getCode import getMailCode
+from data.getCode import getDataInFileEmails
 # file_path = 'D:\\Workspace\\toolregfb\\data.xlsx'
 # emails, passwords, first_names, last_names = DocFileExcel(file_path)
 
@@ -36,20 +37,17 @@ from include.quitInstance import RebootVaXoaCache
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    emailText = 'nelay69535@matmayer.com'
-    passText = '9dVhsUax@'
-    fieldFirstName = 'Henry'
-    fieldLastName = 'DauBui'
-    verifycode = '123456'
-    # data = openBrave()
-    # emailText = data.get("emailText")
-    # passText = data.get("passText")
-    # fieldFirstName = data.get("fieldFirstName")
-    # fieldLastName = data.get("fieldLastName")
-    # cookie_mi = data.get("MI")
-    # cookie_phpsessid = data.get("PHPSESSID")
-    # verifycode = getMailCode(cookie_mi, cookie_phpsessid)
-    # print("Mã xác nhận:" ,verifycode)
+    data = getDataInFileEmails(3)
+    emailText = data["email"]
+    passText = data["passWord"]
+    fieldFirstName = data["firstName"]
+    fieldLastName = data["lastName"]
+    mi = data["mi"]
+    phpsessid = data["phpsessid"]
+
+    print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
+
+
 
 
     # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
@@ -218,9 +216,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     
     ## cần tạo function để check verify code sau đó mới chạy tiếp chỗ này bắt buộc phải có verify code mới được xử lý code bên dưới 
 
-    # pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
-    # if(pos != None):
-    #     GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+    pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
+    if(pos != None):
+        verifycode = getMailCode(mi, phpsessid)
+        if(verifycode == None):
+            print("Không lấy được mã code")
+            RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+            return
+        GoText(index, ld_path_console, verifycode, pos[0], pos[1])
 
     DemThoiGian(5)
 

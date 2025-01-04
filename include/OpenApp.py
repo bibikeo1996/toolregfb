@@ -16,62 +16,6 @@ ld_path_console = os.getenv('LD_PATH_CONSOLE')  # Đường dẫn tới LDPlayer
 ld_path_exe = os.getenv('LD_PATH_EXE')  # Đường dẫn tới LDPlayer
 apk_path = os.getenv('APK_PATH')  # Đường dẫn tới file APK
 package_name = os.getenv('PACKAGE_NAME')  # Tên gói của ứng dụng
-# brave_path = os.getenv('BRAVE_PATH')  # Đường dẫn tới trình duyệt Brave
-# url = os.getenv('URL')  # URL cần mở trên trình duyệt
-
-# def openBrave():
-#     try:
-#         options = webdriver.ChromeOptions()
-#         options.binary_location = brave_path
-#         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-#         driver.get(url)
-#         global email_text, firstName, lastName, mi_value, phpsessid_value
-#         email_element = driver.find_element(By.ID, "email")
-#         email_text = email_element.text
-#         local_part = email_text.split("@")[0]
-#         firstName, lastName = local_part.split(".")
-#         # Lấy cookie MI
-#         mi_cookie = driver.get_cookie("MI")
-#         mi_value = mi_cookie["value"] if mi_cookie else "Không tìm thấy cookie MI"
-
-#         # Lấy cookie PHPSESSID
-#         phpsessid_cookie = driver.get_cookie("PHPSESSID")
-#         phpsessid_value = phpsessid_cookie["value"] if phpsessid_cookie else "Không tìm thấy cookie PHPSESSID"
-#     except Exception as e:
-#         print(f"Lỗi xảy ra: {e}")
-#     finally:
-#         # input("Nhấn Enter để đóng trình duyệt...")
-#         driver.quit()
-#         return {
-#             "emailText": email_text,
-#             "passText": firstName + lastName + '123456',
-#             "fieldFirstName": firstName,
-#             "fieldLastName": lastName,
-#             "MI": mi_value,
-#             "PHPSESSID": phpsessid_value
-#         }
-
-# def getMailCode(mi_value, phpsessid_value):
-    # try:
-    #     options = webdriver.ChromeOptions()
-    #     options.binary_location = brave_path
-    #     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    #     driver.get(url)
-    #     driver.add_cookie({"name": "MI", "value": mi_value})
-    #     driver.add_cookie({"name": "PHPSESSID", "value": phpsessid_value})
-    #     driver.refresh()
-    #     #get mail code
-    #     confirmation_code_element = driver.find_element(By.CLASS_NAME, "predmet")
-    #     confirmation_code_text = confirmation_code_element.text
-    #     confirmation_code = confirmation_code_text.split(" ")[0]
-    #     return confirmation_code
-
-        
-    # except Exception as e:
-    #     print(f"Lỗi xảy ra: {e}")
-    # finally:
-    #     # input("Nhấn Enter để đóng trình duyệt...")
-    #     driver.quit()
 
 def ADBKillAndStartServer():
     kill_command = ["adb", "kill-server"]
