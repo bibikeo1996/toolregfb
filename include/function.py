@@ -76,7 +76,8 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
         try:
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-
+            file_name = os.path.basename(template_path)
+            print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
             if max_val >= confidence:
                 x, y = max_loc
                 h, w = template.shape
