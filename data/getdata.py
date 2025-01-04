@@ -4,24 +4,27 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 # Path to the Excel file
-file_path = r"D:\toolregfb\data\emails.xlsx"
-brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
-url = "https://www.minuteinbox.com/"
+file_path = os.getenv('FILE_PATH')
+brave_path = os.getenv('BRAVE_PATH')
+url = os.getenv('URL')
 
 def openBrave():
     try:
         options = webdriver.ChromeOptions()
         options.binary_location = brave_path
+        options.add_argument("--start-maximized")
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get(url)
         # Tìm thẻ a có title="1 month" và click vào nó
         one_month_link = driver.find_element(By.XPATH, '//a[@title="1 month"]')
         one_month_link.click()
-        time.sleep(5)
         email_element = driver.find_element(By.ID, "email")
         email_text = email_element.text
+        print(f"Email: {email_text}")
         local_part = email_text.split("@")[0]
         firstName, lastName = local_part.split(".")
         # Lấy cookie MI

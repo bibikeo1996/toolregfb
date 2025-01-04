@@ -4,11 +4,13 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 # Path to the Excel file
-file_path = r"D:\toolregfb\data\emails.xlsx"
-brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
-url = "https://www.minuteinbox.com/"
+file_path = os.getenv('FILE_PATH')
+brave_path = os.getenv('BRAVE_PATH')
+url = os.getenv('URL')
 
 def getDataInFileEmails(index):
     df = pd.read_excel(file_path)
@@ -50,4 +52,4 @@ def main(index):
     code = getMailCode(mi, phpsessid)
     print("Code:", code)
 
-main(1)
+# main(2)
