@@ -76,7 +76,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     OpenApp(index)
     
     # DemThoiGian(5)
-    global createbutton_done, getstarted_done, firstname_done, lastname_done, selectyourname_done, setDate_done, sett_done, gender_done, signup_done, email_done, doyouhaveaccount_done, password_done, agree_done, verifycode_done, skip_done, successReg_done, notnow_done, passwordField_done, issue282_done
     
     # Tạo các flag để kiểm soát từng điều kiện
     createbutton_done = False
@@ -100,68 +99,191 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     agree_done = False
     issue282_done = False
 
-    def process_step(condition, action, *args):
-        """
-        Kiểm tra và thực hiện một bước nếu điều kiện chưa hoàn thành.
-        
-        :param condition: Biến trạng thái kiểm tra điều kiện.
-        :param action: Hàm hành động cần thực hiện.
-        :param args: Các tham số cần truyền vào hàm hành động.
-        :return: Trạng thái mới của điều kiện.
-        """
-        if not condition:
-            pos = TimAnhSauKhiChupVaSoSanh(*args)
-            if pos is not None:
-                action(*pos)
-                return True
-        return condition
-
-    steps = [
-        {
-            "condition": "createbutton_done",
-            "action": lambda x, y: Tap(index, ld_path_console, x, y),
-            "args": [Action.createbutton_Btn, index, ld_path_console]
-        },
-        {
-            "condition": "getstarted_done",
-            "action": lambda x, y: Tap(index, ld_path_console, x, y),
-            "args": [Action.getstarted_Btn, index, ld_path_console]
-        },
-        {
-            "condition": "firstname_done",
-            "action": lambda x, y: GoText(index, ld_path_console, fieldFirstName, x, y),
-            "args": [Action.firstname3_Btn, index, ld_path_console]
-        },
-        {
-            "condition": "lastname_done",
-            "action": lambda x, y: GoText(index, ld_path_console, fieldLastName, x, y),
-            "args": [Action.lastname_Btn, index, ld_path_console]
-        },
-        {
-            "condition": "selectyourname_done",
-            "action": lambda x, y: Tap(index, ld_path_console, x, y),
-            "args": [Action.selectyourname_Btn, index, ld_path_console]
-        },
-        {
-            "condition": "setDate_done",
-            "action": lambda: ChonNgayThangNamSinh(index, ld_path_console),
-            "args": [Action.setDate_Btn, index, ld_path_console]
-        }
-        # Thêm các bước khác theo cấu trúc tương tự
-    ]
-
+    saveText = {}
     while True:
-        for step in steps:
-            # Lấy giá trị điều kiện từ tên biến
-            condition = globals()[step["condition"]]
-            
-            # Cập nhật điều kiện nếu bước được thực hiện
-            globals()[step["condition"]] = process_step(condition, step["action"], *step["args"])
+        # Kiểm tra createbutton nếu chưa hoàn thành
+        if not createbutton_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                createbutton_done = True
 
-        # Kiểm tra nếu các bước đầu tiên đã hoàn thành và thực hiện hành động Next
-        if all(globals()[step["condition"]] for step in steps[:4]) and XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next")
+        # Kiểm tra getstarted nếu chưa hoàn thành
+        if not getstarted_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                getstarted_done = True
 
-        # Kiểm tra nếu tất cả các điều kiện đã hoàn thành, thoát vòng lặp
-        if all(globals()[step["condition"]] for step in steps):
+        # Kiểm tra firstname nếu chưa hoàn thành
+        if not firstname_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
+            if pos is not None:
+                GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
+                print("Đã nhập firstname")
+                firstname_done = True
+
+        # Kiểm tra lastname nếu chưa hoàn thành
+        if not lastname_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
+            if pos is not None:
+                GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
+                print("Đã nhập lastname")
+                lastname_done = True
+
+        # Kiểm tra nextt nếu chưa hoàn thành
+        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            print("Đã click Next 1")
+
+        # Kiểm tra selectyourname nếu chưa hoàn thành
+        if not selectyourname_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                selectyourname_done = True
+                # Kiểm tra nextt nếu chưa hoàn thành
+                if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                    print("Đã click Next 2")
+
+        # Kiểm tra setDate nếu chưa hoàn thành
+        if not setDate_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+            if pos is not None:
+                ChonNgayThangNamSinh(index, ld_path_console)
+                setDate_done = True
+
+        # Kiểm tra sett nếu chưa hoàn thành
+        if not sett_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                sett_done = True
+
+        # Kiểm tra nextt nếu chưa hoàn thành
+        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            print("Đã click Next 3")                
+
+        # Kiểm tra gender nếu chưa hoàn thành
+        if not gender_done:
+            pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                gender_done = True
+
+        # Kiểm tra nextt nếu chưa hoàn thành
+        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            print("Đã click Next 4")
+
+        # Kiểm tra signup nếu chưa hoàn thành
+        if not signup_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.signupWithEmail_Btn, index, ld_path_console)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                signup_done = True
+
+        # Kiểm tra email nếu chưa hoàn thành
+        if not email_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.emailfieldv2_Btn, index, ld_path_console)
+            if pos is not None:
+                GoText(index, ld_path_console, emailText, pos[0], pos[1])
+                email_done = True
+
+        # Kiểm tra nextt nếu chưa hoàn thành
+        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            print("Đã click Next 5")        
+
+        # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
+        if not doyouhaveaccount_done:
+            ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
+            ### Check_attempt=True là cho phép kiểm tra element
+            pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+            if pos is not None:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console)
+                if pos is not None:
+                    Tap(index, ld_path_console, pos[0], pos[1])
+                    doyouhaveaccount_done = True
+
+        # Kiểm tra password nếu chưa hoàn thành
+        if not password_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.clickcreatepassword_Btn, index, ld_path_console)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                password_done = True
+
+        # Kiểm tra agree nếu chưa hoàn thành
+        if not passwordField_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console)
+            if(pos != None):
+                GoText(index, ld_path_console, passText, pos[0], pos[1])                   
+
+        # Kiểm tra nextt nếu chưa hoàn thành
+        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            print("Đã click Next 6")
+
+        if not notnow_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
+            if(pos != None):
+                Tap(index, ld_path_console, pos[0], pos[1])  
+
+        if not agree_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
+            if(pos != None):
+                Tap(index, ld_path_console, pos[0], pos[1])                    
+
+        ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
+        if not issue282_done:
+            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(is282 != None):
+                issue282_done = True
+                print(f"Email: {emailText} bị dính 282")
+                DemThoiGian(2)
+                RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+
+        # Kiểm tra verifycode nếu chưa hoàn thành
+        if not verifycode_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
+            if pos is not None:
+
+                ## Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
+                verifycode = getMailCode(mi, phpsessid)
+                if verifycode is None:
+                    print("Không lấy được mã code == Reboot và xóa cache")
+                    # RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+                    return
+                GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+                verifycode_done = True
+
+        if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
+            print("Đã click skip")
+
+
+        if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
+            print("Đã click skip lần 2") 
+
+
+        if XuLyNextButton(index, ld_path_console, Action.skip1_Btn):
+            print("Đã click skip lần 3")                        
+             
+
+        # Kiểm tra successReg nếu chưa hoàn thành
+        if not successReg_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
+            if pos is not None:
+                isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
+                if isSuccess:
+                    CookieToken = json.loads(getAdbData(index, ld_path_console))
+                    uid = CookieToken.get("uid")
+                    cookie = CookieToken.get("cookie")
+                    token = CookieToken.get("token")
+                    account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+                    print(account)
+                    print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
+                    DemThoiGian(3)
+                    successReg_done = True
+                    RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+
+        # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
+        if (createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
+            selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
+            doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and issue282_done):
             break
