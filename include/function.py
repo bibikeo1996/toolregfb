@@ -45,45 +45,56 @@ def UnInstallAppFile(ld_type, index, package_name):
         print("LD_PATH_CONSOLE environment variable is not set.")
 
 ## So sánh ảnh màn hình với ảnh action để click
-def ChupAnhTrenManhinh(index, filename, ld_path_console):
-    emulator_screenshot_path = "/sdcard/screenshot.png"
-    command_screencap = f'{ld_path_console} adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
-    subprocess.run(command_screencap, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    local_screenshot_path = f"./screenshot{index}.png"
-    command_pull = f'{ld_path_console} adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
-    subprocess.run(command_pull, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+import os
+import cv2
+import shutil
+import time
+import subprocess
+import sys
 
-    file_name = os.path.basename(filename)
-    secondary_screenshot_path = f"./screenshot/{file_name}-{index}.png"
-    shutil.copy(local_screenshot_path, secondary_screenshot_path)
-
-    if not os.path.exists(local_screenshot_path):
-        raise FileNotFoundError(f"File {local_screenshot_path} không tồn tại. Quá trình pull ảnh có thể đã gặp lỗi.")
-    screenshot = cv2.imread(local_screenshot_path, cv2.IMREAD_GRAYSCALE)
-    if screenshot is None:
-        raise ValueError(f"Không thể đọc file ảnh từ {local_screenshot_path}. File có thể không hợp lệ.")
-
-    return screenshot, local_screenshot_path
-
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=1, check_attempt=False):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=1, check_attempt=False, similarity_threshold=3):
+    os.makedirs("./imageBeforeAfter", exist_ok=True)
+    
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
 
     attempts = 0
     while True:
+        # Bước 1: Chụp ảnh Before
+        before_screenshot, before_path = ChupAnhTrenManhinh(index, "before.png", ld_path_console)
+        shutil.move(before_path, f"./imageBeforeAfter/before_{index}.png")
+
+        # Bước 2: Chụp ảnh hiện tại và so sánh với ảnh hành động
         screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
         try:
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
             file_name = os.path.basename(template_path)
             print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
+
             if max_val >= confidence:
                 x, y = max_loc
                 h, w = template.shape
                 center_x, center_y = x + w // 2, y + h // 2
 
+                # Thực hiện hành động (ví dụ: click)
+                # Giả sử thực hiện xong thì chụp lại ảnh After
+                after_screenshot, after_path = ChupAnhTrenManhinh(index, "after.png", ld_path_console)
+                shutil.move(after_path, f"./imageBeforeAfter/after_{index}.png")
+
+                # So sánh ảnh Before và After để kiểm tra layout
+                if not LayoutThayDoi(before_screenshot, after_screenshot, similarity_threshold):
+                    print("Layout chưa thay đổi, thử lại...")
+                    attempts += 1
+                    if attempts >= max_attempts:
+                        print("Không tìm thấy hình sau nhiều lần thử.")
+                        return None
+                    time.sleep(delay)
+                    continue
+
                 return (center_x, center_y)
+
             else:
                 if check_attempt:
                     sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
@@ -98,8 +109,41 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
             if os.path.exists(local_screenshot_path):
                 os.remove(local_screenshot_path)
 
-    # print("Không tìm thấy hình sau nhiều lần thử.")
     return None
+
+def ChupAnhTrenManhinh(index, filename, ld_path_console):
+    emulator_screenshot_path = "/sdcard/screenshot.png"
+    command_screencap = f'{ld_path_console} adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
+    subprocess.run(command_screencap, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    local_screenshot_path = f"./screenshot{index}.png"
+    command_pull = f'{ld_path_console} adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
+    subprocess.run(command_pull, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    if not os.path.exists(local_screenshot_path):
+        raise FileNotFoundError(f"File {local_screenshot_path} không tồn tại. Quá trình pull ảnh có thể đã gặp lỗi.")
+    
+    screenshot = cv2.imread(local_screenshot_path, cv2.IMREAD_GRAYSCALE)
+    if screenshot is None:
+        raise ValueError(f"Không thể đọc file ảnh từ {local_screenshot_path}. File có thể không hợp lệ.")
+
+    return screenshot, local_screenshot_path
+
+def LayoutThayDoi(before_image, after_image, similarity_threshold):
+    # So sánh ảnh Before và After bằng matchTemplate
+    result = cv2.matchTemplate(before_image, after_image, cv2.TM_CCOEFF_NORMED)
+    _, max_val, _, _ = cv2.minMaxLoc(result)
+
+    # Đếm số lượng điểm tương đồng
+    diff = cv2.absdiff(before_image, after_image)
+    _, thresh = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
+    non_zero_count = cv2.countNonZero(thresh)
+
+    print(f"Số điểm tương đồng: {non_zero_count}")
+
+    # Kiểm tra nếu số điểm tương đồng <= similarity_threshold thì coi như layout đã thay đổi
+    return non_zero_count <= similarity_threshold
+
+
 
 def KetNoiPortThietBiTheoPort(adb_port):
     connect_command = f"adb connect 127.0.0.1:{adb_port}"
