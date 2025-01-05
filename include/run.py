@@ -133,7 +133,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next")
+            print("Đã click Next 1")
 
         # Kiểm tra selectyourname nếu chưa hoàn thành
         if not selectyourname_done:
@@ -143,7 +143,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 selectyourname_done = True
                 # Kiểm tra nextt nếu chưa hoàn thành
                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                    print("Đã click Next")
+                    print("Đã click Next 2")
 
         # Kiểm tra setDate nếu chưa hoàn thành
         if not setDate_done:
@@ -161,7 +161,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next")                
+            print("Đã click Next 3")                
 
         # Kiểm tra gender nếu chưa hoàn thành
         if not gender_done:
@@ -172,7 +172,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next")
+            print("Đã click Next 4")
 
         # Kiểm tra signup nếu chưa hoàn thành
         if not signup_done:
@@ -190,7 +190,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next")        
+            print("Đã click Next 5")        
 
         # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
         if not doyouhaveaccount_done:
@@ -218,7 +218,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next")
+            print("Đã click Next 6")
 
         if not notnow_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
