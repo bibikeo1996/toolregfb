@@ -102,7 +102,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
             else:
                 if check_attempt:
-                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
+                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}\n")
                     sys.stdout.flush()
                     attempts += 1
                     if attempts >= max_attempts:
@@ -112,7 +112,8 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
         finally:
             if os.path.exists(local_screenshot_path):
-                os.remove(local_screenshot_path)
+                # os.remove(local_screenshot_path)
+                print("\n")
 
     return None
 
