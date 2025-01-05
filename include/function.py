@@ -52,7 +52,7 @@ import time
 import subprocess
 import sys
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=1, check_attempt=False, similarity_threshold=3):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
     os.makedirs("./imageBeforeAfter", exist_ok=True)
     
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
@@ -101,7 +101,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
                     sys.stdout.flush()
                     attempts += 1
                     if attempts >= max_attempts:
-                        print("Không tìm thấy hình sau nhiều lần thử.")
+                        print("\nKhông tìm thấy hình sau nhiều lần thử.")
                         return None
                     time.sleep(delay)
 
@@ -138,6 +138,8 @@ def LayoutThayDoi(before_image, after_image, similarity_threshold):
     _, thresh = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
     non_zero_count = cv2.countNonZero(thresh)
 
+    ## điểm tương đồng > 3 nghĩa là layout chưa đổi 
+    ## còn < 3 nghĩa là đã đổi ==> pass
     print(f"Số điểm tương đồng: {non_zero_count}")
 
     # Kiểm tra nếu số điểm tương đồng <= similarity_threshold thì coi như layout đã thay đổi

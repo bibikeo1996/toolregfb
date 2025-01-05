@@ -76,7 +76,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     OpenApp(index)
     
     # DemThoiGian(5)
-    
+
     # Tạo các flag để kiểm soát từng điều kiện
     createbutton_done = False
     getstarted_done = False
@@ -137,7 +137,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra selectyourname nếu chưa hoàn thành
         if not selectyourname_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+            pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console, max_attempts=5, check_attempt=True)
             if pos is not None:
                 Tap(index, ld_path_console, pos[0], pos[1])
                 selectyourname_done = True
@@ -245,11 +245,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if pos is not None:
 
                 ## Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                verifycode = getMailCode(mi, phpsessid)
-                if verifycode is None:
-                    print("Không lấy được mã code == Reboot và xóa cache")
-                    # RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-                    return
+                # verifycode = getMailCode(mi, phpsessid)
+                # if verifycode is None:
+                #     print("Không lấy được mã code == Reboot và xóa cache")
+                #     # RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+                #     return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
                 verifycode_done = True
 
