@@ -53,8 +53,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     # phpsessid = data["phpsessid"]
     # print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
 
-    # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
-
+    # RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+    # quit
     isSetup = ThietLapThongSoThietbi(index, ld_path_console)
     if(isSetup == True):
         pass
@@ -237,7 +237,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 issue282_done = True
                 print(f"Email: {emailText} bị dính 282")
                 DemThoiGian(2)
-                RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+                RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
         # Kiểm tra verifycode nếu chưa hoàn thành
         if not verifycode_done:
@@ -248,7 +248,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 verifycode = getMailCode(mi, phpsessid)
                 if verifycode is None:
                     print("Không lấy được mã code == Reboot và xóa cache")
-                    # RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+                    # RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
                     return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
                 verifycode_done = True
@@ -280,7 +280,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
                     DemThoiGian(3)
                     successReg_done = True
-                    RebootVaXoaCache(index, ld_path_console, ld_path_instance)
+                    RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
         if (createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and

@@ -5,8 +5,9 @@ import time
 
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer
+# from include.run import RunLD
 
-def RebootVaXoaCache(index, ld_path_console, ld_path_instance):
+def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance):
     try:
         # Dừng LDPlayer instance trước khi xử lý
         stop_command = [ld_path_console, "quit", "--index", str(index)]
@@ -30,7 +31,8 @@ def RebootVaXoaCache(index, ld_path_console, ld_path_instance):
 
         # Thiết lập thông số thiết bị
         ThietLapThongSoThietbi(index, ld_path_console)
-        time.sleep(1)
+        
+        # RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
         return True
 
