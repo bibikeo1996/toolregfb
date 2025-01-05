@@ -58,7 +58,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     isSetup = ThietLapThongSoThietbi(index, ld_path_console)
     if(isSetup == True):
         pass
-
+/ 10 
     isStarted = KhoiDongLDPlayer(index, ld_path_console)
     if(isStarted == True):
         pass
@@ -252,7 +252,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
                     return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
-                DemThoiGian(30)
+                # DemThoiGian(30)
                 verifycode_done = True
         
         if not okbtn_done:
