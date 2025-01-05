@@ -77,6 +77,28 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     
     DemThoiGian(5)
 
+    # Tạo các flag để kiểm soát từng điều kiện
+    createbutton_done = False
+    getstarted_done = False
+    firstname_done = False
+    lastname_done = False
+    selectyourname_done = False
+    setDate_done = False
+    sett_done = False
+    gender_done = False
+    signup_done = False
+    email_done = False
+    doyouhaveaccount_done = False
+    password_done = False
+    agree_done = False
+    verifycode_done = False
+    skip_done = False
+    successReg_done = False
+    notnow_done = False
+    passwordField_done = False
+    agree_done = False
+    issue282_done = False
+
     def process_step(condition, action, *args):
         """
         Kiểm tra và thực hiện một bước nếu điều kiện chưa hoàn thành.
