@@ -52,7 +52,7 @@ import time
 import subprocess
 import sys
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.9, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
     os.makedirs("./imageBeforeAfter", exist_ok=True)
     
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
