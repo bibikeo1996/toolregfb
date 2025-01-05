@@ -77,6 +77,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     
     DemThoiGian(5)
 
+    def process_step(condition, action, *args):
+        """
+        Kiểm tra và thực hiện một bước nếu điều kiện chưa hoàn thành.
+        
+        :param condition: Biến trạng thái kiểm tra điều kiện.
+        :param action: Hàm hành động cần thực hiện.
+        :param args: Các tham số cần truyền vào hàm hành động.
+        :return: Trạng thái mới của điều kiện.
+        """
+        if not condition:
+            pos = TimAnhSauKhiChupVaSoSanh(*args)
+            if pos is not None:
+                action(*pos)
+                return True
+        return condition
+
     # Tạo các flag để kiểm soát từng điều kiện
     createbutton_done = False
     getstarted_done = False
@@ -99,43 +115,27 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     agree_done = False
     issue282_done = False
 
-    def process_step(condition, action, *args):
-        """
-        Kiểm tra và thực hiện một bước nếu điều kiện chưa hoàn thành.
-        
-        :param condition: Biến trạng thái kiểm tra điều kiện.
-        :param action: Hàm hành động cần thực hiện.
-        :param args: Các tham số cần truyền vào hàm hành động.
-        :return: Trạng thái mới của điều kiện.
-        """
-        if not condition:
-            pos = TimAnhSauKhiChupVaSoSanh(*args)
-            if pos is not None:
-                action(*pos)
-                return True
-        return condition
+    while True:
+        # Danh sách các bước tuần tự
+        steps = [
+            (createbutton_done, lambda x, y: Tap(index, ld_path_console, x, y), Action.createbutton_Btn),
+            (getstarted_done, lambda x, y: Tap(index, ld_path_console, x, y), Action.getstarted_Btn),
+            (firstname_done, lambda x, y: GoText(index, ld_path_console, fieldFirstName, x, y), Action.firstname3_Btn),
+            (lastname_done, lambda x, y: GoText(index, ld_path_console, fieldLastName, x, y), Action.lastname_Btn),
+            (selectyourname_done, lambda x, y: Tap(index, ld_path_console, x, y), Action.selectyourname_Btn),
+            (setDate_done, lambda: ChonNgayThangNamSinh(index, ld_path_console), Action.setDate_Btn),
+            # Thêm các bước khác theo cấu trúc tương tự
+        ]
 
-while True:
-    # Danh sách các bước tuần tự
-    steps = [
-        (createbutton_done, lambda x, y: Tap(index, ld_path_console, x, y), Action.createbutton_Btn),
-        (getstarted_done, lambda x, y: Tap(index, ld_path_console, x, y), Action.getstarted_Btn),
-        (firstname_done, lambda x, y: GoText(index, ld_path_console, fieldFirstName, x, y), Action.firstname3_Btn),
-        (lastname_done, lambda x, y: GoText(index, ld_path_console, fieldLastName, x, y), Action.lastname_Btn),
-        (selectyourname_done, lambda x, y: Tap(index, ld_path_console, x, y), Action.selectyourname_Btn),
-        (setDate_done, lambda: ChonNgayThangNamSinh(index, ld_path_console), Action.setDate_Btn),
-        # Thêm các bước khác theo cấu trúc tương tự
-    ]
+        # Duyệt qua các bước
+        for i, (condition, action, *action_args) in enumerate(steps):
+            if all(step[0] for step in steps[:i]):  # Chỉ chạy nếu tất cả bước trước đó đã hoàn thành
+                steps[i] = (process_step(condition, action, index, ld_path_console, *action_args), action, *action_args)
 
-    # Duyệt qua các bước
-    for i, (condition, action, *action_args) in enumerate(steps):
-        if all(step[0] for step in steps[:i]):  # Chỉ chạy nếu tất cả bước trước đó đã hoàn thành
-            steps[i] = (process_step(condition, action, index, ld_path_console, *action_args), action, *action_args)
+        # Kiểm tra Next Button nếu cần thiết
+        if all(step[0] for step in steps[:4]) and XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            print("Đã click Next")
 
-    # Kiểm tra Next Button nếu cần thiết
-    if all(step[0] for step in steps[:4]) and XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-        print("Đã click Next")
-
-    # Kiểm tra nếu tất cả các điều kiện đã hoàn thành, thoát vòng lặp
-    if all(step[0] for step in steps):
-        break
+        # Kiểm tra nếu tất cả các điều kiện đã hoàn thành, thoát vòng lặp
+        if all(step[0] for step in steps):
+            break
