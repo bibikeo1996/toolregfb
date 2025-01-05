@@ -85,13 +85,18 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
                 # So sánh ảnh Before và After để kiểm tra layout
                 if not LayoutThayDoi(before_screenshot, after_screenshot, similarity_threshold):
-                    print("Layout chưa thay đổi, thử lại...")
-                    attempts += 1
-                    if attempts >= max_attempts:
-                        print("Không tìm thấy hình sau nhiều lần thử.")
-                        return None
-                    time.sleep(delay)
-                    continue
+                    if check_attempt:
+                        print("Layout chưa thay đổi, thử lại...")
+                        attempts += 1
+                        if attempts >= max_attempts:
+                            print("Không tìm thấy hình sau nhiều lần thử.")
+                            return None
+                        time.sleep(delay)
+                        continue
+                    else:
+                        print("Layout chưa thay đổi, thử lại...")
+                        time.sleep(delay)
+                        continue    
 
                 return (center_x, center_y)
 
