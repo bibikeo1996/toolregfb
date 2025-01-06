@@ -112,9 +112,12 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
     command_screencap = f'{ld_path_console} adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
+    print(command_screencap)
+
     subprocess.run(command_screencap, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     local_screenshot_path = f"./screenshot{index}.png"
     command_pull = f'{ld_path_console} adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
+    print(command_pull)
     subprocess.run(command_pull, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if not os.path.exists(local_screenshot_path):
