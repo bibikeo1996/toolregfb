@@ -90,9 +90,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if(isStarted == True):
             isStarted = True
             pass
-
-        OpenApp(index)
-
+            
         # Kiểm tra isStartedApp nếu chưa hoàn thành
         if not isStartedApp_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
