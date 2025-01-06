@@ -51,7 +51,7 @@ test/
 *.apk
 
 # Excel file
-*.xlsx
+# *.xlsx
 
 # IDE files
 .vscode/
