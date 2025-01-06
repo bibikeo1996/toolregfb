@@ -37,7 +37,7 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
             if not ThoatInstance(index, ld_path_console):
                 print(f"Không thể thoát instance ld{index}. Dừng tiến trình.")
 
-                ADBKillAndStartServer()
+                # ADBKillAndStartServer()
 
                 # Xóa cache/logs
                 instance_path = os.path.join(ld_path_instance, f"leidian{index}")

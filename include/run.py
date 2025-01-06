@@ -90,12 +90,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if(isStarted == True):
             isStarted = True
             pass
-            
+
         # Kiểm tra isStartedApp nếu chưa hoàn thành
         if not isStartedApp_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
             if pos is not None:
-                MoAppThanhCong(index, ld_path_console, pos[0], pos[1])
                 isStartedApp_done = True
 
         # Kiểm tra createbutton nếu chưa hoàn thành
