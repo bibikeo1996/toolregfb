@@ -26,23 +26,29 @@ def ADBKillAndStartServer():
     # print("ADB server started")
 
 def KhoiDongLDPlayer(index, ld_path_console):
-    ldplayer_running = False
-    while not ldplayer_running:
-        # Kết nối ADB đến 127.0.0.1:5555
-        command = 'adb connect 127.0.0.1:5555'
-        result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        
-        # Kiểm tra nếu kết quả trả về chứa "connected to 127.0.0.1:5555"
-        if "connected to 127.0.0.1:5555" in result.stdout.lower():
-            print("Connected to 127.0.0.1:5555. LDPlayer is running.")
-            ldplayer_running = True
-        else:
-            print("Not connected yet. Starting LDPlayer instance...")
-            # Khởi động instance LDPlayer
-            start_command = f'{ld_path_console} launch --index {index}'
-            subprocess.run(start_command, shell=True)
-            time.sleep(3)  # Chờ một vài giây trước khi kiểm tra lại
-    return True     
+    getPort = f'{ld_path_console} list3 --index {index}'
+    result = subprocess.run(getPort, shell=True, capture_output=True, text=True)
+    output = result.stdout
+    parts = output.split(',')
+    port_value = [part.split('-')[1] for part in parts if "port-" in part][0]
+    if(port_value):
+        port = port_value
+        ldplayer_running = False
+        while not ldplayer_running:
+            # Kết nối ADB đến 127.0.0.1:5555
+            command = f'adb connect 127.0.0.1:{port}'
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            # Kiểm tra nếu kết quả trả về chứa "connected to 127.0.0.1:5555"
+            if f"connected to 127.0.0.1:{port}" in result.stdout.lower():
+                print(f"Connected to 127.0.0.1:{port}. LDPlayer is running.")
+                ldplayer_running = True
+            else:
+                print("Not connected yet. Starting LDPlayer instance...")
+                # Khởi động instance LDPlayer
+                start_command = f'{ld_path_console} launch --index {index}'
+                subprocess.run(start_command, shell=True)
+                time.sleep(1)  # Chờ một vài giây trước khi kiểm tra lại
+        return True     
 
 # def KhoiDongLDPlayer(index, ld_path_console):
 #     ldplayer_running = False

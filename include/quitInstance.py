@@ -15,15 +15,15 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
             return False
 
         # Hàm kiểm tra LDPlayer có đang chạy không
-        # def is_ldplayer_running(index, ld_path_console):
-        #     command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
-        #     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        #     return "not found" not in result.stdout.lower() and "not found" not in result.stderr.lower()
+        def CheckLDPlayerRunning(index, ld_path_console):
+            command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            return "not found" not in result.stdout.lower() and "not found" not in result.stderr.lower()
 
         # Kiểm tra LDPlayer có đang chạy hay không
-        ld_running = KhoiDongLDPlayer(index, ld_path_console)
-        
-        if ld_running:
+        CheckLDPlayerRunning = CheckLDPlayerRunning(index, ld_path_console)
+
+        if CheckLDPlayerRunning:
             # TH1: Nếu LDPlayer đang chạy, thoát instance trước
             # print(f"LDPlayer ld{index} đang chạy. Tiến hành thoát instance.")
             if not ThoatInstance(index, ld_path_console):
@@ -32,6 +32,7 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
         else:
             # TH2: LDPlayer chưa chạy
             print(f"LDPlayer ld{index} chưa chạy. Bắt đầu xử lý.")
+            pass
 
         # Xóa cache/logs
         instance_path = os.path.join(ld_path_instance, f"leidian{index}")
