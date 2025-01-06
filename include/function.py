@@ -30,19 +30,25 @@ def OpenApp(index):
     if ld_path_console:
         try:
             subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
+            return True
         except subprocess.CalledProcessError as e:
             print(f"Failed to open app: {e}")
+            return False
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
+        return False
 
 def UnInstallAppFile(index, ld_path_console, package_name):
     if ld_path_console:
         try:
             subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
+            return True
         except subprocess.CalledProcessError as e:
-            print(f"Failed to uninstall app: {e}")
+            print(f"Failed to uninstall app: {e}")        
+            return False
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
+        return False
 
 def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
     os.makedirs("./imageBeforeAfter", exist_ok=True)
