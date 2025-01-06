@@ -28,18 +28,37 @@ def ADBKillAndStartServer():
 def KhoiDongLDPlayer(index, ld_path_console):
     ldplayer_running = False
     while not ldplayer_running:
-        command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
-        # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell getprop"]
+        # Kết nối ADB đến 127.0.0.1:5555
+        command = 'adb connect 127.0.0.1:5555'
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-        if "not found" in result.stdout.lower() or "not found" in result.stderr.lower():
-            start_command = [ld_path_console, "launch", "--index", str(index)]
-            subprocess.run(start_command)
-            # print(f"{result.stdout}")
-            time.sleep(1)
-        else:
-            # print(f"LDPlayer {index} is already running")
+        
+        # Kiểm tra nếu kết quả trả về chứa "connected to 127.0.0.1:5555"
+        if "connected to 127.0.0.1:5555" in result.stdout.lower():
+            print("Connected to 127.0.0.1:5555. LDPlayer is running.")
             ldplayer_running = True
-    return True       
+        else:
+            print("Not connected yet. Starting LDPlayer instance...")
+            # Khởi động instance LDPlayer
+            start_command = f'{ld_path_console} launch --index {index}'
+            subprocess.run(start_command, shell=True)
+            time.sleep(3)  # Chờ một vài giây trước khi kiểm tra lại
+    return True     
+
+# def KhoiDongLDPlayer(index, ld_path_console):
+#     ldplayer_running = False
+#     while not ldplayer_running:
+#         command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
+#         # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell getprop"]
+#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
+#         if "not found" in result.stdout.lower() or "not found" in result.stderr.lower():
+#             start_command = [ld_path_console, "launch", "--index", str(index)]
+#             subprocess.run(start_command)
+#             # print(f"{result.stdout}")
+#             time.sleep(1)
+#         else:
+#             # print(f"LDPlayer {index} is already running")
+#             ldplayer_running = True
+#     return True       
 
 def ThoatInstance(index, ld_path_console):
     """
