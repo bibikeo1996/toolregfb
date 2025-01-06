@@ -87,7 +87,7 @@ def DemThoiGian(seconds):
 #     sys.stdout.write(table + "\n")
 #     sys.stdout.flush()
             
-def KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console=None):
+def KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console):
     command = f'{ld_path_console} adb --index {index} --command "shell pm list packages"'
     # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell pm list packages"]
     result = subprocess.run(command, capture_output=True, text=True)

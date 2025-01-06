@@ -10,6 +10,10 @@ from include.function import CapQuyenTruyCapChoFacebookLite, OpenApp, UnInstallA
 
 def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance):
     try:
+        if not all([ld_path_console, ld_path_instance]):
+            print("Đường dẫn ld_path_console hoặc ld_path_instance không hợp lệ.")
+            return False
+
         # Hàm kiểm tra LDPlayer có đang chạy không
         def is_ldplayer_running(index, ld_path_console):
             command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
