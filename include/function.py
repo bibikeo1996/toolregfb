@@ -50,70 +50,38 @@ def UnInstallAppFile(index, ld_path_console, package_name):
         print("LD_PATH_CONSOLE environment variable is not set.")
         return False
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
-    os.makedirs("./imageBeforeAfter", exist_ok=True)
-    
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=1, check_attempt=False):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
 
     attempts = 0
     while True:
-        # Bước 1: Chụp ảnh Before
-        before_screenshot, before_path = ChupAnhTrenManhinh(index, "before.png", ld_path_console)
-        shutil.move(before_path, f"./imageBeforeAfter/before_{index}.png")
-
-        # Bước 2: Chụp ảnh hiện tại và so sánh với ảnh hành động
         screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
         try:
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-            _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
             file_name = os.path.basename(template_path)
             print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
-
             if max_val >= confidence:
                 x, y = max_loc
                 h, w = template.shape
                 center_x, center_y = x + w // 2, y + h // 2
 
-                # Thực hiện hành động (ví dụ: click)
-                # Giả sử thực hiện xong thì chụp lại ảnh After
-                after_screenshot, after_path = ChupAnhTrenManhinh(index, "after.png", ld_path_console)
-                shutil.move(after_path, f"./imageBeforeAfter/after_{index}.png")
-
-                # So sánh ảnh Before và After để kiểm tra layout
-                if not LayoutThayDoi(before_screenshot, after_screenshot, similarity_threshold):
-                    if check_attempt:
-                        print("Layout chưa thay đổi, thử lại...")
-                        attempts += 1
-                        if attempts >= max_attempts:
-                            print("Không tìm thấy hình sau nhiều lần thử.")
-                            return None
-                        time.sleep(delay)
-                        continue
-                    else:
-                        print("Layout chưa thay đổi, thử lại...")
-                        time.sleep(delay)
-                        continue    
-
                 return (center_x, center_y)
-
             else:
                 if check_attempt:
-                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}\n")
+                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
                     sys.stdout.flush()
                     attempts += 1
                     if attempts >= max_attempts:
-                        print("\nKhông tìm thấy hình sau nhiều lần thử.")
+                        print("Không tìm thấy hình sau nhiều lần thử.")
                         return None
                     time.sleep(delay)
 
         finally:
             if os.path.exists(local_screenshot_path):
-                # os.remove(local_screenshot_path)
-                pass
-
-    return None
+                os.remove(local_screenshot_path)
 
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"

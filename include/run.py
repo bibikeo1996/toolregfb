@@ -19,12 +19,12 @@ from io import BytesIO
 
 
 ## import function
-from include.function import MoAppThanhCong, DocFileExcel, XuLyNextButton, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
+from include.function import MoAppThanhCong, DocFileExcel, XuLyNextButton, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
 from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
-from include.quitInstance import RebootVaXoaCache
+from include.quitInstance import RebootVaXoaCache, OpenApp, UnInstallAppFile
 
 # from include.OpenApp import openBrave
 from data.getCode import getMailCode
@@ -58,7 +58,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     # if(isStarted == True):
     #     isStarted = True
     #     pass
-
+    isRebooted_done = False
     isStarted = False
     isStartedApp_done = False
     createbutton_done = False
@@ -85,18 +85,30 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     saveText = {}
     while True:
+        
+        isSetup = ThietLapThongSoThietbi(index, ld_path_console)
+        if isSetup:
+            print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
 
-        isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-        if(isStarted == True):
-            isStarted = True
-            pass
+        if not isRebooted_done:
+            isRebooted = RebootVaXoaCache(index, ld_path_console, package_name, apk_path)
+            if isRebooted:
+                print("Đã reboot và xóa cache")
+                isRebooted_done = True
 
+        if isRebooted_done:
+            print("Đã cài app")
+            OpenApp(index, ld_path_console, package_name)
+
+       
         # Kiểm tra isStartedApp nếu chưa hoàn thành
         if not isStartedApp_done:
+            print("Đang mở app")
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
             if pos is not None:
                 isStartedApp_done = True
 
+        quit()
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
