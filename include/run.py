@@ -19,7 +19,7 @@ from io import BytesIO
 
 
 ## import function
-from include.function import DocFileExcel, XuLyNextButton, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
+from include.function import MoAppThanhCong, DocFileExcel, XuLyNextButton, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, OpenApp, UnInstallAppFile, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
 from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
@@ -60,6 +60,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     #     pass
 
     isStarted = False
+    isStartedApp_done = False
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -90,6 +91,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             isStarted = True
             pass
 
+        OpenApp(index)
+
+        # Kiểm tra isStartedApp nếu chưa hoàn thành
+        if not isStartedApp_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
+            if pos is not None:
+                MoAppThanhCong(index, ld_path_console, pos[0], pos[1])
+                isStartedApp_done = True
 
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
@@ -280,7 +289,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
-        if (createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
+        if (isStarted and isStartedApp_done and createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
             selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
             doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and issue282_done and okbtn_done):
             break

@@ -73,8 +73,6 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
         # Cấp quyền và mở ứng dụng
         CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
-        OpenApp(index)
-
         print(f"Tất cả tác vụ đã hoàn tất cho LDPlayer ld{index}.")
         return True
 

@@ -230,6 +230,13 @@ def Tap(index, ld_path_console, x, y):
     command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     return True
+
+def MoAppThanhCong(index, x, y):
+    if x is not None and y is not None:
+        return True
+    else:
+        print("Mở app không thành công!")
+        return False    
      
 def KiemTraDangKyThanhCong(index, x, y):
     if x is not None and y is not None:
@@ -245,67 +252,3 @@ def XuLyNextButton(index, ld_path_console, actionURL):
         return True
     return False
 
-
-# def processButton(button, action, text, index, ld_path_console, saveText, emailText, passText):
-#     thinhthoang = False
-#     if len(button) == 4:
-#         thinhthoang = button[3]
-#     btn_location = TimAnhSauKhiChupVaSoSanh(button[0], index)
-
-#     if btn_location:
-#         if action == "Tap":
-#             Tap(index, btn_location[0], btn_location[1])
-#         elif action == "GoText":
-#             GoText(index, text, btn_location[0], btn_location[1])
-#         elif action == "ChonNgayThangNamSinh":
-#             ChonNgayThangNamSinh(index, ld_path_console)
-#         elif action == "KiemTraDangKyThanhCong":
-#             isSuccess = KiemTraDangKyThanhCong(index, btn_location[0], btn_location[1])
-#             if isSuccess:
-#                 TrangThaiInstance(index, f"Instance {index} đã đăng ký thành công", saveText)
-#                 TrangThaiInstance(index, f"Instance {index} đang lấy Cookie", saveText)
-#                 CookieToken = json.loads(getAdbData(index, ld_path_console))
-#                 uid = CookieToken.get("uid")
-#                 cookie = CookieToken.get("cookie")
-#                 token = CookieToken.get("token")
-#                 account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
-#                 print(account)
-#         time.sleep(1)
-#     elif thinhthoang:
-#         # Nếu button "thỉnh thoảng hiện" không tồn tại, bỏ qua
-#         print(f"Button {button[0]} không tồn tại, bỏ qua.")
-
-# def CommandGoText(index, ld_path_console, keycode):
-#     command = f'{ld_path_console} adb --index {str(index)} --command "shell input keyevent {keycode}"'
-#     print(f"{index} Modify command:", " ".join(command))
-#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#     if result.returncode != 0:
-#         print(f"Lỗi khi gửi sự kiện {keycode}: {result.stderr}")
-#     else:
-#         print(f"Đã gửi sự kiện {keycode} thành công.")
-#     time.sleep(0.5)  # Độ trễ sau mỗi lệnh
-
-# def GoText(index, text, x, y, ld_path_console):
-#     # Nếu có tọa độ, thực hiện tap vào vị trí đó
-#     if x is not None and y is not None:
-#         Tap(index, x, y)
-
-#     if isinstance(text, int):
-#         # Nếu text là một mã key event
-#         command = f'{ld_path_console} adb --index {index} --command "shell input keyevent {text}"'
-#         # print(f"Command: {command}")
-#         # print(f"{index} Modify command:", " ".join(command))
-#         result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#         if result.returncode != 0:
-#             print(f"Lỗi khi gửi sự kiện: {result.stderr}")
-#     else:
-#         # Nếu text là một đoạn văn bản, gửi từng ký tự dưới dạng key event
-#         for char in text:
-#             keycode = getattr(KeyCode, f"KEYCODE_{char.upper()}", None)
-#             if keycode is not None:
-#                 CommandGoText(index, ld_path_console, keycode)
-#             else:
-#                 print(f"Không tìm thấy mã key event cho ký tự: {char}")
-
-#     print("Tất cả các sự kiện đã được gửi.")
-        
