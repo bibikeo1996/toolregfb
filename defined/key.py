@@ -65,7 +65,7 @@ class Action:
     base_dir = os.path.dirname(os.path.abspath(__file__))
     createbutton_Btn = os.path.join(base_dir, '..', 'imageAction', 'createaccount.png')
     getstarted_Btn = os.path.join(base_dir, '..', 'imageAction', 'getstarted.png')
-    firstname_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname2.png')
+    firstname2_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname2.png')
     firstname3_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname3.png')
     lastname_Btn = os.path.join(base_dir, '..', 'imageAction', 'lastname.png')
     nextt_Btn = os.path.join(base_dir, '..', 'imageAction', 'next.png')
