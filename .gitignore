@@ -65,4 +65,7 @@ Thumbs.db
 *.xml
 
 # No upload PNG
-#*.png
+*.png
+
+#Ignore this folder png
+!/imageAction/*.png
