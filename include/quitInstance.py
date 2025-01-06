@@ -4,7 +4,7 @@ import shutil
 import time
 
 from include.setUpDevices import ThietLapThongSoThietbi
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, ThoatInstance
+from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, ThoatInstance, ADBKillAndStartServer
 from include.function import CapQuyenTruyCapChoFacebookLite, OpenApp, UnInstallAppFile
 # from include.run import RunLD
 
@@ -36,6 +36,8 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
             # print(f"LDPlayer ld{index} đang chạy. Tiến hành thoát instance.")
             if not ThoatInstance(index, ld_path_console):
                 print(f"Không thể thoát instance ld{index}. Dừng tiến trình.")
+
+                ADBKillAndStartServer()
 
                 # Xóa cache/logs
                 instance_path = os.path.join(ld_path_instance, f"leidian{index}")

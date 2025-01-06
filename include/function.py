@@ -89,7 +89,7 @@ def TimAnhSauKhiChupVaSoSanh(template_paths, index, ld_path_console, confidence=
 
                 # Thực hiện hành động (ví dụ: click)
                 # Giả sử thực hiện xong thì chụp lại ảnh After
-                time.sleep(1)
+                time.sleep(5)
                 after_screenshot, after_path = ChupAnhTrenManhinh(index, "after.png", ld_path_console)
                 shutil.move(after_path, f"./imageBeforeAfter/after_{index}.png")
 
