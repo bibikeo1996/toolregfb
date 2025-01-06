@@ -8,12 +8,20 @@ from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, T
 from include.function import CapQuyenTruyCapChoFacebookLite, OpenApp, UnInstallAppFile
 # from include.run import RunLD
 
+def remove_all_pycache(root_dir):
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        for dirname in dirnames:
+            if dirname == "__pycache__":
+                pycache_path = os.path.join(dirpath, dirname)
+                shutil.rmtree(pycache_path)
+                print(f"Đã xóa thư mục: {pycache_path}")
+
 def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance):
     try:
         if not all([ld_path_console, ld_path_instance]):
             print("Đường dẫn ld_path_console hoặc ld_path_instance không hợp lệ.")
             return False
-
+        remove_all_pycache(".")
         # Hàm kiểm tra LDPlayer có đang chạy không
         def CheckLDPlayerRunning(index, ld_path_console):
             command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
