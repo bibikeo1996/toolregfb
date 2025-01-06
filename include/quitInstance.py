@@ -5,7 +5,7 @@ import time
 
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, ThoatInstance, ADBKillAndStartServer
-from include.function import CapQuyenTruyCapChoFacebookLite, OpenApp, UnInstallAppFile
+from include.function import CapQuyenTruyCapChoFacebookLite
 # from include.run import RunLD
 
 def remove_all_pycache(root_dir):
@@ -16,12 +16,32 @@ def remove_all_pycache(root_dir):
                 shutil.rmtree(pycache_path)
                 print(f"Đã xóa thư mục: {pycache_path}")
 
-
 def Reboot(index, ld_path_console):
     command = f'{ld_path_console} reboot --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     time.sleep(10)
     return True
+
+def CheckLDPlayerRunning(index, ld_path_console):
+    command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return "not found" not in result.stdout.lower() and "not found" not in result.stderr.lower()
+
+def OpenLD(index, ld_path_console):
+    ldplayer_running = False
+    while not ldplayer_running:
+        command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
+        # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell getprop"]
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        if "not found" in result.stdout.lower() or "not found" in result.stderr.lower():
+            start_command = [ld_path_console, "launch", "--index", str(index)]
+            subprocess.run(start_command)
+            # print(f"{result.stdout}")
+            time.sleep(1)
+        else:
+            # print(f"LDPlayer {index} is already running")
+            ldplayer_running = True
+    return True 
 
 def LDOpened(index, ld_path_console):
     command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
@@ -78,18 +98,32 @@ def RebootVaXoaCache(index, ld_path_console, package_name, apk_path):
                 print("Deleting...")
     else:
         pass
-    print("Rebooting...")                        
-    isRebooted = Reboot(index, ld_path_console)
-    while isRebooted:
-        time.sleep(1)
-        isOpenedLD = LDOpened(index, ld_path_console)
-        if isOpenedLD:
-            isInstalled = InstallAppFile(index, ld_path_console, apk_path)
-            if isInstalled:
-                return True
-                break
-        else:
-            print("Đang chờ LDPlayer mở...")
+    if CheckLDPlayerRunning(index, ld_path_console):
+        print("Rebooting...")                        
+        isRebooted = Reboot(index, ld_path_console)
+        while isRebooted:
+            time.sleep(1)
+            isOpenedLD = LDOpened(index, ld_path_console)
+            if isOpenedLD:
+                isInstalled = InstallAppFile(index, ld_path_console, apk_path)
+                if isInstalled:
+                    return True
+                    break
+            else:
+                print("Đang chờ LDPlayer mở...")
+    else:  
+        print("Opening LDPlayer...")
+        isOpened = OpenLD(index, ld_path_console)
+        while isOpened:
+            time.sleep(1)
+            isOpenedLD = LDOpened(index, ld_path_console)
+            if isOpenedLD:
+                isInstalled = InstallAppFile(index, ld_path_console, apk_path)
+                if isInstalled:
+                    return True
+                    break
+            else:
+                print("Đang chờ LDPlayer mở...")
     return False
 
 # def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance):

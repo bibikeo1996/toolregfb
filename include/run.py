@@ -98,6 +98,10 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         time.sleep(2)
 
+        CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+
+        time.sleep(2)
+
         if isRebooted_done:
             print("Đã cài app")
             OpenApp(index, ld_path_console, package_name)

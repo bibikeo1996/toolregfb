@@ -26,30 +26,6 @@ adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH')
 package_name = os.getenv('PACKAGE_NAME')
 
-def OpenApp(index):
-    if ld_path_console:
-        try:
-            subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
-            return True
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to open app: {e}")
-            return False
-    else:
-        print("LD_PATH_CONSOLE environment variable is not set.")
-        return False
-
-def UnInstallAppFile(index, ld_path_console, package_name):
-    if ld_path_console:
-        try:
-            subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
-            return True
-        except subprocess.CalledProcessError as e:
-            print(f"Failed to uninstall app: {e}")        
-            return False
-    else:
-        print("LD_PATH_CONSOLE environment variable is not set.")
-        return False
-
 def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=1, check_attempt=False):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
@@ -116,8 +92,6 @@ def LayoutThayDoi(before_image, after_image, similarity_threshold):
 
     # Kiểm tra nếu số điểm tương đồng <= similarity_threshold thì coi như layout đã thay đổi
     return non_zero_count <= similarity_threshold
-
-
 
 def KetNoiPortThietBiTheoPort(adb_port):
     connect_command = f"adb connect 127.0.0.1:{adb_port}"
