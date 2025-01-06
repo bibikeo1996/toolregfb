@@ -25,7 +25,7 @@ def ADBKillAndStartServer():
     subprocess.run(start_command)
     # print("ADB server started")
 
-def KhoiDongLDPlayer(index, ld_path_console=None):
+def KhoiDongLDPlayer(index, ld_path_console):
     ldplayer_running = False
     while not ldplayer_running:
         command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
@@ -41,7 +41,7 @@ def KhoiDongLDPlayer(index, ld_path_console=None):
             ldplayer_running = True
     return True       
 
-def ThoatInstance(index, ld_path_console=None):
+def ThoatInstance(index, ld_path_console):
     """
     Hàm xử lý thoát một instance của LDPlayer.
 
