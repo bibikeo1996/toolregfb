@@ -54,10 +54,30 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
     # Tạo các flag để kiểm soát từng điều kiện
 
-    isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-    if(isStarted == True):
-        isStarted = True
+    # isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+    # if(isStarted == True):
+    #     isStarted = True
+    #     pass
+
+    isSetup = ThietLapThongSoThietbi(index, ld_path_console)
+    if(isSetup == True):
         pass
+
+    isStarted = KhoiDongLDPlayer(index, ld_path_console)
+    if(isStarted == True):
+        pass
+
+    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
+    if(isInstalled == True):
+        pass
+
+    # DemThoiGian(1)
+
+    CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+
+    DemThoiGian(1)
+
+    OpenApp(index)
 
     createbutton_done = False
     getstarted_done = False
