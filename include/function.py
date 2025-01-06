@@ -30,13 +30,10 @@ def OpenApp(index):
     if ld_path_console:
         try:
             subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
-            return True
         except subprocess.CalledProcessError as e:
             print(f"Failed to open app: {e}")
-            return False
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
-        return False
 
 def UnInstallAppFile(index, ld_path_console, package_name):
     if ld_path_console:
@@ -47,18 +44,12 @@ def UnInstallAppFile(index, ld_path_console, package_name):
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
 
-def TimAnhSauKhiChupVaSoSanh(template_paths, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
     os.makedirs("./imageBeforeAfter", exist_ok=True)
     
-    if isinstance(template_paths, str):
-        template_paths = [template_paths]
-    
-    templates = []
-    for path in template_paths:
-        template = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-        if template is None:
-            raise FileNotFoundError(f"Không tìm thấy file {path}")
-        templates.append(template)
+    template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
+    if template is None:
+        raise FileNotFoundError(f"Không tìm thấy file {template_path}")
 
     attempts = 0
     while True:
@@ -67,29 +58,20 @@ def TimAnhSauKhiChupVaSoSanh(template_paths, index, ld_path_console, confidence=
         shutil.move(before_path, f"./imageBeforeAfter/before_{index}.png")
 
         # Bước 2: Chụp ảnh hiện tại và so sánh với ảnh hành động
-        screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, "current.png", ld_path_console)
+        screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
         try:
-            max_val = 0
-            max_loc = None
-            best_template = None
-            for template, path in zip(templates, template_paths):
-                result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-                _, temp_max_val, _, temp_max_loc = cv2.minMaxLoc(result)
-                if temp_max_val > max_val:
-                    max_val = temp_max_val
-                    max_loc = temp_max_loc
-                    best_template = template
-                    file_name = os.path.basename(path)
-                    print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
+            result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+            _, max_val, _, max_loc = cv2.minMaxLoc(result)
+            file_name = os.path.basename(template_path)
+            print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
 
             if max_val >= confidence:
                 x, y = max_loc
-                h, w = best_template.shape
+                h, w = template.shape
                 center_x, center_y = x + w // 2, y + h // 2
 
                 # Thực hiện hành động (ví dụ: click)
                 # Giả sử thực hiện xong thì chụp lại ảnh After
-                time.sleep(5)
                 after_screenshot, after_path = ChupAnhTrenManhinh(index, "after.png", ld_path_console)
                 shutil.move(after_path, f"./imageBeforeAfter/after_{index}.png")
 
@@ -112,7 +94,7 @@ def TimAnhSauKhiChupVaSoSanh(template_paths, index, ld_path_console, confidence=
 
             else:
                 if check_attempt:
-                    sys.stdout.write(f"\rKhông tìm thấy hình với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}\n")
+                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}\n")
                     sys.stdout.flush()
                     attempts += 1
                     if attempts >= max_attempts:
@@ -123,7 +105,7 @@ def TimAnhSauKhiChupVaSoSanh(template_paths, index, ld_path_console, confidence=
         finally:
             if os.path.exists(local_screenshot_path):
                 # os.remove(local_screenshot_path)
-                print("\n")
+                pass
 
     return None
 
@@ -233,13 +215,6 @@ def Tap(index, ld_path_console, x, y):
     command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     return True
-
-def MoAppThanhCong(index, x, y):
-    if x is not None and y is not None:
-        return True
-    else:
-        print("Mở app không thành công!")
-        return False    
      
 def KiemTraDangKyThanhCong(index, x, y):
     if x is not None and y is not None:
@@ -255,3 +230,9 @@ def XuLyNextButton(index, ld_path_console, actionURL):
         return True
     return False
 
+def MoAppThanhCong(index, x, y):
+    if x is not None and y is not None:
+        return True
+    else:
+        print("Mở app không thành công!")
+        return False
