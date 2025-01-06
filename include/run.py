@@ -54,8 +54,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
     # Tạo các flag để kiểm soát từng điều kiện
 
+    isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+    if(isStarted == True):
+        isStarted = True
+        pass
 
-    isStarted = False
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -80,13 +83,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     saveText = {}
     while True:
-
-        if not isStarted:
-            isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-            if(isStarted == True):
-                isStarted = True
-                pass
-        # quit()
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
@@ -276,7 +272,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
-        if (isStarted and createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
+        if (createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
             selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
             doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and issue282_done and okbtn_done):
             break

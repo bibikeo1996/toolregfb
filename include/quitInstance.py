@@ -22,7 +22,7 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
 
         # Kiểm tra LDPlayer có đang chạy hay không
         ld_running = KhoiDongLDPlayer(index, ld_path_console)
-
+        
         if ld_running:
             # TH1: Nếu LDPlayer đang chạy, thoát instance trước
             # print(f"LDPlayer ld{index} đang chạy. Tiến hành thoát instance.")
