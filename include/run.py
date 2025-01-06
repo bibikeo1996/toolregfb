@@ -59,26 +59,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     #     isStarted = True
     #     pass
 
-    isSetup = ThietLapThongSoThietbi(index, ld_path_console)
-    if(isSetup == True):
-        pass
-
-    isStarted = KhoiDongLDPlayer(index, ld_path_console)
-    if(isStarted == True):
-        pass
-
-    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
-    if(isInstalled == True):
-        pass
-
-    # DemThoiGian(1)
-
-    CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
-
-    DemThoiGian(1)
-
-    OpenApp(index)
-
+    isStarted = False
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -103,6 +84,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     saveText = {}
     while True:
+
+        check = KhoiDongLDPlayer(index, ld_path_console)
+        print(f"Check: {check}")
+        quit()
+        
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
