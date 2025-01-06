@@ -72,6 +72,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
                 # Thực hiện hành động (ví dụ: click)
                 # Giả sử thực hiện xong thì chụp lại ảnh After
+                time.sleep(5)
                 after_screenshot, after_path = ChupAnhTrenManhinh(index, "after.png", ld_path_console)
                 shutil.move(after_path, f"./imageBeforeAfter/after_{index}.png")
 
@@ -112,12 +113,9 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
     command_screencap = f'{ld_path_console} adb --index {index} --command "shell screencap -p {emulator_screenshot_path}"'
-    print(command_screencap)
-
     subprocess.run(command_screencap, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     local_screenshot_path = f"./screenshot{index}.png"
     command_pull = f'{ld_path_console} adb --index {index} --command "pull {emulator_screenshot_path} {local_screenshot_path}"'
-    print(command_pull)
     subprocess.run(command_pull, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     if not os.path.exists(local_screenshot_path):
