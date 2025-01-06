@@ -37,47 +37,25 @@ from data.getCode import getDataInFileEmails
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    # data = getDataInFileEmails(3)
-    # emailText = data["email"]
-    # passText = data["passWord"]
-    # fieldFirstName = data["firstName"]
-    # fieldLastName = data["lastName"]
+    data = getDataInFileEmails(4)
+    emailText = data["email"]
+    passText = data["passWord"]
+    fieldFirstName = data["firstName"]
+    fieldLastName = data["lastName"]
+    mi = data["mi"]
+    phpsessid = data["phpsessid"]
+
+    # emailText = "dofafe9582@pixdd.com"
+    # passText = "9dVhsUax@"
+    # fieldFirstName = "Tony"
+    # fieldLastName = "Nguyen"
     # mi = data["mi"]
     # phpsessid = data["phpsessid"]
-
-    emailText = "dofafe9582@pixdd.com"
-    passText = "9dVhsUax@"
-    fieldFirstName = "Tony"
-    fieldLastName = "Nguyen"
-    # mi = data["mi"]
-    # phpsessid = data["phpsessid"]
-    # print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
-
-    # RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-    # quit
-    isSetup = ThietLapThongSoThietbi(index, ld_path_console)
-    if(isSetup == True):
-        pass
-        
-    isStarted = KhoiDongLDPlayer(index, ld_path_console)
-    if(isStarted == True):
-        pass
-
-    isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
-    if(isInstalled == True):
-        pass
-
-    DemThoiGian(1)
-
-    CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
-
-    DemThoiGian(2)
-
-    OpenApp(index)
-    
-    DemThoiGian(5)
-
+    print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
     # Tạo các flag để kiểm soát từng điều kiện
+
+
+    isStarted = False
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -102,6 +80,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
     saveText = {}
     while True:
+
+        if not isStarted:
+            isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+            if(isStarted == True):
+                isStarted = True
+                pass
+                
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)

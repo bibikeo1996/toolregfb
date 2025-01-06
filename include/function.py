@@ -35,7 +35,7 @@ def OpenApp(index):
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
 
-def UnInstallAppFile(ld_type, index, package_name):
+def UnInstallAppFile(index, ld_path_console, package_name):
     if ld_path_console:
         try:
             subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
@@ -43,14 +43,6 @@ def UnInstallAppFile(ld_type, index, package_name):
             print(f"Failed to uninstall app: {e}")
     else:
         print("LD_PATH_CONSOLE environment variable is not set.")
-
-## So sánh ảnh màn hình với ảnh action để click
-import os
-import cv2
-import shutil
-import time
-import subprocess
-import sys
 
 def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, check_attempt=False, similarity_threshold=3):
     os.makedirs("./imageBeforeAfter", exist_ok=True)

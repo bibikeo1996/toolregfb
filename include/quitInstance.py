@@ -4,21 +4,38 @@ import shutil
 import time
 
 from include.setUpDevices import ThietLapThongSoThietbi
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer
+from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, ThoatInstance
+from include.function import CapQuyenTruyCapChoFacebookLite, OpenApp, UnInstallAppFile
 # from include.run import RunLD
 
 def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance):
     try:
-        # Dừng LDPlayer instance trước khi xử lý
-        stop_command = [ld_path_console, "quit", "--index", str(index)]
-        subprocess.run(stop_command, check=True)
-        print(f"Instance ld{index} đã được dừng.")
-        time.sleep(2)
+        # Hàm kiểm tra LDPlayer có đang chạy không
+        def KhoiDongLDPlayer(index, ld_path_console):
+            ldplayer_running = False
+            while not ldplayer_running:
+                command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
+                # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell getprop"]
+                result = subprocess.run(command, shell=True, capture_output=True, text=True)
+                if "not found" in result.stdout.lower() or "not found" in result.stderr.lower():
+                    start_command = [ld_path_console, "launch", "--index", str(index)]
+                    subprocess.run(start_command)
+                    # print(f"{result.stdout}")
+                    time.sleep(1)
+                else:
+                    # print(f"LDPlayer {index} is already running")
+                    ldplayer_running = True
+            return True  
 
-        # Đường dẫn thư mục của instance
+        # Kiểm tra LDPlayer có đang chạy hay không
+        ld_running = KhoiDongLDPlayer(index, ld_path_console)
+
+        if ld_running:
+            print(f"LDPlayer ld{index} đang chạy.")
+            UnInstallAppFile(index, ld_path_console, package_name)
+            ThoatInstance(index, ld_path_console)
+
         instance_path = os.path.join(ld_path_instance, f"leidian{index}")
-
-        # Xóa thư mục Logs
         logs_path = os.path.join(instance_path, "Logs")
         if os.path.exists(logs_path):
             shutil.rmtree(logs_path)
@@ -26,56 +43,30 @@ def RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_ins
         else:
             print(f"Không tìm thấy thư mục Logs tại {logs_path}.")
 
-        # Giữ nguyên các file vmdk, vbox, data
-        print(f"Đã giữ nguyên các file cấu hình quan trọng trong {instance_path}.")
 
-        # Thiết lập thông số thiết bị
-        ThietLapThongSoThietbi(index, ld_path_console)
+        # Reboot LDPlayer
+        isSetup = ThietLapThongSoThietbi(index, ld_path_console)
+        if(isSetup == True):
+            pass
         
-        # RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance)
+        # Start LDPlayer
+        isStarted = KhoiDongLDPlayer(index, ld_path_console)
+        if isStarted:
+            print(f"Đã khởi động LDPlayer ld{index}.")
+
+        # Cài đặt ứng dụng nếu chưa có
+        isInstalled = KiemTraDaCaiAppFaceBookLiteChua(index, package_name, apk_path, ld_path_console)
+        if not isInstalled:
+            print("Tiến hành cài đặt ứng dụng.")
+            # Thực hiện cài đặt (nếu cần)
+
+        # Cấp quyền và mở ứng dụng
+        CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+
+        OpenApp(index)
 
         return True
 
-    except subprocess.CalledProcessError as e:
-        print(f"Lỗi khi xử lý reboot hoặc xóa cache: {e}")
-        return False
     except Exception as e:
-        print(f"Lỗi khác: {e}")
+        print(f"Lỗi trong quá trình thực thi: {e}")
         return False
-
-# def RebootVaXoaCache(index, ld_path_console, ld_path_instance):
-#     try:
-#         # Dừng LDPlayer instance trước khi xử lý
-#         stop_command = [ld_path_console, "quit", "--index", str(index)]
-#         subprocess.run(stop_command, check=True)
-#         print(f"Instance ld{index} đã được dừng.")
-#         time.sleep(2)
-#         # Xóa toàn bộ thư mục config của instance
-#         instance_path = os.path.join(ld_path_instance, f"leidian{index}")
-#         if os.path.exists(instance_path):
-#             shutil.rmtree(instance_path)
-#             print(f"Đã xóa toàn bộ dữ liệu của instance ld{index} tại {instance_path}.")
-#         else:
-#             print(f"Không tìm thấy thư mục leidian{index} tại {instance_path}.")
-
-#         ThietLapThongSoThietbi(index, ld_path_console)
-#         time.sleep(1)
-
-#         return True
-
-#     except subprocess.CalledProcessError as e:
-#         print(f"Lỗi khi xử lý reboot hoặc xóa cache: {e}")
-#         return False
-#     except Exception as e:
-#         print(f"Lỗi khác: {e}")
-#         return False
-
-
-# ld_path_console = "D:\\LDPlayer\\LDPlayer9\\ldconsole.exe"
-# ld_path_instance = "D:\\LDPlayer\\LDPlayer9\\vms\\"
-# index = 1
-
-# if RebootVaXoaCache(index, ld_path_console, ld_path_instance):
-#     print("Reboot và xóa cache thành công!")
-# else:
-#     print("Có lỗi xảy ra khi reboot và xóa cache.")
