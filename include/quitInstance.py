@@ -156,7 +156,7 @@ from include.function import *
 def StartLD(index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    DemThoiGian(15)
+    DemThoiGian(25)
     return False
 
 ## Check facebook có tồn tại hay không sau đó uninstall
@@ -169,7 +169,7 @@ def UninstallFacebook(index, ld_path_console, package_name, timeout=20):
 def InstallFacebook(template_path, index, ld_path_console, apk_path, timeout=20):
     command = f'{ld_path_console} adb --index {index} --command "install {apk_path}"'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    print("Installing Facebook...")
+    # print("Installing Facebook...")
     DemThoiGian(5)
     return True
 

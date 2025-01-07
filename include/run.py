@@ -125,7 +125,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
             if pos is not None:
                 GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
-                print("Đã nhập firstname")
+                # print("Đã nhập firstname")
+                pass
                 firstname_done = True
 
         # time.sleep(2)
@@ -135,14 +136,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
             if pos is not None:
                 GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
-                print("Đã nhập lastname")
+                # print("Đã nhập lastname")
+                pass
                 lastname_done = True
 
         # time.sleep(2)
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 1")
+            # print("Đã click Next 1")
+            pass
 
         # Kiểm tra selectyourname nếu chưa hoàn thành
         if not selectyourname_done:
@@ -152,7 +155,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 selectyourname_done = True
                 # Kiểm tra nextt nếu chưa hoàn thành
                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                    print("Đã click Next 2")
+                    # print("Đã click Next 2")
+                    pass
 
         # time.sleep(2)
 
@@ -176,7 +180,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 3")                
+            # print("Đã click Next 3")           
+            pass     
 
         # time.sleep(2)
 
@@ -191,7 +196,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 4")
+            # print("Đã click Next 4")
+            pass
 
         # time.sleep(2)
 
@@ -215,7 +221,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 5")        
+            # print("Đã click Next 5")        
+            pass
 
         # time.sleep(2)
 
@@ -260,7 +267,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 6")
+            # print("Đã click Next 6")
+            pass
 
         # time.sleep(2)
 
@@ -317,17 +325,20 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         # time.sleep(2)
 
         if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
-            print("Đã click skip")
+            # print("Đã click skip")
+            pass
 
         # time.sleep(2)
 
         if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
-            print("Đã click skip lần 2") 
+            # print("Đã click skip lần 2") 
+            pass
 
         # time.sleep(2)
 
         if XuLyNextButton(index, ld_path_console, Action.skip1_Btn):
-            print("Đã click skip lần 3")                        
+            # print("Đã click skip lần 3") 
+            pass                       
              
         # time.sleep(2)             
 
@@ -343,7 +354,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     token = CookieToken.get("token")
                     account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
                     print(account)
-                    print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
+                    # print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
                     DemThoiGian(3)
                     successReg_done = True
                     UninstallFacebook(index, ld_path_console, package_name)
