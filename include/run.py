@@ -264,10 +264,10 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if not invalid_email_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
             if pos is not None:
-                isFacebookExist = isFacebookExist(index, ld_path_console, package_name)
-                if isFacebookExist:
-                    isRebooting = isRebooting(index, ld_path_console)
-                    if isRebooting:
+                isFacebookExist2 = isFacebookExist(Action.isFacebookExist_Btn, index, ld_path_console, package_name)
+                if isFacebookExist2:
+                    isRebooting2 = isRebooting(Action.isLDRunning_Btn, index, ld_path_console)
+                    if isRebooting2:
                         break
 
 
@@ -336,10 +336,10 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 issue282_done = True
                 print(f"Email: {emailText} bị dính 282")
                 DemThoiGian(2)
-                isFacebookExist = isFacebookExist(index, ld_path_console, package_name)
-                if isFacebookExist:
-                    isRebooting = isRebooting(index, ld_path_console)
-                    if isRebooting:
+                isFacebookExist2 = isFacebookExist(Action.isFacebookExist_Btn, index, ld_path_console, package_name)
+                if isFacebookExist2:
+                    isRebooting2 = isRebooting(Action.isLDRunning_Btn, index, ld_path_console)
+                    if isRebooting2:
                         break
 
 
