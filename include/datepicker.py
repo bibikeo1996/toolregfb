@@ -96,6 +96,8 @@ def ChonNgayThangNamSinh(index, ld_path_console):
         },
     }
 
+    selected_date = {}
+
     for name, coord in coordinates.items():
         if name in config:
             x, y = coord
@@ -109,9 +111,20 @@ def ChonNgayThangNamSinh(index, ld_path_console):
             times = random.randint(min_swipes, max_swipes)
             delay = random.uniform(min_delay, max_delay)
 
-            # print(f"Swiping {name}: direction={direction}, times={times}, delay={delay:.2f}s")
+            # Perform the swipe action
             VuotChon(index, ld_path_console, x, y, direction=direction, times=times)
             time.sleep(delay)
+
+            # Capture the selected value (this part is hypothetical and depends on your implementation)
+            selected_value = LayGiaTriDaChon(ld_path_console, x, y)
+            selected_date[name] = selected_value
+
+    return selected_date
+
+def LayGiaTriDaChon(ld_path_console, x, y):
+    # This function should implement the logic to capture the selected value from the date picker
+    # For example, it could use OCR or another method to read the value at the given coordinates
+    pass
 
 def DumpMap(ld_path_console, dump_file_path="include/map/datePickerLocation.xml"):
     try:

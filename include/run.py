@@ -96,7 +96,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         InstallFacebook(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
 
-        # CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+        CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
         OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
 
