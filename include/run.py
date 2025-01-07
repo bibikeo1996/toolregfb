@@ -84,8 +84,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     sStartLD = False
     isFacebookInstall_done = False
     isInvalidEmail_done = False    
-    isInvalidBirth_done = False
-
+    isInvalidBirth_done = False    
+    isInvalidaccount_done = False
 
     saveText = {}
     while True:
@@ -295,11 +295,18 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # time.sleep(2)
 
+        if not isInvalidaccount_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidAccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(pos != None):
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return
+
         ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
         DemThoiGian(30)
 
         if not issue282_done:
-            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=3, check_attempt=True)
+            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
             if(is282 != None):
                 issue282_done = True
                 print(f"Email: {emailText} bị dính 282")
