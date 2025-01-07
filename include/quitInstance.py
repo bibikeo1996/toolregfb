@@ -4,9 +4,9 @@ import shutil
 import time
 import pyautogui
 
-from include.setUpDevices import ThietLapThongSoThietbi
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, ThoatInstance, ADBKillAndStartServer, DemThoiGian
-from include.function import CapQuyenTruyCapChoFacebookLite
+from include.setUpDevices import *
+from include.OpenApp import *
+from include.function import *
 # from include.run import RunLD
 
 # def remove_all_pycache(root_dir):
@@ -133,98 +133,71 @@ from include.function import CapQuyenTruyCapChoFacebookLite
 #                 print("Đang chờ LDPlayer mở...")
 #     return False
 
-## Mở app Facebook
-def OpenApp(template_path, index, ld_path_console, package_name, timeout=10):
-    subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        try:
-            print("Opening App...")
-            location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-            if location:
-                return True
-        except pyautogui.ImageNotFoundException:
-            return False
-        time.sleep(0.5)
-    return False
 
 ## Check LDPlayer đang chạy hay không
-def isLDRunning(template_path, index, ld_path_console, package_name, timeout=10):
-    while True:
-        try:
-            print("Checking LDPlayer is running...")
-            command = f'{ld_path_console} killapp --index {index} --packagename {package_name}'
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            time.sleep(2)
-            location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-            if location:
-                return True
-            else:
-                return False                
-        except pyautogui.ImageNotFoundException:
-            return False
-        time.sleep(0.5)
-    return False
+# def isLDRunning(template_path, index, ld_path_console, package_name, timeout=20):
+#     while True:
+#         try:
+#             print("Checking LDPlayer is running...")
+#             command = f'{ld_path_console} killapp --index {index} --packagename {package_name}'
+#             result = subprocess.run(command, shell=True, capture_output=True, text=True)
+#             time.sleep(2)
+#             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
+#             if location:
+#                 return True
+#             else:
+#                 return False                
+#         except pyautogui.ImageNotFoundException:
+#             return False
+#         time.sleep(0.5)
+#     return False
 
 ## Khởi dộng LDPlayer
-def StartLD(template_path, index, ld_path_console):
+def StartLD(index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    while True:
-        try:
-            print("Starting LD...")
-            location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-            if location:
-                return True
-        except pyautogui.ImageNotFoundException:
-            pass
-        time.sleep(0.5)
-    return False 
-
-## Check facebook có tồn tại hay không sau đó uninstall
-def isFacebookExist(template_path, index, ld_path_console, package_name, timeout=10):
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        try:
-            location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-            print("Deleting Facebook...")
-            if location:
-                subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
-                return True
-        except pyautogui.ImageNotFoundException:
-            pass                
-        time.sleep(0.5)
+    DemThoiGian(15)
     return False
 
+## Check facebook có tồn tại hay không sau đó uninstall
+def UninstallFacebook(index, ld_path_console, package_name, timeout=20):
+    subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
+    DemThoiGian(2)
+    return True
+
 ## Cài facebook
-def isFacebookInstall(template_path, index, ld_path_console, apk_path, timeout=10):
+def InstallFacebook(template_path, index, ld_path_console, apk_path, timeout=20):
+    command = f'{ld_path_console} adb --index {index} --command "install {apk_path}"'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    print("Installing Facebook...")
+    DemThoiGian(5)
+    return True
+
+## Mở app Facebook
+def OpenApp(template_path, index, ld_path_console, package_name, timeout=20):
+    subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
     start_time = time.time()
-    while time.time() - start_time < timeout:
-        try:
-            command = f'{ld_path_console} adb --index {index} --command "install {apk_path}"'
-            result = subprocess.run(command, shell=True, capture_output=True, text=True)
-            print("Installing Facebook...")
-            location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-            if location:
-                return True
-        except pyautogui.ImageNotFoundException:
-            pass
-        time.sleep(0.5)
-    return False  
+    DemThoiGian(5)
+    return True
 
 ## Reboot và xóa cache
-def isRebooting(template_path, index, ld_path_console, timeout=10):
-    command = f'{ld_path_console} reboot --index {index}'
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    start_time = time.time()
-    while time.time() - start_time < timeout:
-        try:
-            print("Rebooting...")
-            location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-            if location:
-                return True
-        except pyautogui.ImageNotFoundException:
-            pass
-        time.sleep(0.5)
-    return False     
+# def isRebooting(template_path, index, ld_path_console, timeout=20):
+#     command = f'{ld_path_console} reboot --index {index}'
+#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
+#     start_time = time.time()
+#     while time.time() - start_time < timeout:
+#         try:
+#             print("Rebooting...")
+#             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
+#             if location:
+#                 return True
+#         except pyautogui.ImageNotFoundException:
+#             pass
+#         time.sleep(0.5)
+#     return False     
 
+def QuitLD(index, ld_path_console):
+    command = f'{ld_path_console} quit --index {index}'
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    DemThoiGian(2)
+    return True

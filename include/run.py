@@ -19,16 +19,15 @@ from io import BytesIO
 
 
 ## import function
-from include.function import MoAppThanhCong, DocFileExcel, XuLyNextButton, Tap, GoText, TimAnhSauKhiChupVaSoSanh, KetNoiPortThietBiTheoPort, KiemTraDangKyThanhCong, CapQuyenTruyCapChoFacebookLite
-from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, DemThoiGian
-from include.datepicker import ChonNgayThangNamSinh, DumpMap
-from include.setUpDevices import ThietLapThongSoThietbi
-from include.getCookieToken import getAdbData
-from include.quitInstance import RebootVaXoaCache, OpenApp, UnInstallAppFile
+from include.function import *
+from include.OpenApp import *
+from include.datepicker import *
+from include.setUpDevices import *
+from include.getCookieToken import *
+from include.quitInstance import *
 
 # from include.OpenApp import openBrave
-from data.getCode import getMailCode
-from data.getCode import getDataInFileEmails
+from data.getCode import *
 # file_path = 'D:\\Workspace\\toolregfb\\data.xlsx'
 # emails, passwords, first_names, last_names = DocFileExcel(file_path)
 
@@ -37,7 +36,7 @@ from data.getCode import getDataInFileEmails
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    data = getDataInFileEmails(6)
+    data = getDataInFileEmails(1)
     emailText = data["email"]
     passText = data["passWord"]
     fieldFirstName = data["firstName"]
@@ -58,9 +57,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     # if(isStarted == True):
     #     isStarted = True
     #     pass
-    isRebooted_done = False
-    isStarted = False
-    isStartedApp_done = False
+
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -83,6 +80,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     issue282_done = False
     okbtn_done = False
 
+    # New
+    sStartLD = False
+    isFacebookInstall_done = False
+    isInvalidEmail_done = False
+
     saveText = {}
     while True:
         
@@ -90,33 +92,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if isSetup:
             print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
 
-        if not isRebooted_done:
-            isRebooted = RebootVaXoaCache(index, ld_path_console, package_name, apk_path)
-            if isRebooted:
-                print("Đã reboot và xóa cache")
-                isRebooted_done = True
+        StartLD(index, ld_path_console)
 
-        time.sleep(2)
+        InstallFacebook(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
 
-        CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+        # CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
-        time.sleep(2)
+        OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
 
-        if isRebooted_done:
-            print("Đã cài app")
-            OpenApp(index, ld_path_console, package_name)
+        quit()
 
-        time.sleep(2)
-       
-        # Kiểm tra isStartedApp nếu chưa hoàn thành
-        if not isStartedApp_done:
-            print("Đang mở app")
-            pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
-            if pos is not None:
-                isStartedApp_done = True
-
-        time.sleep(2)
-        # quit()
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
@@ -124,7 +109,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 createbutton_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra getstarted nếu chưa hoàn thành
         if not getstarted_done:
@@ -133,7 +118,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 getstarted_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra firstname nếu chưa hoàn thành
         if not firstname_done:
@@ -143,7 +128,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 print("Đã nhập firstname")
                 firstname_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra lastname nếu chưa hoàn thành
         if not lastname_done:
@@ -153,7 +138,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 print("Đã nhập lastname")
                 lastname_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
@@ -169,7 +154,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                     print("Đã click Next 2")
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra setDate nếu chưa hoàn thành
         if not setDate_done:
@@ -178,7 +163,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 ChonNgayThangNamSinh(index, ld_path_console)
                 setDate_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra sett nếu chưa hoàn thành
         if not sett_done:
@@ -187,13 +172,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 sett_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
             print("Đã click Next 3")                
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra gender nếu chưa hoàn thành
         if not gender_done:
@@ -202,13 +187,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 gender_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
             print("Đã click Next 4")
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra signup nếu chưa hoàn thành
         if not signup_done:
@@ -217,7 +202,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 signup_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra email nếu chưa hoàn thành
         if not email_done:
@@ -226,13 +211,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 GoText(index, ld_path_console, emailText, pos[0], pos[1])
                 email_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
             print("Đã click Next 5")        
 
-        time.sleep(2)
+        # time.sleep(2)
+
+        if not isInvalidEmail_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(pos != None):
+                print("Email không hợp lệ")
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return
+
 
         # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
         if not doyouhaveaccount_done:
@@ -245,7 +239,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     doyouhaveaccount_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra password nếu chưa hoàn thành
         if not password_done:
@@ -254,7 +248,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 password_done = True
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra agree nếu chưa hoàn thành
         if not passwordField_done:
@@ -262,38 +256,39 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if(pos != None):
                 GoText(index, ld_path_console, passText, pos[0], pos[1])                   
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
             print("Đã click Next 6")
 
-        time.sleep(2)
+        # time.sleep(2)
 
         if not notnow_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
             if(pos != None):
                 Tap(index, ld_path_console, pos[0], pos[1])  
 
-        time.sleep(2)
+        # time.sleep(2)
 
         if not agree_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
             if(pos != None):
                 Tap(index, ld_path_console, pos[0], pos[1])                    
 
-        time.sleep(2)
+        # time.sleep(2)
 
         ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
         if not issue282_done:
-            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=5, check_attempt=True)
+            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=3, check_attempt=True)
             if(is282 != None):
                 issue282_done = True
                 print(f"Email: {emailText} bị dính 282")
-                DemThoiGian(2)
-                RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return
 
-        time.sleep(2)
+        # time.sleep(2)
 
         # Kiểm tra verifycode nếu chưa hoàn thành
         if not verifycode_done:
@@ -304,13 +299,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 verifycode = getMailCode(mi, phpsessid)
                 if verifycode is None:
                     print("Không lấy được mã code == Reboot và xóa cache")
-                    RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
                     return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
-                # DemThoiGian(30)
+                DemThoiGian(30)
                 verifycode_done = True
         
-        time.sleep(2)
+        # time.sleep(2)
 
         if not okbtn_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
@@ -318,22 +314,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])   
                 okbtn_done = True 
 
-        time.sleep(2)
+        # time.sleep(2)
 
         if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
             print("Đã click skip")
 
-        time.sleep(2)
+        # time.sleep(2)
 
         if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
             print("Đã click skip lần 2") 
 
-        time.sleep(2)
+        # time.sleep(2)
 
         if XuLyNextButton(index, ld_path_console, Action.skip1_Btn):
             print("Đã click skip lần 3")                        
              
-        time.sleep(2)             
+        # time.sleep(2)             
 
         # Kiểm tra successReg nếu chưa hoàn thành
         if not successReg_done:
@@ -350,10 +346,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
                     DemThoiGian(3)
                     successReg_done = True
-                    RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
-        if (isRebooted_done and isStarted and isStartedApp_done and createbutton_done and getstarted_done and firstname_done and lastname_done and
+        if (createbutton_done and getstarted_done and firstname_done and lastname_done and
             selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
             doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and issue282_done and okbtn_done):
             break

@@ -95,7 +95,6 @@ def ThietLapThongSoThietbi(index, ld_path_console):
             "13812345678",  # Example phone number
         ]
         subprocess.run(modify_command, check=True)
-        print(f"{index} Modify command:", " ".join(modify_command))
         return True
     except subprocess.CalledProcessError as e:
         print(f"Failed to set device properties: {e}")
