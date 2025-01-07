@@ -36,21 +36,22 @@ from data.getCode import *
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    data = getDataInFileEmails(0)
-    emailText = data["email"]
-    passText = data["passWord"]
-    fieldFirstName = data["firstName"]
-    fieldLastName = data["lastName"]
-    mi = data["mi"]
-    phpsessid = data["phpsessid"]
-
-    # emailText = "dofafe9582@pixdd.com"
-    # passText = "9dVhsUax@"
-    # fieldFirstName = "Tony"
-    # fieldLastName = "Nguyen"
+    # data = getDataInFileEmails(0)
+    # emailText = data["email"]
+    # passText = data["passWord"]
+    # fieldFirstName = data["firstName"]
+    # fieldLastName = data["lastName"]
     # mi = data["mi"]
     # phpsessid = data["phpsessid"]
-    print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
+
+    emailText = "kavif45498@myweblaw.com"
+    passText = "9dVhsUax@"
+    fieldFirstName = "Khavid"
+    fieldLastName = "Nguyen"
+    verifycode = None
+    # mi = data["mi"]
+    # phpsessid = data["phpsessid"]
+    # print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
     # Tạo các flag để kiểm soát từng điều kiện
 
     # isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
@@ -321,7 +322,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
             if pos is not None:
                 # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                verifycode = getMailCode(mi, phpsessid)
+                # verifycode = getMailCode(mi, phpsessid)
                 if verifycode is None:
                     print("Không lấy được mã code == Reboot và xóa cache")
                     UninstallFacebook(index, ld_path_console, package_name)
