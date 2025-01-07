@@ -103,6 +103,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             print("LD running...")
             ## Kiểm tra facebook đã cài chưa 
             if not isFacebookExist_done:
+                print("Checking Facebook... 1")
                 isFacebookExist_done = isFacebookExist(Action.isFacebookExist_Btn, index, ld_path_console, package_name)
                 if isFacebookExist_done:
                     print("Installed 1 Facebook")
@@ -150,10 +151,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
-            print(pyautogui.center(pos))
             if pos is not None:
-                pyautogui.click(pyautogui.center(pos))
-                # Tap(index, ld_path_console, pos[0], pos[1])
+                Tap(index, ld_path_console, pos[0], pos[1])
                 createbutton_done = True
         # quit()
         # Kiểm tra getstarted nếu chưa hoàn thành

@@ -151,9 +151,12 @@ def OpenApp(template_path, index, ld_path_console, package_name, timeout=10):
 def isLDRunning(template_path, index, timeout=10):
     while True:
         try:
+            print("Checking LDPlayer is running...")
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
             if location:
                 return True
+            else:
+                return False                
         except pyautogui.ImageNotFoundException:
             return False
         time.sleep(0.5)
