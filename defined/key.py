@@ -113,3 +113,4 @@ class Action:
     isFacebookExist_Btn = os.path.join(base_dir, '..', 'imageAction', 'facebook.png')
     isOpenApp_Btn = os.path.join(base_dir, '..', 'imageAction', 'openapp.png')
     isInvalidEmail_Btn = os.path.join(base_dir, '..', 'imageAction', 'invalidemail.png')
+    isInvalidBirth_Btn = os.path.join(base_dir, '..', 'imageAction', 'validaBirth.png')

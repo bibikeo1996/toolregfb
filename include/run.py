@@ -83,7 +83,9 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     # New
     sStartLD = False
     isFacebookInstall_done = False
-    isInvalidEmail_done = False
+    isInvalidEmail_done = False    
+    isInvalidBirth_done = False
+
 
     saveText = {}
     while True:
@@ -177,6 +179,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 sett_done = True
 
         # time.sleep(2)
+
+        if not isInvalidBirth_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(pos != None):
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
