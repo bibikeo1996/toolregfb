@@ -98,7 +98,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         ## Kiểm tra trường hợp nếu LD đang chạy thì 
         ## kiểm tra facebook (nếu có thì xóa )
         ## sau đó reboot 
-        isLDRunning_done = isLDRunning(Action.isLDRunning_Btn, index)
+        isLDRunning_done = isLDRunning(Action.isLDRunning_Btn, index, ld_path_console, package_name)
         if isLDRunning_done:
             print("LD running...")
             ## Kiểm tra facebook đã cài chưa 
@@ -260,6 +260,12 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 GoText(index, ld_path_console, emailText, pos[0], pos[1])
                 email_done = True
 
+        # Kiểm tra email nếu chưa hoàn thành
+        if not invalid_email_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if pos is not None:
+                Tap(index, ld_path_console, pos[0], pos[1])
+                invalid_email_done = True
 
 
         # Kiểm tra nextt nếu chưa hoàn thành

@@ -148,10 +148,13 @@ def OpenApp(template_path, index, ld_path_console, package_name, timeout=10):
     return False
 
 ## Check LDPlayer đang chạy hay không
-def isLDRunning(template_path, index, timeout=10):
+def isLDRunning(template_path, index, ld_path_console, package_name, timeout=10):
     while True:
         try:
             print("Checking LDPlayer is running...")
+            command = f'{ld_path_console} killapp --index {index} --packagename {package_name}'
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            time.sleep(2)
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
             if location:
                 return True

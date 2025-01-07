@@ -89,7 +89,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
                 return (center_x, center_y)
             else:
                 if check_attempt:
-                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
+                    sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}\n")
                     sys.stdout.flush()
                     attempts += 1
                     if attempts >= max_attempts:
@@ -219,7 +219,7 @@ def Tap(index, ld_path_console, x, y):
     # print(f"Tap at {x}, {y}")
     command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    time.sleep(2)
+    time.sleep(3)
     return True
      
 def KiemTraDangKyThanhCong(index, x, y):
