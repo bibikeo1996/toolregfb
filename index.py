@@ -26,7 +26,7 @@ if __name__ == "__main__":
                 RunLD(i, apk_path, package_name, ld_path_console, ld_path_instance)
 
             threads = []
-            for i in range(5):
+            for i in range(4):
                 t = threading.Thread(target=task, args=(i, apk_path, package_name, ld_path_console, ld_path_instance))
                 threads.append(t)
                 t.start()

@@ -36,7 +36,7 @@ from data.getCode import *
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    data = getDataInFileEmails(1)
+    data = getDataInFileEmails(7)
     emailText = data["email"]
     passText = data["passWord"]
     fieldFirstName = data["firstName"]
@@ -296,6 +296,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         # time.sleep(2)
 
         ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
+        DemThoiGian(30)
+        
         if not issue282_done:
             is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=3, check_attempt=True)
             if(is282 != None):
@@ -311,7 +313,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if not verifycode_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
             if pos is not None:
-
                 # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
                 verifycode = getMailCode(mi, phpsessid)
                 if verifycode is None:
