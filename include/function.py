@@ -219,6 +219,7 @@ def Tap(index, ld_path_console, x, y):
     # print(f"Tap at {x}, {y}")
     command = f'{ld_path_console} adb --index {index} --command "shell input tap {x} {y}"'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    time.sleep(2)
     return True
      
 def KiemTraDangKyThanhCong(index, x, y):
