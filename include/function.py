@@ -60,7 +60,7 @@ package_name = os.getenv('PACKAGE_NAME')
 #             if os.path.exists(local_screenshot_path):
 #                 os.remove(local_screenshot_path)
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=1, timeout=20, check_attempt=False):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, timeout=20, check_attempt=False):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
@@ -98,7 +98,8 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
         finally:
             if os.path.exists(local_screenshot_path):
-                os.remove(local_screenshot_path)
+                pass
+                # os.remove(local_screenshot_path)
 
         # Chờ delay giữa các lần thử
         time.sleep(delay)
