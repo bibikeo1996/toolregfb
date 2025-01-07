@@ -58,63 +58,8 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
 
         finally:
             if os.path.exists(local_screenshot_path):
-                os.remove(local_screenshot_path)
-
-# def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=3, timeout=20, check_attempt=False):
-#     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
-#     if template is None:
-#         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
-
-#     start_time = time.time()  # Lưu thời điểm bắt đầu
-#     attempts = 0
-
-#     while True:
-#         # Kiểm tra thời gian đã vượt quá timeout chưa
-#         elapsed_time = time.time() - start_time
-#         if elapsed_time > timeout:
-#             print(f"Hết thời gian {timeout} giây. Không tìm thấy hình.")
-#             return None
-
-#         # Chụp ảnh màn hình và xử lý so sánh
-#         screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
-#         try:
-#             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-#             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-#             file_name = os.path.basename(template_path)
-#             print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
-#             if max_val >= confidence:
-#                 x, y = max_loc
-#                 h, w = template.shape
-#                 center_x, center_y = x + w // 2, y + h // 2
-#                 return (center_x, center_y)
-#             else:
-#                 if check_attempt:
-#                     sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}\n")
-#                     sys.stdout.flush()
-#                     attempts += 1
-#                     if attempts >= max_attempts:
-#                         print("\nKhông tìm thấy hình sau nhiều lần thử.")
-#                         return None
-
-#         finally:
-#             if os.path.exists(local_screenshot_path):
-#                 pass
-#                 # os.remove(local_screenshot_path)
-
-#         # Chờ delay giữa các lần thử
-#         time.sleep(delay)
-
-
-# def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, timeout=10):
-#     FileName = os.path.basename(template_path)
-#     start_time = time.time()
-#     while time.time() - start_time < timeout:
-#         location = pyautogui.locateOnScreen(template_path, confidence=0.8)
-#         if location:
-#             print(f'Đã click {FileName}')
-#             return location
-#         time.sleep(0.5)
-#     return None
+                # os.remove(local_screenshot_path)
+                pass
 
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
