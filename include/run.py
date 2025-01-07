@@ -100,33 +100,33 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         ## sau đó reboot 
         isLDRunning_done = isLDRunning(Action.isLDRunning_Btn, index, ld_path_console, package_name)
         if isLDRunning_done:
-            print("LD running...")
+            # print("LD running...")
             ## Kiểm tra facebook đã cài chưa 
             if not isFacebookExist_done:
-                print("Checking Facebook... 1")
+                # print("Checking Facebook... 1")
                 isFacebookExist_done = isFacebookExist(Action.isFacebookExist_Btn, index, ld_path_console, package_name)
                 if isFacebookExist_done:
                     isFacebookExist_done = True
-                    print("Installed 1 Facebook")
+                    # print("Installed 1 Facebook")
                     if not isRebooting_done:
                         isRebooting_done = isRebooting(Action.isLDRunning_Btn, index, ld_path_console)
                         if isRebooting_done:
-                            print("Rebooted...")
+                            # print("Rebooted...")
                             isRebooting_done = True
                 else:
                     if not isFacebookInstall_done:
                         isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
                         if isFacebookInstall_done:
-                                print("Installed 2 Facebook...")
+                                # print("Installed 2 Facebook...")
                                 isFacebookInstall_done = True             
         else:
             isStartLD = StartLD(Action.isLDRunning_Btn, index, ld_path_console)
             if isStartLD:
-                print("Started LD")
+                # print("Started LD")
                 isStartLD = True
                 isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
                 if isFacebookInstall_done:
-                    print("Installed 3 Facebook")
+                    # print("Installed 3 Facebook")
                     isFacebookInstall_done = True
 
 
@@ -134,7 +134,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if not isFacebookInstall_done:
            isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
            if isFacebookInstall_done:
-                print("Installed 4 Facebook...")
+                # print("Installed 4 Facebook...")
                 isFacebookInstall_done = True
         
         DemThoiGian(2)

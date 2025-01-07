@@ -139,6 +139,7 @@ def OpenApp(template_path, index, ld_path_console, package_name, timeout=10):
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
+            print("Opening App...")
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
             if location:
                 return True
@@ -171,6 +172,7 @@ def StartLD(template_path, index, ld_path_console):
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     while True:
         try:
+            print("Starting LD...")
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
             if location:
                 return True
@@ -185,6 +187,7 @@ def isFacebookExist(template_path, index, ld_path_console, package_name, timeout
     while time.time() - start_time < timeout:
         try:
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
+            print("Deleting Facebook...")
             if location:
                 subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
                 return True
@@ -200,6 +203,7 @@ def isFacebookInstall(template_path, index, ld_path_console, apk_path, timeout=1
         try:
             command = f'{ld_path_console} adb --index {index} --command "install {apk_path}"'
             result = subprocess.run(command, shell=True, capture_output=True, text=True)
+            print("Installing Facebook...")
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
             if location:
                 return True
