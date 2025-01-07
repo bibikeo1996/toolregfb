@@ -9,6 +9,7 @@ import string
 import requests
 import adb_shell
 import json
+import pyautogui
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
@@ -24,7 +25,7 @@ from include.OpenApp import KiemTraDaCaiAppFaceBookLiteChua, KhoiDongLDPlayer, D
 from include.datepicker import ChonNgayThangNamSinh, DumpMap
 from include.setUpDevices import ThietLapThongSoThietbi
 from include.getCookieToken import getAdbData
-from include.quitInstance import RebootVaXoaCache, OpenApp, UnInstallAppFile
+from include.quitInstance import isLDRunning, isFacebookExist, isRebooting, StartLD, isFacebookInstall, OpenApp
 
 # from include.OpenApp import openBrave
 from data.getCode import getMailCode
@@ -54,13 +55,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
     # Tạo các flag để kiểm soát từng điều kiện
 
-    # isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-    # if(isStarted == True):
-    #     isStarted = True
-    #     pass
     isRebooted_done = False
     isStarted = False
     isStartedApp_done = False
+
+
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -82,50 +81,81 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     agree_done = False
     issue282_done = False
     okbtn_done = False
+    ## New
+    isOpenApp_done = False
 
+    isLDRunning_done = False
+    isStartLD = False
+
+    isFacebookExist_done = False
+    isFacebookInstall_done = False
+
+
+    isRebooting_done = False
     saveText = {}
     while True:
+        # if not isLDRunning_done:
+        ## Kiểm tra trường hợp nếu LD đang chạy thì 
+        ## kiểm tra facebook (nếu có thì xóa )
+        ## sau đó reboot 
+        isLDRunning_done = isLDRunning(Action.isLDRunning_Btn, index)
+        if isLDRunning_done:
+            print("LD running...")
+            ## Kiểm tra facebook đã cài chưa 
+            if not isFacebookExist_done:
+                isFacebookExist_done = isFacebookExist(Action.isFacebookExist_Btn, index, ld_path_console, package_name)
+                if isFacebookExist_done:
+                    print("Installed 1 Facebook")
+                    if not isRebooting_done:
+                        isRebooting_done = isRebooting(Action.isLDRunning_Btn, index, ld_path_console)
+                        if isRebooting_done:
+                            print("Rebooted...")
+                            isRebooting_done = True
+                            isFacebookExist_done = True
+                else:
+                    if not isFacebookInstall_done:
+                        isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
+                        if isFacebookInstall_done:
+                                print("Installed 2 Facebook...")
+                                isFacebookInstall_done = True             
+        else:
+            isStartLD = StartLD(Action.isLDRunning_Btn, index, ld_path_console)
+            if isStartLD:
+                print("Started LD")
+                isStartLD = True
+                isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
+                if isFacebookInstall_done:
+                    print("Installed 3 Facebook")
+                    isFacebookInstall_done = True
+
+
+        ## Reboot lại LD sẽ xóa FB và chỗ này sẽ cài lại
+        if not isFacebookInstall_done:
+           isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
+           if isFacebookInstall_done:
+                print("Installed 4 Facebook...")
+                isFacebookInstall_done = True
         
-        isSetup = ThietLapThongSoThietbi(index, ld_path_console)
-        if isSetup:
-            print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
-
-        if not isRebooted_done:
-            isRebooted = RebootVaXoaCache(index, ld_path_console, package_name, apk_path)
-            if isRebooted:
-                print("Đã reboot và xóa cache")
-                isRebooted_done = True
-
-        time.sleep(2)
+        DemThoiGian(2)
 
         CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
-        time.sleep(2)
+        DemThoiGian(1)
 
-        if isRebooted_done:
-            print("Đã cài app")
-            OpenApp(index, ld_path_console, package_name)
+        if not isOpenApp_done:
+            isOpenApp_done = OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
+            if isOpenApp_done:
+                isOpenApp_done = True
 
-        time.sleep(2)
-       
-        # Kiểm tra isStartedApp nếu chưa hoàn thành
-        if not isStartedApp_done:
-            print("Đang mở app")
-            pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
-            if pos is not None:
-                isStartedApp_done = True
-
-        time.sleep(2)
-        # quit()
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
+            print(pyautogui.center(pos))
             if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
+                pyautogui.click(pyautogui.center(pos))
+                # Tap(index, ld_path_console, pos[0], pos[1])
                 createbutton_done = True
-
-        time.sleep(2)
-
+        # quit()
         # Kiểm tra getstarted nếu chưa hoàn thành
         if not getstarted_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
@@ -133,31 +163,33 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 getstarted_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra firstname nếu chưa hoàn thành
         if not firstname_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
             if pos is not None:
                 GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
-                print("Đã nhập firstname")
                 firstname_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra lastname nếu chưa hoàn thành
         if not lastname_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
             if pos is not None:
                 GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
-                print("Đã nhập lastname")
+                # print("Đã nhập lastname")
                 lastname_done = True
+                pass
 
-        time.sleep(2)
+
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 1")
+            pass
+
+
 
         # Kiểm tra selectyourname nếu chưa hoàn thành
         if not selectyourname_done:
@@ -167,9 +199,10 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 selectyourname_done = True
                 # Kiểm tra nextt nếu chưa hoàn thành
                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                    print("Đã click Next 2")
+                    # print("Đã click Next 2")
+                    pass
 
-        time.sleep(2)
+
 
         # Kiểm tra setDate nếu chưa hoàn thành
         if not setDate_done:
@@ -178,7 +211,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 ChonNgayThangNamSinh(index, ld_path_console)
                 setDate_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra sett nếu chưa hoàn thành
         if not sett_done:
@@ -187,13 +220,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 sett_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 3")                
+            # print("Đã click Next 3")
+            pass            
 
-        time.sleep(2)
+
 
         # Kiểm tra gender nếu chưa hoàn thành
         if not gender_done:
@@ -202,13 +236,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 gender_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 4")
+            # print("Đã click Next 4")
+            pass
 
-        time.sleep(2)
+
 
         # Kiểm tra signup nếu chưa hoàn thành
         if not signup_done:
@@ -217,7 +252,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 signup_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra email nếu chưa hoàn thành
         if not email_done:
@@ -226,13 +261,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 GoText(index, ld_path_console, emailText, pos[0], pos[1])
                 email_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 5")        
+            # print("Đã click Next 5")
+            pass     
 
-        time.sleep(2)
+
 
         # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
         if not doyouhaveaccount_done:
@@ -245,7 +281,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     doyouhaveaccount_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra password nếu chưa hoàn thành
         if not password_done:
@@ -254,7 +290,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])
                 password_done = True
 
-        time.sleep(2)
+
 
         # Kiểm tra agree nếu chưa hoàn thành
         if not passwordField_done:
@@ -262,27 +298,28 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if(pos != None):
                 GoText(index, ld_path_console, passText, pos[0], pos[1])                   
 
-        time.sleep(2)
+
 
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            print("Đã click Next 6")
+            # print("Đã click Next 6")
+            pass
 
-        time.sleep(2)
+
 
         if not notnow_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
             if(pos != None):
                 Tap(index, ld_path_console, pos[0], pos[1])  
 
-        time.sleep(2)
+
 
         if not agree_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
             if(pos != None):
                 Tap(index, ld_path_console, pos[0], pos[1])                    
 
-        time.sleep(2)
+
 
         ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
         if not issue282_done:
@@ -293,7 +330,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 DemThoiGian(2)
                 RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
-        time.sleep(2)
+
 
         # Kiểm tra verifycode nếu chưa hoàn thành
         if not verifycode_done:
@@ -310,7 +347,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 # DemThoiGian(30)
                 verifycode_done = True
         
-        time.sleep(2)
+
 
         if not okbtn_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
@@ -318,22 +355,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 Tap(index, ld_path_console, pos[0], pos[1])   
                 okbtn_done = True 
 
-        time.sleep(2)
+
 
         if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
-            print("Đã click skip")
+            pass
 
-        time.sleep(2)
+
 
         if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
-            print("Đã click skip lần 2") 
+            pass
 
-        time.sleep(2)
+
 
         if XuLyNextButton(index, ld_path_console, Action.skip1_Btn):
-            print("Đã click skip lần 3")                        
+            pass                        
              
-        time.sleep(2)             
+             
 
         # Kiểm tra successReg nếu chưa hoàn thành
         if not successReg_done:
@@ -353,7 +390,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
-        if (isRebooted_done and isStarted and isStartedApp_done and createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
+        if (createbutton_done and getstarted_done and firstname_done and lastname_done and nextt_done and
             selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
             doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and issue282_done and okbtn_done):
             break

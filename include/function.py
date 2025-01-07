@@ -10,6 +10,7 @@ import requests
 import threading
 import shutil
 import pandas as pd
+import pyautogui
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
@@ -58,6 +59,17 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
         finally:
             if os.path.exists(local_screenshot_path):
                 os.remove(local_screenshot_path)
+
+# def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, timeout=10):
+#     FileName = os.path.basename(template_path)
+#     start_time = time.time()
+#     while time.time() - start_time < timeout:
+#         location = pyautogui.locateOnScreen(template_path, confidence=0.8)
+#         if location:
+#             print(f'Đã click {FileName}')
+#             return location
+#         time.sleep(0.5)
+#     return None
 
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
