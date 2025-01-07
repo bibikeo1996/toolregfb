@@ -100,7 +100,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
 
-        quit()
+        # quit()
 
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
