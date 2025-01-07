@@ -215,6 +215,7 @@ def isRebooting(template_path, index, ld_path_console, timeout=10):
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
+            print("Rebooting...")
             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
             if location:
                 return True

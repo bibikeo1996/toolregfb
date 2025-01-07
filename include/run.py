@@ -90,7 +90,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     isFacebookExist_done = False
     isFacebookInstall_done = False
 
-
+    invalid_email_done = False
     isRebooting_done = False
     saveText = {}
     while True:
@@ -106,13 +106,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 print("Checking Facebook... 1")
                 isFacebookExist_done = isFacebookExist(Action.isFacebookExist_Btn, index, ld_path_console, package_name)
                 if isFacebookExist_done:
+                    isFacebookExist_done = True
                     print("Installed 1 Facebook")
                     if not isRebooting_done:
                         isRebooting_done = isRebooting(Action.isLDRunning_Btn, index, ld_path_console)
                         if isRebooting_done:
                             print("Rebooted...")
                             isRebooting_done = True
-                            isFacebookExist_done = True
                 else:
                     if not isFacebookInstall_done:
                         isFacebookInstall_done = isFacebookInstall(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
@@ -264,8 +264,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         if not invalid_email_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
             if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                invalid_email_done = True
+                isFacebookExist = isFacebookExist(index, ld_path_console, package_name)
+                if isFacebookExist:
+                    isRebooting = isRebooting(index, ld_path_console)
+                    if isRebooting:
+                        break
 
 
         # Kiểm tra nextt nếu chưa hoàn thành
@@ -333,7 +336,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 issue282_done = True
                 print(f"Email: {emailText} bị dính 282")
                 DemThoiGian(2)
-                RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
+                isFacebookExist = isFacebookExist(index, ld_path_console, package_name)
+                if isFacebookExist:
+                    isRebooting = isRebooting(index, ld_path_console)
+                    if isRebooting:
+                        break
 
 
 
