@@ -9,155 +9,66 @@ from include.OpenApp import *
 from include.function import *
 # from include.run import RunLD
 
-# def remove_all_pycache(root_dir):
-#     for dirpath, dirnames, filenames in os.walk(root_dir):
-#         for dirname in dirnames:
-#             if dirname == "__pycache__":
-#                 pycache_path = os.path.join(dirpath, dirname)
-#                 shutil.rmtree(pycache_path)
-#                 print(f"Đã xóa thư mục: {pycache_path}")
-
-# def Reboot(index, ld_path_console):
-    # command = f'{ld_path_console} reboot --index {index}'
-    # result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    # DemThoiGian(10)
-    # return True
-
-# def CheckLDPlayerRunning(index, ld_path_console):
-#     command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
-#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#     return "not found" not in result.stdout.lower() and "not found" not in result.stderr.lower()
-
-# def OpenLD(index, ld_path_console):
-#     ldplayer_running = False
-#     command = f'{ld_path_console} launch --index {index}'
-#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#     DemThoiGian(15)
-#     # while not ldplayer_running:
-#     #     command = f'{ld_path_console} adb --index {index} --command "shell getprop"'
-#     #     # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell getprop"]
-#     #     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#     #     if "not found" in result.stdout.lower() or "not found" in result.stderr.lower():
-#     #         start_command = [ld_path_console, "launch", "--index", str(index)]
-#     #         subprocess.run(start_command)
-#     #         # print(f"{result.stdout}")
-#     #         time.sleep(1)
-#     #     else:
-#     #         # print(f"LDPlayer {index} is already running")
-#     #         ldplayer_running = True
-#     return True 
-
-# def LDOpened(template_path, index, ld_path_console):
-#     command = f'{ld_path_console} launch --index {index}'
-#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#     while True:
-#         try:
-#             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-#             if location:
-#                 return location
-#         except pyautogui.ImageNotFoundException:
-#             pass
-#         time.sleep(0.5)
-    
-#     # start_time = time.time()
-#     # while time.time() - start_time < timeout:
-#     #     location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-#     #     if location:
-#     #         return True
-#     #     time.sleep(0.5)
-#     # return False
-
-# def InstallAppFile(index, ld_path_console, apk_path):
-#     if ld_path_console:
-#         try:
-#             install_command = f'{ld_path_console} adb --index {index} --command "install {apk_path}"'
-#             result = subprocess.run(install_command, shell=True, capture_output=True, text=True)
-#             return True
-#         except subprocess.CalledProcessError as e:
-#             print(f"Failed to uninstall app: {e}")        
-#             return False
-#     else:
-#         print("LD_PATH_CONSOLE environment variable is not set.")
-#         return False
-
-# def UnInstallAppFile(index, ld_path_console, package_name):
-#     if ld_path_console:
-#         try:
-#             subprocess.run([ld_path_console, 'uninstallapp', '--index', str(index), '--packagename', package_name], check=True)
-#             return True
-#         except subprocess.CalledProcessError as e:
-#             print(f"Failed to uninstall app: {e}")        
-#             return False
-#     else:
-#         print("LD_PATH_CONSOLE environment variable is not set.")
-#         return False        
-
-# def RebootVaXoaCache(index, ld_path_console, package_name, apk_path):
-#     command = f'{ld_path_console} adb --index {index} --command "shell pm list packages"'
-#     # command = [ld_path_console, "adb", "--index", str(index), "--command", "shell pm list packages"]
-#     result = subprocess.run(command, capture_output=True, text=True)
-#     # print(result.returncode)
-#     if result.returncode == 0:
-#         packages = [line.split(":")[1].strip() for line in result.stdout.splitlines() if ":" in line]
-#         for app in packages:
-#             if package_name.lower() in app.lower():
-#                 UnInstallAppFile(index, ld_path_console, app)
-#                 print("Deleting...")
-#     else:
-#         pass
-#     if CheckLDPlayerRunning(index, ld_path_console):
-#         print("Rebooting...")                        
-#         isRebooted = Reboot(index, ld_path_console)
-#         while isRebooted:
-#             time.sleep(1)
-#             isOpenedLD = LDOpened(index, ld_path_console)
-#             if isOpenedLD:
-#                 isInstalled = InstallAppFile(index, ld_path_console, apk_path)
-#                 if isInstalled:
-#                     return True
-#                     break
-#             else:
-#                 print("Đang chờ LDPlayer mở...")
-#     else:  
-#         print("Opening LDPlayer...")
-#         isOpened = OpenLD(index, ld_path_console)
-#         while isOpened:
-#             time.sleep(1)
-#             isOpenedLD = LDOpened(index, ld_path_console)
-#             if isOpenedLD:
-#                 isInstalled = InstallAppFile(index, ld_path_console, apk_path)
-#                 if isInstalled:
-#                     return True
-#                     break
-#             else:
-#                 print("Đang chờ LDPlayer mở...")
-#     return False
-
-
-## Check LDPlayer đang chạy hay không
-# def isLDRunning(template_path, index, ld_path_console, package_name, timeout=20):
-#     while True:
-#         try:
-#             print("Checking LDPlayer is running...")
-#             command = f'{ld_path_console} killapp --index {index} --packagename {package_name}'
-#             result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#             time.sleep(2)
-#             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-#             if location:
-#                 return True
-#             else:
-#                 return False                
-#         except pyautogui.ImageNotFoundException:
-#             return False
-#         time.sleep(0.5)
-#     return False
+def ADBKillAndStartServer():
+    kill_command = ["adb", "kill-server"]
+    subprocess.run(kill_command)
+    time.sleep(2)
+    # print("ADB server stopped")
+    start_command = ["adb", "start-server"]
+    subprocess.run(start_command)
+    time.sleep(2)
+    # start_command = ["adb", "devices"]
+    # subprocess.run(start_command)
+    # time.sleep(5)
 
 ## Khởi dộng LDPlayer
 def StartLD(index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    DemThoiGian(25)
+    DemThoiGian(13)
     return False
+
+def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port):
+    try:   
+        encoded_password = urllib.parse.quote(proxy_password)
+        command = f'{ld_path_console} adb --index {index} --command "shell settings put global http_proxy {proxy_username}:{encoded_password}@{proxy_ip}:{proxy_port}"'
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            return True
+        else:
+            return False
+            print("Ko thể connect Proxy:", result.stderr)
+    except FileNotFoundError:
+        print(f"Không tìm thấy ldconsole.exe tại: {ldconsole_path}")
+    DemThoiGian(2)        
+
+def RemoveProxy(index, ld_path_console, proxy_ip, proxy_port):
+    try:
+        command = f'{ld_path_console} adb --index {index} --command "shell settings delete global http_proxy"'
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            return True
+        else:
+            return False
+            print("Ko thể remove Proxy:", result.stderr)
+    except FileNotFoundError:
+        print(f"Không tìm thấy ldconsole.exe tại: {ldconsole_path}")        
+
+def ClearCache(index, ld_path_instance):
+    try:
+        # Xác định đường dẫn thư mục cache cần xóa
+        cache_folder = os.path.join(ld_path_instance, f'leidian{index}')
+        if os.path.exists(cache_folder):
+            # Xóa thư mục và toàn bộ nội dung bên trong
+            shutil.rmtree(cache_folder)
+            print(f"Đã xóa thành công thư mục cache: {cache_folder}")
+            return True
+        else:
+            print(f"Không tìm thấy thư mục cache tại: {cache_folder}")
+            return False
+    except Exception as e:
+        print(f"Lỗi khi xóa thư mục cache: {e}")
+        return False
 
 ## Check facebook có tồn tại hay không sau đó uninstall
 def UninstallFacebook(index, ld_path_console, package_name, timeout=20):
@@ -179,22 +90,6 @@ def OpenApp(template_path, index, ld_path_console, package_name, timeout=20):
     start_time = time.time()
     DemThoiGian(5)
     return True
-
-## Reboot và xóa cache
-# def isRebooting(template_path, index, ld_path_console, timeout=20):
-#     command = f'{ld_path_console} reboot --index {index}'
-#     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-#     start_time = time.time()
-#     while time.time() - start_time < timeout:
-#         try:
-#             print("Rebooting...")
-#             location = pyautogui.locateOnScreen(template_path, confidence=0.9)
-#             if location:
-#                 return True
-#         except pyautogui.ImageNotFoundException:
-#             pass
-#         time.sleep(0.5)
-#     return False     
 
 def QuitLD(index, ld_path_console):
     command = f'{ld_path_console} quit --index {index}'

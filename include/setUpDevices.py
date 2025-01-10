@@ -19,6 +19,10 @@ def generate_imei():
     imei.append(calculate_luhn_check_digit(imei))
     return "".join(map(str, imei))
 
+def GetPhone():
+    random_phone_number = "+19043" + ''.join(random.choices('0123456789', k=6))
+    return random_phone_number  
+
 
 def ThietLapThongSoThietbi(index, ld_path_console):
     resolutions = [
@@ -92,7 +96,7 @@ def ThietLapThongSoThietbi(index, ld_path_console):
             "--model",
             f"{device['model']}",
             "--pnumber",
-            "13812345678",  # Example phone number
+            GetPhone(),  # Example phone number
         ]
         subprocess.run(modify_command, check=True)
         return True

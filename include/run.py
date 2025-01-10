@@ -35,29 +35,14 @@ from data.getCode import *
 #     # RunLD(i, 'apk_path', 'package_name', 'ld_path_console', emails[i], passwords[i], first_names[i], last_names[i])
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
-def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
-    # data = getDataInFileEmails(0)
-    # emailText = data["email"]
-    # passText = data["passWord"]
-    # fieldFirstName = data["firstName"]
-    # fieldLastName = data["lastName"]
-    # mi = data["mi"]
-    # phpsessid = data["phpsessid"]
-
-    emailText = "kavif45498@myweblaw.com"
-    passText = "9dVhsUax@"
-    fieldFirstName = "Khavid"
-    fieldLastName = "Nguyen"
-    verifycode = None
-    # mi = data["mi"]
-    # phpsessid = data["phpsessid"]
-    # print(f"Email: {emailText} - Pass: {passText} - First Name: {fieldFirstName} - Last Name: {fieldLastName} - MI: {mi} - PHPSESSID: {phpsessid}")
-    # Tạo các flag để kiểm soát từng điều kiện
-
-    # isStarted = RebootVaXoaCache(index, apk_path, package_name, ld_path_console, ld_path_instance)
-    # if(isStarted == True):
-    #     isStarted = True
-    #     pass
+def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, proxy_username, proxy_password, proxy_ip, proxy_port, fileTxtPath):
+    emailText = TaoEmail()
+    passText = ''.join(random.choice(string.ascii_letters) for i in range(15))
+    fieldFirstName = getHoTenRandom(fileTxtPath+'ho.txt')  
+    fieldLastName = getHoTenRandom(fileTxtPath+'ten.txt')
+    # verifycode = None
+    print(f"Email: {emailText}, Firstname: {fieldFirstName}, Lastname: {fieldLastName}, Pass: {passText}")
+    # quit()
 
     createbutton_done = False
     getstarted_done = False
@@ -80,6 +65,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     agree_done = False
     issue282_done = False
     okbtn_done = False
+    issue282_done = False
+    issue282_v1_done = False
 
     # New
     sStartLD = False
@@ -88,13 +75,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
     isInvalidBirth_done = False    
     isInvalidaccount_done = False
 
+    # New register
+    sendviaSMS_done = False
+    sendViaEmail_done = False
+    newEmail_done = False
+    phonenumber_done = False
+    continueCreate_done = False
+    confirmviaemail_done = False
+    nextviaEmail_done = False
+    sendcodeviaSMS_done = False
+
     saveText = {}
     while True:
         
         isSetup = ThietLapThongSoThietbi(index, ld_path_console)
         if isSetup:
             print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
-
         StartLD(index, ld_path_console)
 
         InstallFacebook(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
@@ -102,9 +98,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
         CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
         OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
-
-        # quit()
-
+        
         # Kiểm tra createbutton nếu chưa hoàn thành
         if not createbutton_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
@@ -211,24 +205,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
 
         # time.sleep(2)
 
-        # Kiểm tra signup nếu chưa hoàn thành
-        if not signup_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.signupWithEmail_Btn, index, ld_path_console)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                signup_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra email nếu chưa hoàn thành
-        if not email_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.emailfieldv2_Btn, index, ld_path_console)
-            if pos is not None:
-                GoText(index, ld_path_console, emailText, pos[0], pos[1])
-                email_done = True
-
-        # time.sleep(2)
-
         # Kiểm tra nextt nếu chưa hoàn thành
         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
             # print("Đã click Next 5")        
@@ -256,20 +232,17 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     doyouhaveaccount_done = True
 
-        # time.sleep(2)
-
-        # Kiểm tra password nếu chưa hoàn thành
-        if not password_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.clickcreatepassword_Btn, index, ld_path_console)
+        if not continueCreate_done:
+            ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
+            ### Check_attempt=True là cho phép kiểm tra element
+            pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
             if pos is not None:
                 Tap(index, ld_path_console, pos[0], pos[1])
-                password_done = True
-
-        # time.sleep(2)
+                continueCreate_done = True
 
         # Kiểm tra agree nếu chưa hoàn thành
         if not passwordField_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console)
+            pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console, confidence=0.5)
             if(pos != None):
                 GoText(index, ld_path_console, passText, pos[0], pos[1])                   
 
@@ -294,7 +267,15 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             if(pos != None):
                 Tap(index, ld_path_console, pos[0], pos[1])                    
 
-        # time.sleep(2)
+        # time.sleep(2)   
+        if not issue282_done:
+            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(is282 != None):
+                issue282_done = True
+                print(f"Email: {emailText} bị dính 282")
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return           
 
         if not isInvalidaccount_done:
             pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidAccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
@@ -303,8 +284,55 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                 QuitLD(index, ld_path_console)
                 return
 
-        ## Kiểm tra có bị dính issue 282 nếu có thì reboot xóa cache chạy lại
-        DemThoiGian(30)
+        if not sendviaSMS_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsField_Btn, index, ld_path_console)
+            if(pos != None):
+                Tap(index, ld_path_console, pos[0], pos[1])    
+                sendviaSMS_done = True
+
+        if not issue282_done:
+            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(is282 != None):
+                issue282_done = True
+                print(f"Email: {emailText} bị dính 282")
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return               
+
+        if not sendcodeviaSMS_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.sendcodeviasms_Btn, index, ld_path_console)
+            if(pos != None):
+                Tap(index, ld_path_console, pos[0], pos[1])    
+                sendcodeviaSMS_done = True
+
+            ###
+        # if not sendViaEmail_done:
+        #     pos = TimAnhSauKhiChupVaSoSanh(Action.sendviaemail_Btn, index, ld_path_console, confidence=0.5)
+        #     if(pos != None):
+        #         Tap(index, ld_path_console, pos[0], pos[1]) 
+        #         sendViaEmail_done = True
+
+        if not confirmviaemail_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemail_Btn, index, ld_path_console)
+            if(pos != None):
+                GoText(index, ld_path_console, emailText, pos[0], pos[1])
+                confirmviaemail_done = True
+
+            ###
+
+        if not newEmail_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.newEmailField_Btn, index, ld_path_console)
+            if(pos != None):
+                GoText(index, ld_path_console, emailText, pos[0], pos[1])
+                newEmail_done = True
+
+        if not nextviaEmail_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.nextviaemail_Btn, index, ld_path_console)
+            if(pos != None):
+                Tap(index, ld_path_console, pos[0], pos[1])    
+                nextviaEmail_done = True
+
+        DemThoiGian(40)
 
         if not issue282_done:
             is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
@@ -322,14 +350,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
             pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
             if pos is not None:
                 # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                # verifycode = getMailCode(mi, phpsessid)
+                verifycode = GetOTP(emailText)
                 if verifycode is None:
                     print("Không lấy được mã code == Reboot và xóa cache")
-                    UninstallFacebook(index, ld_path_console, package_name)
-                    QuitLD(index, ld_path_console)
+                    # UninstallFacebook(index, ld_path_console, package_name)
+                    # QuitLD(index, ld_path_console)
                     return
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
-                DemThoiGian(30)
+                DemThoiGian(60)
                 verifycode_done = True
         
         # time.sleep(2)
@@ -379,7 +407,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance):
                     QuitLD(index, ld_path_console)
 
         # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
-        if (createbutton_done and getstarted_done and firstname_done and lastname_done and
+        if (sendcodeviaSMS_done and nextviaEmail_done and confirmviaemail_done and continueCreate_done and sendviaSMS_done and sendViaEmail_done and newEmail_done and createbutton_done and getstarted_done and firstname_done and lastname_done and
             selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
-            doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and issue282_done and okbtn_done):
+            doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and okbtn_done):
             break

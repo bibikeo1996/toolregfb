@@ -17,14 +17,6 @@ ld_path_exe = os.getenv('LD_PATH_EXE')  # Đường dẫn tới LDPlayer
 apk_path = os.getenv('APK_PATH')  # Đường dẫn tới file APK
 package_name = os.getenv('PACKAGE_NAME')  # Tên gói của ứng dụng
 
-def ADBKillAndStartServer():
-    kill_command = ["adb", "kill-server"]
-    subprocess.run(kill_command)
-    # print("ADB server stopped")
-    start_command = ["adb", "start-server"]
-    subprocess.run(start_command)
-    # print("ADB server started")
-
 def KhoiDongLDPlayer(index, ld_path_console):
     getPort = f'{ld_path_console} list3 --index {index}'
     result = subprocess.run(getPort, shell=True, capture_output=True, text=True)

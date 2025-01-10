@@ -11,6 +11,7 @@ import threading
 import shutil
 import pandas as pd
 import pyautogui
+import urllib.parse
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
@@ -39,7 +40,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
             file_name = os.path.basename(template_path)
-            # print(f"Độ khớp {file_name}: {max_val * 100:.2f}%")
+            print(f"Độ khớp instance {index} {file_name}: {max_val * 100:.2f}%")
             if max_val >= confidence:
                 x, y = max_loc
                 h, w = template.shape
@@ -52,7 +53,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
                     sys.stdout.flush()
                     attempts += 1
                     if attempts >= max_attempts:
-                        print("Không tìm thấy hình sau nhiều lần thử.")
+                        print("\nKhông tìm thấy hình sau nhiều lần thử.")
                         return None
                     time.sleep(delay)
 
@@ -137,6 +138,7 @@ def CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name):
         if result.returncode != 0:
             print(f"Failed to grant {permission}: {result.stderr}")
 
+
 # Xử lý hành động của user 
 def GoText(index, ld_path_console, text, x, y):
     if x is not None and y is not None:
@@ -187,3 +189,76 @@ def MoAppThanhCong(index, x, y):
     else:
         print("Mở app không thành công!")
         return False
+
+def GetOTP(email, max_attempts=10, delay=3):
+    url = f"https://api.internal.temp-mail.io/api/v3/email/{email}/messages"
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    }
+
+    for attempt in range(max_attempts):
+        try:
+            response = requests.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                messages = response.json()
+                
+                # Kiểm tra từng email trong danh sách
+                for message in messages:
+                    subject = message.get("subject", "")
+                    if "FB-" in subject:
+                        # Bóc tách mã OTP từ subject
+                        otp = subject.split("FB-")[1].split()[0]
+                        print(f"OTP Found: {otp}")
+                        return otp
+            else:
+                print(f"Request failed with status: {response.status_code}")
+        
+        except Exception as e:
+            print(f"Error occurred: {e}")
+        
+        # Chờ trước khi thử lại
+        print(f"Attempt {attempt + 1}/{max_attempts}. Retrying in {delay} seconds...")
+        time.sleep(delay)
+    
+    print("OTP not found after maximum attempts.")
+    return None
+
+def TaoEmail():
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5",
+        "application-name": "web",
+        "application-version": "2.4.2",
+        "priority": "u=1, i",
+        "referer": "https://temp-mail.io/",
+        "sec-ch-ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    }
+
+    # Payload
+    payload = {
+        "min_name_length": 6,
+        "max_name_length": 10
+    }
+    response = requests.post("https://api.internal.temp-mail.io/api/v3/email/new", headers=headers, json=payload)
+    print(response.text)
+
+    if response.status_code == 200:
+        EmailAdd = response.json().get("email")
+        return EmailAdd
+    return None  
+
+def getHoTenRandom(filename):
+    with open(filename, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+        return random.choice(lines).strip()      
