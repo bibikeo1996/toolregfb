@@ -36,13 +36,20 @@ from data.getCode import *
 #     print(f"{emails[i]}, {passwords[i]}, {first_names[i]}, {last_names[i]}")
 
 def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, proxy_username, proxy_password, proxy_ip, proxy_port, fileTxtPath):
+    # CookieToken = json.loads(getAdbData(index, ld_path_console))
+    # uid = CookieToken.get("uid")
+    # cookie = CookieToken.get("cookie")
+    # token = CookieToken.get("token")
+    # # account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+    # account = f"{uid}|{cookie}|{token}"
+    # print(account)
+    # quit()
     emailText = TaoEmail()
     passText = ''.join(random.choice(string.ascii_letters) for i in range(15))
     fieldFirstName = getHoTenRandom(fileTxtPath+'ho.txt')  
     fieldLastName = getHoTenRandom(fileTxtPath+'ten.txt')
     # verifycode = None
     print(f"Email: {emailText}, Firstname: {fieldFirstName}, Lastname: {fieldLastName}, Pass: {passText}")
-    # quit()
 
     createbutton_done = False
     getstarted_done = False
@@ -84,6 +91,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
     confirmviaemail_done = False
     nextviaEmail_done = False
     sendcodeviaSMS_done = False
+    smslimitreached_done = False
 
     saveText = {}
     while True:
@@ -332,7 +340,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 Tap(index, ld_path_console, pos[0], pos[1])    
                 nextviaEmail_done = True
 
-        DemThoiGian(30)
+        # DemThoiGian(30)
 
         if not issue282_done:
             is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
@@ -342,22 +350,31 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 UninstallFacebook(index, ld_path_console, package_name)
                 QuitLD(index, ld_path_console)
                 return
-
         # time.sleep(2)
+
+        if not smslimitreached_done:
+            pos = TimAnhSauKhiChupVaSoSanh(Action.smslimitreached_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            if(pos != None):
+                UninstallFacebook(index, ld_path_console, package_name)
+                QuitLD(index, ld_path_console)
+                return
+
 
         # Kiểm tra verifycode nếu chưa hoàn thành
         if not verifycode_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console)
+            pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console, confidence=0.75)
             if pos is not None:
                 # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                verifycode = GetOTP(emailText)
+                verifycode = GetOTP(email=emailText)
+                print(f"Verify code: {verifycode}")
+                DemThoiGian(1)
                 if verifycode is None:
                     print("Không lấy được mã code == Reboot và xóa cache")
-                    # UninstallFacebook(index, ld_path_console, package_name)
-                    # QuitLD(index, ld_path_console)
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
                     return
-                DemThoiGian(20)
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+                DemThoiGian(1)
                 verifycode_done = True
         
         # time.sleep(2)

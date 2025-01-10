@@ -112,4 +112,5 @@ def getAdbData(index, ld_path_console):
     
 # if __name__ == "__main__":
 #     print(f"Running on adb_port {0}")
-#     print(getAdbData(0))
+#     ldconsole_path = "D:\\LDPllayer\\LDPlayer\\LDPlayer9\\ldconsole.exe"
+#     print(getAdbData(0, ldconsole_path))

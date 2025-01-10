@@ -122,3 +122,5 @@ class Action:
     phonenumber_Btn = os.path.join(base_dir, '..', 'imageAction', 'phonenumberfield.png')
     confirmviaemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'confirmviaemail.png')
     nextviaemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'newemailnext.png')
+    smslimitreached_Btn = os.path.join(base_dir, '..', 'imageAction', 'smslimit.png')
+

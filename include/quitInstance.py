@@ -91,6 +91,11 @@ def OpenApp(template_path, index, ld_path_console, package_name, timeout=20):
     DemThoiGian(5)
     return True
 
+def KillApp(index, ld_path_console, package_name):
+    subprocess.run([ld_path_console, 'killapp', '--index', str(index), '--packagename', package_name], check=True)
+    DemThoiGian(2)
+    return True
+
 def QuitLD(index, ld_path_console):
     command = f'{ld_path_console} quit --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)

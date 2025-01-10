@@ -28,7 +28,7 @@ adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH')
 package_name = os.getenv('PACKAGE_NAME')
 
-def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.8, max_attempts=2, delay=1, check_attempt=False):
+def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=1, check_attempt=False):
     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
     if template is None:
         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
@@ -202,7 +202,6 @@ def GetOTP(email, max_attempts=10, delay=3):
     for attempt in range(max_attempts):
         try:
             response = requests.get(url, headers=headers)
-            
             if response.status_code == 200:
                 messages = response.json()
                 
@@ -213,6 +212,11 @@ def GetOTP(email, max_attempts=10, delay=3):
                         # Bóc tách mã OTP từ subject
                         otp = subject.split("FB-")[1].split()[0]
                         print(f"OTP Found: {otp}")
+                        return otp
+                    elif "is your confirmation code" in subject:
+                        # Extract confirmation code from subject
+                        otp = subject.split()[0]
+                        print(f"Confirmation Code Found: {otp}")
                         return otp
             else:
                 print(f"Request failed with status: {response.status_code}")
@@ -262,3 +266,5 @@ def getHoTenRandom(filename):
     with open(filename, 'r', encoding='utf-8') as file:
         lines = file.readlines()
         return random.choice(lines).strip()      
+
+        

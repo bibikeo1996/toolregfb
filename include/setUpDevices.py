@@ -20,9 +20,9 @@ def generate_imei():
     return "".join(map(str, imei))
 
 def GetPhone():
-    random_phone_number = "+19043" + ''.join(random.choices('0123456789', k=6))
-    return random_phone_number  
-
+    prefix = random.choice(['77', '93'])
+    random_phone_number = "+84" + prefix + ''.join(random.choices('0123456789', k=7))
+    return random_phone_number
 
 def ThietLapThongSoThietbi(index, ld_path_console):
     resolutions = [
