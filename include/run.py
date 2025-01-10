@@ -332,7 +332,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 Tap(index, ld_path_console, pos[0], pos[1])    
                 nextviaEmail_done = True
 
-        DemThoiGian(40)
+        DemThoiGian(30)
 
         if not issue282_done:
             is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
@@ -356,8 +356,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     # UninstallFacebook(index, ld_path_console, package_name)
                     # QuitLD(index, ld_path_console)
                     return
+                DemThoiGian(20)
                 GoText(index, ld_path_console, verifycode, pos[0], pos[1])
-                DemThoiGian(60)
                 verifycode_done = True
         
         # time.sleep(2)
