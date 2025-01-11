@@ -43,14 +43,13 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
     # # account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
     # account = f"{uid}|{cookie}|{token}"
     # print(account)
-    quit()
+    # quit()
     emailText = TaoEmail()
     passText = ''.join(random.choice(string.ascii_letters) for i in range(15))
     fieldFirstName = getHoTenRandom(fileTxtPath+'ho.txt')  
     fieldLastName = getHoTenRandom(fileTxtPath+'ten.txt')
-    # verifycode = None
     print(f"Email: {emailText}, Firstname: {fieldFirstName}, Lastname: {fieldLastName}, Pass: {passText}")
-
+    
     createbutton_done = False
     getstarted_done = False
     firstname_done = False
@@ -91,340 +90,370 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
     confirmviaemail_done = False
     nextviaEmail_done = False
     sendcodeviaSMS_done = False
+    sendviasmsv2_done = False
     smslimitreached_done = False
+    validateName_done = False
+    incorrectcode_done = False
 
     saveText = {}
-    while True:
-        
-        isSetup = ThietLapThongSoThietbi(index, ld_path_console)
-        if isSetup:
-            print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
-        StartLD(index, ld_path_console)
+    try:
+        while True:
+            print("Vòng lặp đang chạy... Ấn Ctrl+C để dừng.")
+            isSetup = ThietLapThongSoThietbi(index, ld_path_console)
+            if isSetup:
+                print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
+            StartLD(index, ld_path_console)
 
-        InstallFacebook(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
+            InstallFacebook(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
 
-        CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
+            CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
 
-        OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
-        
-        # Kiểm tra createbutton nếu chưa hoàn thành
-        if not createbutton_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                createbutton_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra getstarted nếu chưa hoàn thành
-        if not getstarted_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                getstarted_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra firstname nếu chưa hoàn thành
-        if not firstname_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
-            if pos is not None:
-                GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
-                # print("Đã nhập firstname")
-                pass
-                firstname_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra lastname nếu chưa hoàn thành
-        if not lastname_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
-            if pos is not None:
-                GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
-                # print("Đã nhập lastname")
-                pass
-                lastname_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra nextt nếu chưa hoàn thành
-        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            # print("Đã click Next 1")
-            pass
-
-        # Kiểm tra selectyourname nếu chưa hoàn thành
-        if not selectyourname_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.selectyourname_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                selectyourname_done = True
-                # Kiểm tra nextt nếu chưa hoàn thành
-                if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                    # print("Đã click Next 2")
-                    pass
-
-        # time.sleep(2)
-
-        # Kiểm tra setDate nếu chưa hoàn thành
-        if not setDate_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
-            if pos is not None:
-                ChonNgayThangNamSinh(index, ld_path_console)
-                setDate_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra sett nếu chưa hoàn thành
-        if not sett_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                sett_done = True
-
-        # time.sleep(2)
-
-        if not isInvalidBirth_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(pos != None):
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return
-
-        # Kiểm tra nextt nếu chưa hoàn thành
-        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            # print("Đã click Next 3")           
-            pass     
-
-        # time.sleep(2)
-
-        # Kiểm tra gender nếu chưa hoàn thành
-        if not gender_done:
-            pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                gender_done = True
-
-        # time.sleep(2)
-
-        # Kiểm tra nextt nếu chưa hoàn thành
-        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            # print("Đã click Next 4")
-            pass
-
-        # time.sleep(2)
-
-        # Kiểm tra nextt nếu chưa hoàn thành
-        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            # print("Đã click Next 5")        
-            pass
-
-        # time.sleep(2)
-
-        if not isInvalidEmail_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(pos != None):
-                print("Email không hợp lệ")
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return
-
-
-        # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
-        if not doyouhaveaccount_done:
-            ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
-            ### Check_attempt=True là cho phép kiểm tra element
-            pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if pos is not None:
-                pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console)
+            OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
+            
+            # Kiểm tra createbutton nếu chưa hoàn thành
+            if not createbutton_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
-                    doyouhaveaccount_done = True
+                    createbutton_done = True
 
-        if not continueCreate_done:
-            ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
-            ### Check_attempt=True là cho phép kiểm tra element
-            pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if pos is not None:
-                Tap(index, ld_path_console, pos[0], pos[1])
-                continueCreate_done = True
+            # time.sleep(2)
+            # Kiểm tra getstarted nếu chưa hoàn thành
+            if not getstarted_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
+                if pos is not None:
+                    Tap(index, ld_path_console, pos[0], pos[1])
+                    getstarted_done = True
 
-        # Kiểm tra agree nếu chưa hoàn thành
-        if not passwordField_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console, confidence=0.5)
-            if(pos != None):
-                GoText(index, ld_path_console, passText, pos[0], pos[1])                   
+            # time.sleep(2)
 
-        # time.sleep(2)
+            # Kiểm tra firstname nếu chưa hoàn thành
+            if not firstname_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
+                if pos is not None:
+                    GoText(index, ld_path_console, "John", pos[0], pos[1])
+                    # print("Đã nhập firstname")
+                    pass
+                    firstname_done = True
 
-        # Kiểm tra nextt nếu chưa hoàn thành
-        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-            # print("Đã click Next 6")
-            pass
+            # time.sleep(2)
 
-        # time.sleep(2)
+            # Kiểm tra lastname nếu chưa hoàn thành
+            if not lastname_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console)
+                if pos is not None:
+                    GoText(index, ld_path_console, "Doe", pos[0], pos[1])
+                    # print("Đã nhập lastname")
+                    pass
+                    lastname_done = True
 
-        if not notnow_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
-            if(pos != None):
-                Tap(index, ld_path_console, pos[0], pos[1])  
+            # time.sleep(2)
 
-        # time.sleep(2)
+            # Kiểm tra nextt nếu chưa hoàn thành
+            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                # print("Đã click Next 1")
+                pass
 
-        if not agree_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
-            if(pos != None):
-                Tap(index, ld_path_console, pos[0], pos[1])                    
-
-        # time.sleep(2)   
-        if not issue282_done:
-            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(is282 != None):
-                issue282_done = True
-                print(f"Email: {emailText} bị dính 282")
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return           
-
-        if not isInvalidaccount_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidAccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(pos != None):
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return
-
-        if not sendviaSMS_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsField_Btn, index, ld_path_console)
-            if(pos != None):
-                Tap(index, ld_path_console, pos[0], pos[1])    
-                sendviaSMS_done = True
-
-        if not issue282_done:
-            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(is282 != None):
-                issue282_done = True
-                print(f"Email: {emailText} bị dính 282")
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return               
-
-        if not sendcodeviaSMS_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.sendcodeviasms_Btn, index, ld_path_console)
-            if(pos != None):
-                Tap(index, ld_path_console, pos[0], pos[1])    
-                sendcodeviaSMS_done = True
-
-            ###
-        # if not sendViaEmail_done:
-        #     pos = TimAnhSauKhiChupVaSoSanh(Action.sendviaemail_Btn, index, ld_path_console, confidence=0.5)
-        #     if(pos != None):
-        #         Tap(index, ld_path_console, pos[0], pos[1]) 
-        #         sendViaEmail_done = True
-
-        if not confirmviaemail_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemail_Btn, index, ld_path_console)
-            if(pos != None):
-                GoText(index, ld_path_console, emailText, pos[0], pos[1])
-                confirmviaemail_done = True
-
-            ###
-
-        if not newEmail_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.newEmailField_Btn, index, ld_path_console)
-            if(pos != None):
-                GoText(index, ld_path_console, emailText, pos[0], pos[1])
-                newEmail_done = True
-
-        if not nextviaEmail_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.nextviaemail_Btn, index, ld_path_console)
-            if(pos != None):
-                Tap(index, ld_path_console, pos[0], pos[1])    
-                nextviaEmail_done = True
-
-        # DemThoiGian(30)
-
-        if not issue282_done:
-            is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(is282 != None):
-                issue282_done = True
-                print(f"Email: {emailText} bị dính 282")
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return
-        # time.sleep(2)
-
-        if not smslimitreached_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.smslimitreached_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
-            if(pos != None):
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console)
-                return
-
-
-        # Kiểm tra verifycode nếu chưa hoàn thành
-        if not verifycode_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console, confidence=0.75)
-            if pos is not None:
-                # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
-                verifycode = GetOTP(email=emailText)
-                print(f"Verify code: {verifycode}")
-                DemThoiGian(1)
-                if verifycode is None:
-                    print("Không lấy được mã code == Reboot và xóa cache")
+            validateName = [Action.validateName_Btn, Action.selectyourname_Btn, Action.setDate_Btn]
+            # Kiểm tra setDate nếu chưa hoàn thành
+            if not setDate_done:
+                pos = TimAnhSauKhiChupVaSoSanh(template_path=validateName, index=index, ld_path_console=ld_path_console)
+                if(pos[2] == 0):
+                    validateName_done = True
+                    print(f"Wrong Fullname: {fieldFirstName} {fieldLastName}")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console)
                     return
-                GoText(index, ld_path_console, verifycode, pos[0], pos[1])
-                DemThoiGian(1)
-                verifycode_done = True
-        
-        # time.sleep(2)
+                elif(pos[2] == 1):
+                    pos = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                    if pos is not None:
+                        Tap(index, ld_path_console, pos[0], pos[1])
+                        selectyourname_done = True
+                        # Kiểm tra nextt nếu chưa hoàn thành
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            # print("Đã click Next 2")
+                            pass
+                            print("Đang chọn ngày tháng năm sinh")
+                            pos3 = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+                            if pos3 is not None:
+                                ChonNgayThangNamSinh(index, ld_path_console)
+                                setDate_done = True
+                else:
+                    pos = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+                    if pos is not None:
+                        ChonNgayThangNamSinh(index, ld_path_console)
+                        setDate_done = True
 
-        if not okbtn_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
-            if(pos != None):
-                Tap(index, ld_path_console, pos[0], pos[1])   
-                okbtn_done = True 
+            # Kiểm tra sett nếu chưa hoàn thành
 
-        # time.sleep(2)
-
-        if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
-            # print("Đã click skip")
-            pass
-
-        # time.sleep(2)
-
-        if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
-            # print("Đã click skip lần 2") 
-            pass
-
-        # time.sleep(2)
-
-        if XuLyNextButton(index, ld_path_console, Action.skip1_Btn):
-            # print("Đã click skip lần 3") 
-            pass                       
-             
-        # time.sleep(2)             
-
-        # Kiểm tra successReg nếu chưa hoàn thành
-        if not successReg_done:
-            pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
-            if pos is not None:
-                isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
-                if isSuccess:
-                    CookieToken = json.loads(getAdbData(index, ld_path_console))
-                    uid = CookieToken.get("uid")
-                    cookie = CookieToken.get("cookie")
-                    token = CookieToken.get("token")
-                    account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
-                    print(account)
-                    # print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
-                    DemThoiGian(3)
-                    successReg_done = True
+            validateSettDate = [Action.sett_Btn, Action.isInvalidBirth_Btn]
+            if not sett_done:
+                pos = TimAnhSauKhiChupVaSoSanh(validateSettDate, index=index, ld_path_console=ld_path_console)
+                if(pos[2] == 0):
+                    Tap(index, ld_path_console, pos[0], pos[1])
+                    sett_done = True
+                    if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                        # print("Đã click Next 3")           
+                        pass
+                else:
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console)
+                    return  
 
-        # Nếu tất cả các điều kiện đã hoàn thành, thoát khỏi vòng lặp
-        if (sendcodeviaSMS_done and nextviaEmail_done and confirmviaemail_done and continueCreate_done and sendviaSMS_done and sendViaEmail_done and newEmail_done and createbutton_done and getstarted_done and firstname_done and lastname_done and
-            selectyourname_done and setDate_done and sett_done and gender_done and signup_done and email_done and
-            doyouhaveaccount_done and password_done and verifycode_done and successReg_done and notnow_done and passwordField_done and agree_done and okbtn_done):
-            break
+            # time.sleep(2)
+
+            if not isInvalidBirth_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos2[0], pos2[1])
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+                    if pos2 is not None:
+                        ChonNgayThangNamSinh(index, ld_path_console)
+                        isInvalidBirth_done = True
+                    # UninstallFacebook(index, ld_path_console, package_name)
+                    # QuitLD(index, ld_path_console)
+                    # return
+
+            # Kiểm tra nextt nếu chưa hoàn thành
+        
+
+            # time.sleep(2)
+
+            # Kiểm tra gender nếu chưa hoàn thành
+            if not gender_done:
+                pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console)
+                if pos is not None:
+                    Tap(index, ld_path_console, pos[0], pos[1])
+                    gender_done = True
+
+            # time.sleep(2)
+
+            # Kiểm tra nextt nếu chưa hoàn thành
+            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                # print("Đã click Next 4")
+                pass
+
+            # time.sleep(2)
+
+            # Kiểm tra nextt nếu chưa hoàn thành
+            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                # print("Đã click Next 5")        
+                pass
+
+            # time.sleep(2)
+
+            if not isInvalidEmail_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if(pos != None):
+                    print("Email không hợp lệ")
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return
+
+
+            # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
+            if not doyouhaveaccount_done:
+                ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
+                ### Check_attempt=True là cho phép kiểm tra element
+                pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if pos is not None:
+                    pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console)
+                    if pos is not None:
+                        Tap(index, ld_path_console, pos[0], pos[1])
+                        doyouhaveaccount_done = True
+
+            if not continueCreate_done:
+                ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
+                ### Check_attempt=True là cho phép kiểm tra element
+                pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if pos is not None:
+                    Tap(index, ld_path_console, pos[0], pos[1])
+                    continueCreate_done = True
+
+            # Kiểm tra agree nếu chưa hoàn thành
+            if not passwordField_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console, confidence=0.5)
+                if(pos != None):
+                    GoText(index, ld_path_console, passText, pos[0], pos[1])                   
+
+            # time.sleep(2)
+
+            # Kiểm tra nextt nếu chưa hoàn thành
+            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                # print("Đã click Next 6")
+                pass
+
+            # time.sleep(2)
+
+            if not notnow_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])  
+
+            # time.sleep(2)
+
+            if not agree_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])                    
+
+            # time.sleep(2)   
+            if not issue282_done:
+                is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if(is282 != None):
+                    issue282_done = True
+                    print(f"Email: {emailText} bị dính 282")
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return           
+
+            validateAccountName = [Action.isInvalidAccount_Btn, Action.validateName_Btn]
+            if not isInvalidaccount_done:
+                pos = TimAnhSauKhiChupVaSoSanh(validateAccountName, index=index, ld_path_console=ld_path_console)
+                if(pos[2] == 0 or pos[2] == 1):
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return
+
+            if not sendviaSMS_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsField_Btn, index, ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])    
+                    sendviaSMS_done = True
+
+            sendviasmsField_Btn = [Action.sendviasmsField_Btn, Action.sendviasmsFieldv2_Btn]
+            if not sendviasmsv2_done:
+                pos = TimAnhSauKhiChupVaSoSanh(template_path=sendviasmsField_Btn, index=index, ld_path_console=ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])    
+                    sendviasmsv2_done = True
+
+            if not issue282_done:
+                is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if(is282 != None):
+                    issue282_done = True
+                    print(f"Email: {emailText} bị dính 282")
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return               
+
+            if not sendcodeviaSMS_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.sendcodeviasms_Btn, index, ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])    
+                    sendcodeviaSMS_done = True
+
+            if not confirmviaemail_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemail_Btn, index, ld_path_console)
+                if(pos != None):
+                    GoText(index, ld_path_console, emailText, pos[0], pos[1])
+                    confirmviaemail_done = True
+
+                ###
+
+            if not newEmail_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.newEmailField_Btn, index, ld_path_console)
+                if(pos != None):
+                    GoText(index, ld_path_console, emailText, pos[0], pos[1])
+                    newEmail_done = True
+
+            if not nextviaEmail_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.nextviaemail_Btn, index, ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])    
+                    nextviaEmail_done = True
+
+            # DemThoiGian(30)
+
+            if not issue282_done:
+                is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if(is282 != None):
+                    issue282_done = True
+                    print(f"Email: {emailText} bị dính 282")
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return
+            # time.sleep(2)
+
+            if not smslimitreached_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.smslimitreached_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                if(pos != None):
+                    print("SMS limit reached")
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return
+
+
+            # Kiểm tra verifycode nếu chưa hoàn thành
+            if not verifycode_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console, confidence=0.75)
+                if pos is not None:
+                    # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
+                    verifycode = GetOTP(email=emailText)
+                    print(f"Verify code: {verifycode}")
+                    DemThoiGian(1)
+                    if verifycode is None:
+                        print("Không lấy được mã code == Reboot và xóa cache")
+                        UninstallFacebook(index, ld_path_console, package_name)
+                        QuitLD(index, ld_path_console)
+                        return
+                    GoText(index, ld_path_console, verifycode, pos[0], pos[1])
+                    DemThoiGian(1)
+                    verifycode_done = True
+            
+            # time.sleep(2)
+            if not okbtn_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
+                if(pos != None):
+                    Tap(index, ld_path_console, pos[0], pos[1])   
+                    okbtn_done = True 
+
+            # time.sleep(2)
+
+            if not incorrectcode_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.incorrectemail_Btn, index, ld_path_console, max_attempts=3, check_attempt=True)
+                if(pos != None):
+                    print("Mã code không chính xác")
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console)
+                    return
+
+
+            if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
+                # print("Đã click skip")
+                pass
+
+            # time.sleep(2)
+
+            if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
+                # print("Đã click skip lần 2") 
+                pass
+
+            # time.sleep(2)
+
+            if XuLyNextButton(index, ld_path_console, Action.skip1_Btn):
+                # print("Đã click skip lần 3") 
+                pass                       
+                
+            # time.sleep(2)             
+
+            # Kiểm tra successReg nếu chưa hoàn thành
+            if not successReg_done:
+                pos = TimAnhSauKhiChupVaSoSanh(Action.successReg3_Btn, index, ld_path_console)
+                if pos is not None:
+                    isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
+                    if isSuccess:
+                        CookieToken = json.loads(getAdbData(index, ld_path_console))
+                        uid = CookieToken.get("uid")
+                        cookie = CookieToken.get("cookie")
+                        token = CookieToken.get("token")
+                        account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
+                        print(account)
+                        # print(f"Chuẩn bị xóa cache và reboot LDPlayer {index}")
+                        DemThoiGian(2)
+                        successReg_done = True
+                        UninstallFacebook(index, ld_path_console, package_name)
+                        QuitLD(index, ld_path_console)
+                        
+    except KeyboardInterrupt:
+        print("Vòng lặp đã bị ngừng bằng Ctrl+C.")
