@@ -109,6 +109,7 @@ class Action:
     successReg2_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg2.png')
     successReg3_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg3.png')
     issue282_Btn = os.path.join(base_dir, '..', 'imageAction', 'err282.png')
+    issue282v2_Btn = os.path.join(base_dir, '..', 'imageAction', 'err282v2.png')
     validateName_Btn = os.path.join(base_dir, '..', 'imageAction', 'validateName.png')
     isStartedApp_Btn = os.path.join(base_dir, '..', 'imageAction', 'isStarted.png')
     isLDRunning_Btn = os.path.join(base_dir, '..', 'imageAction', 'isLDRunning.png')
