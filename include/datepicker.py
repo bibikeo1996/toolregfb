@@ -90,7 +90,7 @@ def ChonNgayThangNamSinh(index, ld_path_console):
         "col 3": {
             "direction": "up",
             "min_swipes": 15,
-            "max_swipes": 21,
+            "max_swipes": 20,
             "min_delay": 1,
             "max_delay": 1,
         },
@@ -150,22 +150,6 @@ def DumpMap(ld_path_console, dump_file_path="include/map/datePickerLocation.xml"
         print(f"An error occurred: {e}")
         return False
 
-
-
-# def XuatToaDo(file_path, resource_id):
-#     """Extract coordinates for all nodes with the specified resource-id."""
-#     tree = ET.parse(file_path)
-#     root = tree.getroot()
-
-#     coordinates_list = []
-
-#     for node in root.iter("node"):
-#         if "resource-id" in node.attrib and node.attrib["resource-id"] == resource_id:
-#             coordinates = XacDinhToaDo(node)
-#             if coordinates != (None, None):
-#                 coordinates_list.append(coordinates)
-
-#     return coordinates_list
 
 # if __name__ == "__main__":
 #     DumpMap(0)

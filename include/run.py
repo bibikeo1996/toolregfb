@@ -43,7 +43,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
     # # account = f"{uid}|{passText}|{cookie}|{token}|{emailText}"
     # account = f"{uid}|{cookie}|{token}"
     # print(account)
-    # quit()
+    quit()
     emailText = TaoEmail()
     passText = ''.join(random.choice(string.ascii_letters) for i in range(15))
     fieldFirstName = getHoTenRandom(fileTxtPath+'ho.txt')  
