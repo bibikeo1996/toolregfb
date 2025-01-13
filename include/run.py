@@ -221,7 +221,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     Tap(index, ld_path_console, pos[0], pos[1])
                     sett_done = True
                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                        print("Đã click Next 3")           
+                        # print("Đã click Next 3")           
                         pass
 
             # time.sleep(2)
@@ -395,7 +395,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         if(pos2 != None):
                             Tap(index, ld_path_console, pos2[0], pos2[1])    
                             nextviaEmail_done = True
-                            pass
                 else:
                     pos2 = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsFieldv2_Btn, index, ld_path_console)
                     if(pos2 != None):
@@ -411,7 +410,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                                     GoText(index, ld_path_console, emailText, pos[0], pos[1])
                                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                                         sendviasmsv2_done = True
-                                        pass
 
             # DemThoiGian(30)
                            
@@ -480,9 +478,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan1_done = True
 
-
-            time.sleep(2)
-
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
             if not issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
@@ -498,8 +493,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan2_done = True
 
-            time.sleep(2) 
-
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
             if not issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
@@ -513,9 +506,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])
-                    skip_lan3_done = True                
-                
-            time.sleep(2)   
+                    skip_lan3_done = True
 
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
             if not issue282v2_done:
@@ -531,9 +522,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan4_done = True
-
-            time.sleep(2)          
-
+                    
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
             if not issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
