@@ -38,7 +38,6 @@ Torres
 Nguyen
 Hill
 Flores
-Green
 Adams
 Nelson
 Baker
@@ -171,7 +170,6 @@ Hicks
 Holmes
 Palmer
 Wagner
-Black
 Robertson
 Boyd
 Rose
@@ -382,7 +380,6 @@ Lara
 Fletcher
 Page
 Mccarthy
-Love
 Robles
 Cervantes
 Solis

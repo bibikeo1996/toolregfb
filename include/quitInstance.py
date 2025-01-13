@@ -17,21 +17,22 @@ def ADBKillAndStartServer():
     start_command = ["adb", "start-server"]
     subprocess.run(start_command)
     time.sleep(2)
-    # start_command = ["adb", "devices"]
-    # subprocess.run(start_command)
-    # time.sleep(5)
+    start_command = ["adb", "devices"]
+    subprocess.run(start_command)
+    time.sleep(3)
 
 ## Khởi dộng LDPlayer
 def StartLD(index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    DemThoiGian(13)
+    DemThoiGian(16)
     return False
 
 def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port):
-    try:   
+    try: 
+        # ADBKillAndStartServer()
         encoded_password = urllib.parse.quote(proxy_password)
-        command = f'{ld_path_console} adb --index {index} --command "shell settings put global http_proxy {proxy_username}:{encoded_password}@{proxy_ip}:{proxy_port}"'
+        command = f'{ld_path_console} adb --index {index} --command "shell settings put global http_proxy {proxy_ip}:{proxy_port}"'
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode == 0:
             return True
@@ -42,9 +43,9 @@ def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_i
         print(f"Không tìm thấy ldconsole.exe tại: {ldconsole_path}")
     DemThoiGian(2)        
 
-def RemoveProxy(index, ld_path_console, proxy_ip, proxy_port):
+def RemoveProxy(index, ld_path_console):
     try:
-        command = f'{ld_path_console} adb --index {index} --command "shell settings delete global http_proxy"'
+        command = f'{ld_path_console} adb --index {index} --command "shell settings delete global http_proxy :0"'
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode == 0:
             return True
@@ -88,7 +89,7 @@ def InstallFacebook(template_path, index, ld_path_console, apk_path, timeout=20)
 def OpenApp(template_path, index, ld_path_console, package_name, timeout=20):
     subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
     start_time = time.time()
-    DemThoiGian(5)
+    DemThoiGian(7)
     return True
 
 def KillApp(index, ld_path_console, package_name):
@@ -96,8 +97,11 @@ def KillApp(index, ld_path_console, package_name):
     DemThoiGian(2)
     return True
 
-def QuitLD(index, ld_path_console):
+def QuitLD(index, ld_path_console, ld_path_instance):
     command = f'{ld_path_console} quit --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     DemThoiGian(2)
+    RemoveProxy(index, ld_path_console)
+    DemThoiGian(2)
+    # ClearCache(index, ld_path_instance)
     return True
