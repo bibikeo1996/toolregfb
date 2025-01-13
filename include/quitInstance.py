@@ -89,7 +89,7 @@ def InstallFacebook(template_path, index, ld_path_console, apk_path, timeout=20)
 def OpenApp(template_path, index, ld_path_console, package_name, timeout=20):
     subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
     start_time = time.time()
-    DemThoiGian(7)
+    DemThoiGian(5)
     return True
 
 def KillApp(index, ld_path_console, package_name):

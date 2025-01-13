@@ -30,7 +30,7 @@ if __name__ == "__main__":
                 RunLD(i, apk_path, package_name, ld_path_console, ld_path_instance, proxy_username, proxy_password, proxy_ip, proxy_port, fileTxtPath)
 
             threads = []
-            for i in range(2):
+            for i in range(1):
                 t = threading.Thread(target=task, args=(i, apk_path, package_name, ld_path_console, ld_path_instance, proxy_username, proxy_password, proxy_ip, proxy_port, fileTxtPath))
                 threads.append(t)
                 t.start()

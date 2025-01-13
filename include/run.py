@@ -130,7 +130,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
 
             if not openapp_done:
-                pos = TimAnhSauKhiChupVaSoSanh(Action.isOpenApp_Btn, index, ld_path_console, package_name)
+                pos = TimAnhSauKhiChupVaSoSanh(Action.isOpenApp_Btn, index, ld_path_console)
                 if pos is not None:
                     openapp_done = True
                     pass
@@ -346,15 +346,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     isInvalidaccount_done = True
                     pass
 
-            if not sendviaSMS_done:
-                pos = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsField_Btn, index, ld_path_console)
-                if(pos != None):
-                    Tap(index, ld_path_console, pos[0], pos[1])    
-                    sendviaSMS_done = True
+            # if not sendviaSMS_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsField_Btn, index, ld_path_console)
+            #     if(pos != None):
+            #         Tap(index, ld_path_console, pos[0], pos[1])    
+            #         sendviaSMS_done = True
             
             sendviasmsField_Btn = [Action.sendviasmsField_Btn, Action.sendviasmsFieldv2_Btn]
             if not sendviasmsv2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(template_path=sendviasmsField_Btn, index=index, ld_path_console=ld_path_console)
+                print(pos)
                 if(pos[2] == 0):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     sendviasmsv2_done = True
@@ -370,7 +371,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
                             sendcodeviaSMS_done = True
-
 
                     if not confirmviaemail_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
@@ -477,7 +477,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             if not skip_lan1_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
                 if(pos != None):
-                    tap(index, ld_path_console, pos[0], pos[1])
+                    Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan1_done = True
 
 
@@ -495,7 +495,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             if not skip_lan2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
                 if(pos != None):
-                    tap(index, ld_path_console, pos[0], pos[1])
+                    Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan2_done = True
 
             time.sleep(2) 
@@ -512,7 +512,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             if not skip_lan3_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
                 if(pos != None):
-                    tap(index, ld_path_console, pos[0], pos[1])
+                    Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan3_done = True                
                 
             time.sleep(2)   
@@ -529,7 +529,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             if not skip_lan4_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.skip1_Btn, index, ld_path_console)
                 if(pos != None):
-                    tap(index, ld_path_console, pos[0], pos[1])
+                    Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan4_done = True
 
             time.sleep(2)          

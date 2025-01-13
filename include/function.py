@@ -28,70 +28,6 @@ adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH')
 package_name = os.getenv('PACKAGE_NAME')
 
-# def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=1, check_attempt=False):
-#     """
-#     Hàm này so sánh ảnh chụp màn hình với 1 hoặc nhiều template. Nếu bất kỳ template nào đạt độ chính xác yêu cầu, hàm sẽ trả về tọa độ.
-
-#     Parameters:
-#     - template_path: Đường dẫn tới template (có thể là chuỗi hoặc danh sách chuỗi).
-#     - index: Instance index.
-#     - ld_path_console: Đường dẫn console LDPlayer.
-#     - confidence: Độ chính xác tối thiểu để chấp nhận template.
-#     - max_attempts: Số lần thử tối đa.
-#     - delay: Thời gian chờ giữa các lần thử (giây).
-#     - check_attempt: Nếu True, in ra số lần thử.
-
-#     Returns:
-#     - Tuple (center_x, center_y) nếu tìm thấy một template phù hợp, None nếu không tìm thấy.
-#     """
-#     # Xử lý để hỗ trợ 1 hoặc nhiều template
-#     if isinstance(template_path, str):
-#         template_paths = [template_path]
-#     elif isinstance(template_path, list):
-#         template_paths = template_path
-#     else:
-#         raise ValueError("template_path phải là một chuỗi hoặc danh sách chuỗi")
-
-#     # Đọc tất cả các template từ danh sách
-#     templates = []
-#     for path in template_paths:
-#         template = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
-#         if template is None:
-#             raise FileNotFoundError(f"Không tìm thấy file {path}")
-#         templates.append((path, template))
-
-#     attempts = 0
-#     while True:
-#         screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
-#         try:
-#             for template_path, template in templates:
-#                 # So sánh template với ảnh chụp màn hình
-#                 result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-#                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-#                 file_name = os.path.basename(template_path)
-#                 print(f"Độ khớp instance {index} {file_name}: {max_val * 100:.2f}%")
-                
-#                 if max_val >= confidence:
-#                     # Nếu khớp, trả về tọa độ
-#                     x, y = max_loc
-#                     h, w = template.shape
-#                     center_x, center_y = x + w // 2, y + h // 2
-#                     return (center_x, center_y)
-
-#             # Nếu không có template nào khớp
-#             if check_attempt:
-#                 sys.stdout.write(f"\rKhông tìm thấy template phù hợp. Thử lại lần {attempts + 1}/{max_attempts}")
-#                 sys.stdout.flush()
-#                 attempts += 1
-#                 if attempts >= max_attempts:
-#                     print("\nKhông tìm thấy hình sau nhiều lần thử.")
-#                     return None
-#                 time.sleep(delay)
-#         finally:
-#             if os.path.exists(local_screenshot_path):
-#                 # os.remove(local_screenshot_path)
-#                 pass
-
 def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=1, check_attempt=False):
     """
     Hàm này so sánh ảnh chụp màn hình với 1 hoặc nhiều template. Nếu bất kỳ template nào đạt độ chính xác yêu cầu,
@@ -157,42 +93,6 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
                 # os.remove(local_screenshot_path)
                 pass
 
-
-
-
-# def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=1, check_attempt=False):
-#     template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
-#     if template is None:
-#         raise FileNotFoundError(f"Không tìm thấy file {template_path}")
-
-#     attempts = 0
-#     while True:
-#         screenshot, local_screenshot_path = ChupAnhTrenManhinh(index, template_path, ld_path_console)
-#         try:
-#             result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-#             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-#             file_name = os.path.basename(template_path)
-#             print(f"Độ khớp instance {index} {file_name}: {max_val * 100:.2f}%")
-#             if max_val >= confidence:
-#                 x, y = max_loc
-#                 h, w = template.shape
-#                 center_x, center_y = x + w // 2, y + h // 2
-
-#                 return (center_x, center_y)
-#             else:
-#                 if check_attempt:
-#                     sys.stdout.write(f"\rKhông tìm thấy hình {template_path} với độ chính xác yêu cầu. Thử lại lần {attempts + 1}/{max_attempts}")
-#                     sys.stdout.flush()
-#                     attempts += 1
-#                     if attempts >= max_attempts:
-#                         print("\nKhông tìm thấy hình sau nhiều lần thử.")
-#                         return None
-#                     time.sleep(delay)
-
-#         finally:
-#             if os.path.exists(local_screenshot_path):
-#                 # os.remove(local_screenshot_path)
-#                 pass
 
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
     emulator_screenshot_path = "/sdcard/screenshot.png"
@@ -278,6 +178,7 @@ def GoText(index, ld_path_console, text, x, y):
         Tap(index, ld_path_console, x, y)
         
     if isinstance(text, int):
+        print("text là văn bảng số")
         # Nếu text là một mã key event (sử dụng ldconsole)
         command = f'{ld_path_console} adb --index {index} --command "shell input keyevent {text}"'
         print(f"Command: {command}")
@@ -285,6 +186,7 @@ def GoText(index, ld_path_console, text, x, y):
         if result.returncode != 0:
             print(f"Lỗi khi gửi sự kiện: {result.stderr}")
     else:
+        print("text là văn bảng chữ và số")
         # Nếu text là một đoạn văn bản, gửi toàn bộ văn bản dưới dạng input text
         command = f'{ld_path_console} adb --index {index} --command "shell input text \\"{text}\\""'
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -292,7 +194,7 @@ def GoText(index, ld_path_console, text, x, y):
             print(f"Lỗi khi gửi văn bản: {result.stderr}")
         else:
             # Thêm độ trễ sau khi gửi lệnh
-            time.sleep(0.5)  # Độ trễ 50ms
+            time.sleep(1)  # Độ trễ 50ms
 
 def Tap(index, ld_path_console, x, y):
     # print(f"Tap at {x}, {y}")
