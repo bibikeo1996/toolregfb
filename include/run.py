@@ -633,8 +633,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         if account is not None:
                             with open('success.txt', 'a') as file:
                                 file.write(account + '\n')
-                            with open('uid.txt', 'a') as file:
-                                file.write(uid + '\n')
+                            with open('uid.txt', 'a') as file2:
+                                file2.write(uid + '\n')
                         successReg_done = True
                         DemThoiGian(2)
                         UninstallFacebook(index, ld_path_console, package_name)
