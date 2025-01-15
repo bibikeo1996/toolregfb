@@ -52,11 +52,11 @@ def GetPhone(country):
         ])
         central_office_code = ''.join(random.choices('0123456789', k=3))
         line_number = ''.join(random.choices('0123456789', k=4))
-        random_phone_number = f"+1 {area_code} {central_office_code} {line_number}"
+        random_phone_number = f"+1{area_code}{central_office_code}{line_number}"
     elif country == "TW":
         prefix = random.choice(["8862", "8863", "8864", "8866", "8867", "8868", "8869"])
         local_number = ''.join(random.choices('0123456789', k=6))
-        random_phone_number = f"{prefix} {local_number}"
+        random_phone_number = f"{prefix}{local_number}"
     else:
         raise ValueError("Unsupported country. Please use 'VN', 'USA', or 'TW'.")
     
