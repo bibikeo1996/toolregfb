@@ -12,43 +12,57 @@ from include.function import *
 def ADBKillAndStartServer():
     kill_command = ["adb", "kill-server"]
     subprocess.run(kill_command)
-    time.sleep(2)
+    time.sleep(1)
     # print("ADB server stopped")
     start_command = ["adb", "start-server"]
     subprocess.run(start_command)
     time.sleep(2)
-    start_command = ["adb", "devices"]
-    subprocess.run(start_command)
-    time.sleep(3)
 
 ## Khởi dộng LDPlayer
 def StartLD(index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    DemThoiGian(16)
+    DemThoiGian(12)
     return False
 
 def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port):
     try: 
         # ADBKillAndStartServer()
-        encoded_password = urllib.parse.quote(proxy_password)
-        command = f'{ld_path_console} adb --index {index} --command "shell settings put global http_proxy {proxy_ip}:{proxy_port}"'
+        start_command = ["adb", "devices"]
+        subprocess.run(start_command)
+        DemThoiGian(2)
+        """
+        Cấu hình proxy cho emulator dựa trên index.
+        
+        :param index: Index của emulator (bắt đầu từ 0).
+        :param proxy_ip: Địa chỉ IP của proxy.
+        :param proxy_port: Cổng của proxy.
+        """
+        # Tính port dựa trên index
+        port = 5555 + index * 2
+        
+        # Lệnh ADB để cấu hình proxy
+        command = f'adb -s 127.0.0.1:{port} shell settings put global http_proxy {proxy_ip}:{proxy_port}'
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode == 0:
             return True
+            print(f"Proxy set thành công trên {index} (port {port})")
         else:
             return False
-            print("Ko thể connect Proxy:", result.stderr)
+            print(f"Lỗi khi set proxy trên emulator {index} (port {port}): {result.stderr}")
     except FileNotFoundError:
         print(f"Không tìm thấy ldconsole.exe tại: {ldconsole_path}")
-    DemThoiGian(2)        
+    DemThoiGian(2)
+    # checkProxy = f'{ld_path_console} adb --index {index} --command "shell settings get global http_proxy"' 
 
 def RemoveProxy(index, ld_path_console):
     try:
-        command = f'{ld_path_console} adb --index {index} --command "shell settings delete global http_proxy :0"'
+        port = 5555 + index * 2
+        command = f'adb -s 127.0.0.1:{port} shell settings put global http_proxy :0'
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode == 0:
             return True
+            print(f"Tắt proxy thành công trên {index} (port {port})")
         else:
             return False
             print("Ko thể remove Proxy:", result.stderr)
@@ -86,10 +100,9 @@ def InstallFacebook(template_path, index, ld_path_console, apk_path, timeout=20)
     return True
 
 ## Mở app Facebook
-def OpenApp(template_path, index, ld_path_console, package_name, timeout=20):
+def OpenApp(index, ld_path_console, package_name):
     subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
-    start_time = time.time()
-    DemThoiGian(5)
+    DemThoiGian(4)
     return True
 
 def KillApp(index, ld_path_console, package_name):
@@ -100,8 +113,14 @@ def KillApp(index, ld_path_console, package_name):
 def QuitLD(index, ld_path_console, ld_path_instance):
     command = f'{ld_path_console} quit --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    DemThoiGian(2)
+    DemThoiGian(1)
     RemoveProxy(index, ld_path_console)
     DemThoiGian(2)
     # ClearCache(index, ld_path_instance)
     return True
+
+## Mở app Proxifier
+def OpenProxifer(index, ld_path_console, package_name):
+    subprocess.run([ld_path_console, 'runapp', '--index', str(index), '--packagename', package_name], check=True)
+    DemThoiGian(4)
+    return True    

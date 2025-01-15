@@ -76,7 +76,7 @@ def ChonNgayThangNamSinh(index, ld_path_console):
         "col 1": {
             "direction": "down",
             "min_swipes": 1,
-            "max_swipes": 12,
+            "max_swipes": 6,
             "min_delay": 1,
             "max_delay": 1,
         },
@@ -89,8 +89,8 @@ def ChonNgayThangNamSinh(index, ld_path_console):
         },
         "col 3": {
             "direction": "up",
-            "min_swipes": 15,
-            "max_swipes": 20,
+            "min_swipes": 12,
+            "max_swipes": 18,
             "min_delay": 1,
             "max_delay": 1,
         },

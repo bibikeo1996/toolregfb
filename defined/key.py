@@ -93,6 +93,7 @@ class Action:
     deny_Btn = os.path.join(base_dir, '..', 'imageAction', 'deny.png')
     emailfield_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfield.png')
     emailfieldv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'emailfieldv2.png')
+    phonenumberfield_Btn = os.path.join(base_dir, '..', 'imageAction', 'phonenumberfield.png')
     
     doyouhaveaccount_Btn = os.path.join(base_dir, '..', 'imageAction', 'doyouhaveaccount.png')
     continuecreate_Btn = os.path.join(base_dir, '..', 'imageAction', 'continueCreate.png')
@@ -125,6 +126,18 @@ class Action:
     sendviasmsFieldv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'sendviasmsv2.png')
     ididntgethecode_Btn = os.path.join(base_dir, '..', 'imageAction', 'ididntgethecode.png')
     confimbyemailbtn_Btn = os.path.join(base_dir, '..', 'imageAction', 'confimbyemailbtn.png')
+    clearField_Btn = os.path.join(base_dir, '..', 'imageAction', 'clearfield.png')
+    agefield_Btn = os.path.join(base_dir, '..', 'imageAction', 'agefield.jpg')
+    okHideBirthDate_Btn = os.path.join(base_dir, '..', 'imageAction', 'okHideBirthDate.jpg')
+
+    turnonProxifier_Btn = os.path.join(base_dir, '..', 'imageAction', 'turnonProxifier.jpg')
+    decidelater_Btn = os.path.join(base_dir, '..', 'imageAction', 'decidelater.jpg')
+    idontseemyaccountv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'idontseemyaccountv2.png')
+    idontseemyaccountv3_Btn = os.path.join(base_dir, '..', 'imageAction', 'idontseemyaccountv3.png')
+    tryanotherway_Btn = os.path.join(base_dir, '..', 'imageAction', 'tryanotherway.png')
+
+    wrongphonenumber_Btn = os.path.join(base_dir, '..', 'imageAction', 'wrongphonenumber.png')
+    
 
     
     sendcodeviasms_Btn = os.path.join(base_dir, '..', 'imageAction', 'sendcode.png')
@@ -136,4 +149,5 @@ class Action:
     nextviaemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'newemailnext.png')
     smslimitreached_Btn = os.path.join(base_dir, '..', 'imageAction', 'smslimit.png')
     incorrectemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'incorrectemail.png')
+    isphonenumused_Btn = os.path.join(base_dir, '..', 'imageAction', 'phonenumused.png')
 

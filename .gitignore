@@ -49,6 +49,7 @@ test/
 
 # APK files
 *.apk
+.apk/
 
 # Excel file
 *.xlsx
