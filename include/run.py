@@ -109,7 +109,9 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 # print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
 
             StartLD(index, ld_path_console)
-            
+
+
+            ## Connect LD với proxy
             if not isConnected_done:
                 isConnected = ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port)
                 if isConnected is True:
@@ -125,6 +127,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
 
             OpenApp(index, ld_path_console, package_name)
 
+            # Kiểm tra Facebook đã cài mở chưa
             if not openapp_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.isOpenApp_Btn, index, ld_path_console, confidence=0.6)
                 if pos is not None:
@@ -134,21 +137,21 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
             # quit()
 
-            # # Kiểm tra createbutton nếu chưa hoàn thành
+            # Tìm nút Create button
             if not createbutton_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
                     createbutton_done = True
 
-            # Kiểm tra getstarted nếu chưa hoàn thành
+            # Tìm nút get started
             if not getstarted_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
                     getstarted_done = True
 
-            # Kiểm tra firstname nếu chưa hoàn thành
+            # Nhập tên 
             if not firstname_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
                 if pos is not None:
@@ -157,7 +160,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     pass
                     firstname_done = True
 
-            # Kiểm tra lastname nếu chưa hoàn thành
+            # Nhập họ
             if not lastname_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console, confidence=0.5)
                 if pos is not None:
@@ -166,15 +169,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     pass
                     lastname_done = True
 
-            # # Kiểm tra nextt nếu chưa hoàn thành
+            # Click nút next
             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                 pass
 
             validateName = [Action.validateName_Btn, Action.selectyourname_Btn, Action.setDate_Btn]
-            # Kiểm tra setDate nếu chưa hoàn thành
+            # Kiểm tra ngày tháng năm sinh
             if not setDate_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=validateName, index=index, ld_path_console=ld_path_console)
                 if(pos is not None and pos[2] == 0):
+                    # Check nếu Validate name tìm thấy => Nghĩa là họ tên không hợp lệ => nhập lại
                     pos3 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
                     if pos3 is not None:
                         Tap(index, ld_path_console, pos3[0], pos3[1])
@@ -183,6 +187,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                             validateName_done = True
                             pass
+                    # Nếu Bắt chọn Name => Sẽ chọn name ngẫu nhiên 
                 elif(pos[2] == 1):
                     pos = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                     if pos is not None:
@@ -203,6 +208,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                                         sett_done = True
                                         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):         
                                             pass
+                                    # Nếu ngày tháng năm sinh bị sai => Xóa chọn lại cho đúng 
                                 if not isInvalidBirth_done:
                                     pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, confidence=0.5, max_attempts=1, check_attempt=True)
                                     if(pos != None):
@@ -216,6 +222,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                                     else:
                                         pass                                 
                 else:
+                    # Click vào nút Set ngày 
                     pos = TimAnhSauKhiChupVaSoSanhv2(Action.sett_Btn, index, ld_path_console)
                     if pos is not None:
                         Tap(index, ld_path_console, pos[0], pos[1])
@@ -264,25 +271,27 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             #     else:
             #         pass
 
-            # Kiểm tra gender nếu chưa hoàn thành
+            # Chọn giới tính
             if not gender_done:
                 pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console, confidence=0.6)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
                     gender_done = True
 
-            # Kiểm tra nextt nếu chưa hoàn thành
+            # CLick next
             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                 pass
 
+            # Nhập sdt 
             if not mobilePhone_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.phonenumberfield_Btn, index, ld_path_console)
                 if pos is not None:
                     GoText(index, ld_path_console, GetPhone("USA"), pos[0], pos[1])
                     mobilePhone_done = True    
 
-            # Kiểm tra nextt nếu chưa hoàn thành
+            # click next
             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                # Kiểm tra sdt đã được sử dụng chưa
                 pos = TimAnhSauKhiChupVaSoSanh(Action.isphonenumused_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if pos is not None:
                     mobilePhone_done = False
@@ -298,6 +307,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 else:
                     pass                    
 
+            ## Kiểm tra email không họp lệ thì out làm lại 
             if not isInvalidEmail_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(pos != None):
@@ -307,7 +317,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     continue
 
 
-            # Kiểm tra doyouhaveaccount nếu chưa hoàn thành
+            # Kiểm tra popup Do you have account
             if not doyouhaveaccount_done:
                 ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
                 ### Check_attempt=True là cho phép kiểm tra element
@@ -318,6 +328,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         Tap(index, ld_path_console, pos[0], pos[1])
                         doyouhaveaccount_done = True
 
+            # Kiểm tra popup Continue Create account
             if not continueCreate_done:
                 ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
                 ### Check_attempt=True là cho phép kiểm tra element
@@ -326,7 +337,9 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     Tap(index, ld_path_console, pos[0], pos[1])
                     continueCreate_done = True
 
+            # Kiểm tra số điện thoại bị sai format
             if not isInvalidPhone_done:
+                # Nếu sdt sai format xóa nhập lại 
                 pos = TimAnhSauKhiChupVaSoSanh(Action.wrongphonenumber_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(pos != None):
                     mobilePhone_done = False
@@ -342,7 +355,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                                     validateName_done = True
                                     pass
 
-            # Kiểm tra agree nếu chưa hoàn thành
+            # Nhập password
             if not passwordField_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console, confidence=0.5)
                 if(pos != None):
@@ -350,17 +363,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
 
             # time.sleep(2)
 
-            # Kiểm tra nextt nếu chưa hoàn thành
+            # Click next
             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                 # print("Đã click Next 6")
                 pass
 
             # time.sleep(2)
 
-            ## Chỗ này sẽ xuất hiện TH trùng password do sdt bị trùng từ trước => phải xử lý ở đây 
-            ## i dont see my acccount
-            ##
-            # Kiểm tra setDate nếu chưa hoàn thành
+            ## Chỗ này sẽ xuất hiện TH trùng password do sdt bị trùng từ trước => phải xử lý ở đây => Thoát app làm lại
             isAccountExist = [Action.idontseemyaccountv2_Btn, Action.idontseemyaccountv3_Btn, Action.tryanotherway_Btn]
             if not Isaccountexist_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=isAccountExist, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
@@ -370,22 +380,23 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
 
-
+            # Click not now hoặc save account 
             if not notnow_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console, confidence=0.5)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])  
 
             # time.sleep(2)
-
+            # Click agree
             if not agree_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])                    
 
             # time.sleep(2)   
+            # Kiểm tra có dính 282 không => Có thì out app 
             if not issue282_done:
-                is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+                is282 = TimAnhSauKhiChupVaSoSanhv2(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                 if(is282 != None):
                     issue282_done = True
                     print(f"Email: {emailText} bị dính 282")
@@ -405,6 +416,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             #         isInvalidaccount_done = True
             #         pass
 
+            # Kiểm tra account bị sai => out app làm lại
             if not isInvalidaccount_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidAccount_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if pos is not None:
@@ -418,67 +430,81 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             #         Tap(index, ld_path_console, pos[0], pos[1])    
             #         sendviaSMS_done = True
             
+            # Kiểm tra nút gủi SMS => Có 2 nút phải check 2 trường hợp để chọn đúng 
             sendviasmsField_Btn = [Action.sendviasmsField_Btn, Action.sendviasmsFieldv2_Btn]
             if not sendviasmsv2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(template_path=sendviasmsField_Btn, index=index, ld_path_console=ld_path_console)
+                # Nếu là trường hợp 1 
                 if(pos[2] == 0):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     sendviasmsv2_done = True
                     if not issue282_done:
+                        # Kiểm tra die thì out app 
                         is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if(is282 != None):
                             print(f"Email: {emailText} bị dính 282")
                             UninstallFacebook(index, ld_path_console, package_name)
                             QuitLD(index, ld_path_console, ld_path_instance)
                             continue
+
+                    # Kiểm tra đã chọn gửi SMS chưa
                     if not sendcodeviaSMS_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.sendcodeviasms_Btn, index, ld_path_console)
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
                             sendcodeviaSMS_done = True
 
+                    # Kiểm tra đã click vào button verify via email
                     if not confirmviaemail_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
                             confirmviaemail_done = True
 
+                    # Kiểm tra đã click vào button verify by email 
                     if not confirmviaemail_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemailv2_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
                             confirmviaemail_done = True
 
+                    # Tìm thấy field email => nhập email
                     if not newEmail_done:
                         pos1 = TimAnhSauKhiChupVaSoSanh(Action.newEmailField_Btn, index, ld_path_console)
                         if(pos1 != None):
                             GoText(index, ld_path_console, emailText, pos1[0], pos1[1])
                             newEmail_done = True
 
+                    # Click next 
                     if not nextviaEmail_done:
                         pos2 = TimAnhSauKhiChupVaSoSanh(Action.nextviaemail_Btn, index, ld_path_console)
                         if(pos2 != None):
                             Tap(index, ld_path_console, pos2[0], pos2[1])    
                             nextviaEmail_done = True
                 else:
+                    # Trường hợp 2
                     pos2 = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsFieldv2_Btn, index, ld_path_console)
                     if(pos2 != None):
                         Tap(index, ld_path_console, pos[0], pos[1])
+                        # CLick chọn nút i didnt get the code => để được chọn confirm by email
                         pos3 = TimAnhSauKhiChupVaSoSanh(Action.ididntgethecode_Btn, index, ld_path_console)
                         if(pos3 != None):
                             Tap(index, ld_path_console, pos[0], pos[1])
+                            # Click chọn confirm by email
                             pos4 = TimAnhSauKhiChupVaSoSanh(Action.confimbyemailbtn_Btn, index, ld_path_console)
                             if(pos4 != None):
                                 Tap(index, ld_path_console, pos[0], pos[1])
+                                # Chọn field và nhập Email 
                                 pos5 = TimAnhSauKhiChupVaSoSanh(Action.emailfieldv2_Btn, index, ld_path_console)
                                 if(pos5 != None):
                                     GoText(index, ld_path_console, emailText, pos[0], pos[1])
+                                    # Click next
                                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                                         sendviasmsv2_done = True
 
             # DemThoiGian(30)
                            
-
+            # Check die or live
             if not issue282_done:
                 is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(is282 != None):
@@ -488,6 +514,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     continue
             # time.sleep(2)
 
+            # Check dính sms limit => out app 
             if not smslimitreached_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.smslimitreached_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(pos != None):
@@ -497,7 +524,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     continue
 
 
-            # Kiểm tra verifycode nếu chưa hoàn thành
+            # Check verify code field => Có nhập code
             if not verifycode_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console, confidence=0.75)
                 if pos is not None:
@@ -505,6 +532,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     verifycode = GetOTP(email=emailText)
                     print(f"Verify code {index} {emailText}: {verifycode}")
                     DemThoiGian(1)
+                    # Ko tìm được code out thoát app
                     if verifycode is None:
                         print("Không lấy được mã code == Reboot và xóa cache")
                         UninstallFacebook(index, ld_path_console, package_name)
@@ -515,6 +543,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     verifycode_done = True
             
             # time.sleep(2)
+
+            ## CLick submit code  
             if not okbtn_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
                 if(pos != None):
@@ -524,14 +554,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             # time.sleep(2)
             # DemThoiGian(2)
 
+            # Chcek code sai => out app
             if not incorrectcode_done:
-                pos = TimAnhSauKhiChupVaSoSanh(Action.incorrectemail_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+                pos = TimAnhSauKhiChupVaSoSanhv2(Action.incorrectemail_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(pos != None):
                     print("Mã code không chính xác")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
 
+            # CLick next
             if XuLyNextButton(index, ld_path_console, Action.skip_Btn):
                 # print("Đã click skip")
                 pass
@@ -551,12 +583,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             #         QuitLD(index, ld_path_console, ld_path_instance)
             #         continue 
 
+            # Click skip lần 1
             if not skip_lan2_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.skip_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan2_done = True
 
+            # Check die or live 
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
             if not issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
@@ -566,12 +600,14 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue 
 
+            # Click skip lần 2
             if not skip_lan3_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.skip1_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])
                     skip_lan3_done = True
 
+            # Check die or live 
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
             if not issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
@@ -581,7 +617,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
 
-            # Kiểm tra successReg nếu chưa hoàn thành
+            # Check thành công thì get cookie => in vào file txt => out app
             if not successReg_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.successReg3_Btn, index, ld_path_console)
                 if pos is not None:
