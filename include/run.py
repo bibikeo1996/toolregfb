@@ -109,24 +109,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 # print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
 
             StartLD(index, ld_path_console)
-
-            # if not isProxifier_done:
-            #     isProxifier = OpenProxifer(index, ld_path_console, "com.proxifier")
-            #     if isProxifier is True:
-            #         isProxifier_done = True
-            #         pos = TimAnhSauKhiChupVaSoSanhv2(Action.decidelater_Btn, index, ld_path_console, confidence=0.5)
-            #         # print(pos)
-            #         if pos is not None:
-            #             Tap(index, ld_path_console, pos[0], pos[1])
-            #             pos2 = TimAnhSauKhiChupVaSoSanhv2(Action.turnonProxifier_Btn, index, ld_path_console, confidence=0.5)
-            #             # print(pos2)
-            #             if pos2 is not None:
-            #                 Tap(index, ld_path_console, pos2[0], pos2[1])
-            #                 pass
-
-            # quit(
             
-            # quit()
             if not isConnected_done:
                 isConnected = ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port)
                 if isConnected is True:
