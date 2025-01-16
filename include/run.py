@@ -177,42 +177,43 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
                     pass
                     lastname_done = True
-
-            # Click nút next
-            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                pass
-                validateNameSection = ['Select your name', 'We require everyone to use the name they use in everyday life, what their friends call them, on Facebook.', 'Set date']
-                pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
-                if pos is not None and pos[2] == 0:
-                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console)
-                    Tap(index, ld_path_console, pos[0], pos[1])
-                elif pos is not None and pos[2] == 1:
-                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
-                    Tap(index, ld_path_console, pos[0], pos[1])
+            validateNameSection = ['Select your name', 'We require everyone to use the name they use in everyday life, what their friends call them, on Facebook.', 'Set date']
+            pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
+            if pos is not None and pos[2] == 0:
+                pos2 = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console)
+                Tap(index, ld_path_console, pos[0], pos[1])
+            elif pos is not None and pos[2] == 1:
+                pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
+                Tap(index, ld_path_console, pos[0], pos[1])
+            else:
+                if random.choice([True, False]):
+                    ChonNgayThangNamSinh(index, ld_path_console)
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+                    print(f"pos 1 {pos2}")
+                    if pos2 is not None:
+                        Tap(index, ld_path_console, pos2[0], pos2[1])
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            pass
                 else:
-                    if random.choice([True, False]):
-                        ChonNgayThangNamSinh(index, ld_path_console)
-                        pos2 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
-                        if pos2 is not None:
-                            Tap(index, ld_path_console, pos2[0], pos2[1])
+                    pos2 = TimAnhTheoTextVaSoSanh('Set', index, ld_path_console)
+                    print(f"pos 2 {pos2}")
+                    if pos2 is not None:
+                        Tap(index, ld_path_console, pos2[0], pos2[1])
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            pass
                             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                                 pass
-                    else:
-                        pos2 = TimAnhTheoTextVaSoSanh('Set', index, ld_path_console)
-                        if pos2 is not None:
-                            Tap(index, ld_path_console, pos2[0], pos2[1])
-                            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                                pass
-                                if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                                    pass
-                                    pos3 = TimAnhTheoTextVaSoSanh('Age', index, ld_path_console)
-                                    if pos3 is not None:
-                                        randomAge = str(random.randint(18, 36))
-                                        GoText(index, ld_path_console, randomAge, pos3[0], pos3[1])
-                                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                                            pos4 = TimAnhTheoTextVaSoSanh('OK', index, ld_path_console)
-                                            if pos4 is not None:
-                                                Tap(index, ld_path_console, pos4[0], pos4[1])
+                                pos3 = TimAnhTheoTextVaSoSanh('Age', index, ld_path_console)
+                                if pos3 is not None:
+                                    randomAge = str(random.randint(18, 36))
+                                    GoText(index, ld_path_console, randomAge, pos3[0], pos3[1])
+                                    if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                                        pos4 = TimAnhTheoTextVaSoSanh('OK', index, ld_path_console)
+                                        if pos4 is not None:
+                                            Tap(index, ld_path_console, pos4[0], pos4[1])
+            # Click nút next
+            # if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #     pass
 
             # Chọn giới tính
             if not gender_done:
@@ -228,7 +229,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             if not mobilePhone_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.phonenumberfield_Btn, index, ld_path_console)
                 if pos is not None:
-                    GoText(index, ld_path_console, GetPhone("USA"), pos[0], pos[1])
+                    GoText(index, ld_path_console, GetPhone("VN"), pos[0], pos[1])
                     mobilePhone_done = True    
 
             # click next
@@ -247,7 +248,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                             Tap(index, ld_path_console, pos2[0], pos2[1])
                             pos3 = TimAnhTheoTextVaSoSanh('Mobile number', index, ld_path_console)
                             if pos3 is not None:
-                                GoText(index, ld_path_console, GetPhone("USA"), pos3[0], pos3[1])
+                                GoText(index, ld_path_console, GetPhone("VN"), pos3[0], pos3[1])
                                 mobilePhone_done = True
                                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                                     pass
@@ -263,7 +264,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                             Tap(index, ld_path_console, pos2[0], pos2[1])
                             pos3 = TimAnhTheoTextVaSoSanh('Mobile number', index, ld_path_console)
                             if pos3 is not None:
-                                GoText(index, ld_path_console, GetPhone("USA"), pos3[0], pos3[1])
+                                GoText(index, ld_path_console, GetPhone("VN"), pos3[0], pos3[1])
                                 mobilePhone_done = True
                                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                                     pass
@@ -280,7 +281,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                             Tap(index, ld_path_console, pos[0], pos[1])
                             continueCreate_done = True
                     else:
-                        pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console)
+                        pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if pos is not None:
                             Tap(index, ld_path_console, pos[0], pos[1])
                             doyouhaveaccount_done = True
