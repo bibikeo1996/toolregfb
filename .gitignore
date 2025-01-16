@@ -48,8 +48,8 @@ include/authorFiles/
 test/
 
 # APK files
-*.apk
-.apk/
+# *.apk
+# .apk/
 
 # Excel file
 *.xlsx
