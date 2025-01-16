@@ -63,19 +63,21 @@ class KeyCode:
 
 class Action:
     base_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    setDate_Btn = os.path.join(base_dir, '..', 'imageAction', 'setdate.png')
+    sett_Btn = os.path.join(base_dir, '..', 'imageAction', 'set.png')
+
     createbutton_Btn = os.path.join(base_dir, '..', 'imageAction', 'createaccount.png')
     getstarted_Btn = os.path.join(base_dir, '..', 'imageAction', 'getstarted.png')
     firstname2_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname2.png')
     firstname3_Btn = os.path.join(base_dir, '..', 'imageAction', 'firstname3.png')
     lastname_Btn = os.path.join(base_dir, '..', 'imageAction', 'lastname.png')
     nextt_Btn = os.path.join(base_dir, '..', 'imageAction', 'next.png')
-    setDate_Btn = os.path.join(base_dir, '..', 'imageAction', 'setdate.png')
     choosedateAgain_Btn = os.path.join(base_dir, '..', 'imageAction', 'choosedate.png')
     resetdateagain_Btn = os.path.join(base_dir, '..', 'imageAction', 'resetdateagain.png')
     month_Btn = os.path.join(base_dir, '..', 'imageAction', 'month.png')
     date_Btn = os.path.join(base_dir, '..', 'imageAction', 'date.png')
     year_Btn = os.path.join(base_dir, '..', 'imageAction', 'year.png')
-    sett_Btn = os.path.join(base_dir, '..', 'imageAction', 'set.png')
     selectyourname_Btn = os.path.join(base_dir, '..', 'imageAction', 'selectyourname.png')
     pickname_Btn = os.path.join(base_dir, '..', 'imageAction', 'pickname.png')
     female_Btn = os.path.join(base_dir, '..', 'imageAction', 'female.png')
@@ -132,6 +134,8 @@ class Action:
 
     turnonProxifier_Btn = os.path.join(base_dir, '..', 'imageAction', 'turnonProxifier.jpg')
     decidelater_Btn = os.path.join(base_dir, '..', 'imageAction', 'decidelater.jpg')
+
+    
     idontseemyaccountv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'idontseemyaccountv2.png')
     idontseemyaccountv3_Btn = os.path.join(base_dir, '..', 'imageAction', 'idontseemyaccountv3.png')
     tryanotherway_Btn = os.path.join(base_dir, '..', 'imageAction', 'tryanotherway.png')
@@ -139,6 +143,9 @@ class Action:
     wrongphonenumber_Btn = os.path.join(base_dir, '..', 'imageAction', 'wrongphonenumber.png')
     
 
+    smslimitreached_Btn = os.path.join(base_dir, '..', 'imageAction', 'smslimit.png')
+    smsreachlimitfield_Btn = os.path.join(base_dir, '..', 'imageAction', 'smsreachlimitfield.jpg')
+    smsreachlimitAdd_Btn = os.path.join(base_dir, '..', 'imageAction', 'addSmsreachlimit.png')
     
     sendcodeviasms_Btn = os.path.join(base_dir, '..', 'imageAction', 'sendcode.png')
     # sendviaemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'confirmviaemail.png')
@@ -147,7 +154,10 @@ class Action:
     confirmviaemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'confirmviaemail.png')
     confirmviaemailv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'comfirmviaemailv2.png')
     nextviaemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'newemailnext.png')
-    smslimitreached_Btn = os.path.join(base_dir, '..', 'imageAction', 'smslimit.png')
     incorrectemail_Btn = os.path.join(base_dir, '..', 'imageAction', 'incorrectemail.png')
     isphonenumused_Btn = os.path.join(base_dir, '..', 'imageAction', 'phonenumused.png')
+
+
+    wecounldntfindyouaccount_Btn = os.path.join(base_dir, '..', 'imageAction', 'wecounldntfindyouaccount.png')
+    wecoulndfindyouraccountOk_Btn = os.path.join(base_dir, '..', 'imageAction', 'wecoulndfindyouraccountOk.png')
 

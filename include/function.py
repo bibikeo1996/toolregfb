@@ -12,7 +12,7 @@ import shutil
 import pandas as pd
 import pyautogui
 import urllib.parse
-
+import xml.etree.ElementTree as ET
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
 from dotenv import load_dotenv
@@ -91,6 +91,95 @@ def TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console, confidence
             if os.path.exists(local_screenshot_path):
                 # os.remove(local_screenshot_path)
                 pass
+
+
+
+def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=2, delay=2, check_attempt=False):
+    """
+    Hàm này tìm tọa độ của một ký tự hoặc chuỗi văn bản cụ thể trong file XML dump được lấy từ LDPlayer.
+
+    Parameters:
+    - text: Chuỗi văn bản cần tìm trong file XML.
+    - index: Instance index của LDPlayer.
+    - ld_path_console: Đường dẫn console LDPlayer.
+    - xml_dump_path: Đường dẫn để lưu file XML dump.
+    - max_attempts: Số lần thử tối đa.
+    - delay: Thời gian chờ giữa các lần thử (giây).
+    - check_attempt: Nếu True, in ra số lần thử.
+
+    Returns:
+    - Tuple (x, y) nếu tìm thấy văn bản, None nếu không tìm thấy.
+    """
+    xml_dump_path = f"./window_dump{index}.xml"
+    if isinstance(multiple_texts, str):
+        multiple_texts = [multiple_texts]
+    elif isinstance(multiple_texts, list):
+        # Đảm bảo multiple_texts là danh sách, không cần thay đổi gì thêm
+        pass
+    else:
+        raise ValueError("multiple_texts phải là một chuỗi hoặc danh sách chuỗi")    
+
+    def DumpXML(index, xml_path, ld_path_console):
+        """
+        Hàm dump file XML từ LDPlayer.
+        """
+        port = 5555 + index * 2
+        command = f'{ld_path_console} adb --index {index} --command "shell uiautomator dump /sdcard/window_dump.xml"'
+        os.system(command)
+        pull_command = f'{ld_path_console} adb --index {index} --command "pull /sdcard/window_dump.xml {xml_path}"'
+        os.system(pull_command)
+
+    attempts = 0
+    while True:
+        try:
+            # Dump file XML
+            DumpXML(index, xml_dump_path, ld_path_console)
+
+            # Kiểm tra file XML dump
+            if not os.path.exists(xml_dump_path):
+                raise FileNotFoundError(f"Không tìm thấy file dump XML tại {xml_dump_path}")
+
+            # Parse file XML
+            tree = ET.parse(xml_dump_path)
+            root = tree.getroot()
+
+            # Tìm kiếm từng văn bản trong danh sách
+            for array_index, text in enumerate(multiple_texts):
+                for node in root.iter("node"):
+                    if text in node.attrib.get("text", ""):
+                        # Lấy tọa độ từ thuộc tính bounds
+                        bounds = node.attrib.get("bounds", "")
+                        if bounds:
+                            # Phân tích tọa độ từ bounds (vd: [x1,y1][x2,y2])
+                            bounds = bounds.replace("]", ",").replace("[", "").strip(",")
+                            coords = list(map(int, bounds.split(",")))
+                            if len(coords) == 4:
+                                x1, y1, x2, y2 = coords
+                                center_x = (x1 + x2) // 2
+                                center_y = (y1 + y2) // 2
+                                return (center_x, center_y, array_index)
+                                # results.append((center_x, center_y, array_index))
+
+            # if results:
+            #     return results
+
+            # Nếu không tìm thấy text
+            if check_attempt:
+                sys.stdout.write(f"\rKhông tìm thấy văn bản phù hợp. Thử lại lần {attempts + 1}/{max_attempts}")
+                sys.stdout.flush()
+
+            attempts += 1
+            if attempts >= max_attempts:
+                print("\nKhông tìm thấy văn bản sau nhiều lần thử.")
+                return None
+
+            time.sleep(delay)
+        finally:
+            # Dọn dẹp file dump nếu cần thiết
+            if os.path.exists(xml_dump_path):
+                # os.remove(xml_dump_path)  # Bỏ comment nếu muốn tự động xóa file dump
+                pass
+
 
 def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=2, check_attempt=False):
     """

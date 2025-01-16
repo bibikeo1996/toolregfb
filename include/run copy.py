@@ -100,12 +100,6 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             # fieldFirstName = None
             # fieldLastName = None
 
-            # isAccountExist = ['Try another way', 'i don’t see my account', 'Choose your account']
-            # if not Isaccountexist_done:
-            #     pos = TimAnhTheoTextVaSoSanh(isAccountExist, index, ld_path_console)
-
-            # quit()
-
             emailText = TaoEmail()
             passText = ''.join(random.choice(string.ascii_letters) for i in range(15))
             fieldFirstName = getHoTenRandom(fileTxtPath+'ho.txt')  
@@ -148,6 +142,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
             # quit()
 
+            # isAccountExist = ['Try another way', 'i don’t see my account', 'Choose your account']
+            # if not Isaccountexist_done:
+            #     pos = TimAnhTheoTextVaSoSanh(isAccountExist, index, ld_path_console)
+
+
             # Tìm nút Create button
             if not createbutton_done:
                 pos = TimAnhTheoTextVaSoSanh('Create new account', index, ld_path_console)
@@ -163,6 +162,12 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     getstarted_done = True
 
             # Nhập tên 
+            # validateNameSection = ['Select your name', 'We require everyone to use the name they use in everyday life, what their friends call them, on Facebook.', 'Set date']
+            # pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
+            # print(pos)
+            
+            # quit()
+
             if not firstname_done:
                 pos = TimAnhTheoTextVaSoSanh('First name', index, ld_path_console)
                 if pos is not None:
@@ -214,15 +219,132 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                                             if pos4 is not None:
                                                 Tap(index, ld_path_console, pos4[0], pos4[1])
 
+            # validateName = [Action.validateName_Btn, Action.selectyourname_Btn, Action.setDate_Btn]
+            # # Kiểm tra ngày tháng năm sinh
+            # if not setDate_done:
+            #     pos = TimAnhSauKhiChupVaSoSanhv2(template_path=validateName, index=index, ld_path_console=ld_path_console)
+            #     if(pos is not None and pos[2] == 0):
+            #         # Check nếu Validate name tìm thấy => Nghĩa là họ tên không hợp lệ => nhập lại
+            #         pos3 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
+            #         if pos3 is not None:
+            #             Tap(index, ld_path_console, pos3[0], pos3[1])
+            #             fieldLastName = getHoTenRandom(fileTxtPath+'ho.txt')
+            #             GoText(index, ld_path_console, fieldLastName, pos3[0], pos3[1])
+            #             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                 validateName_done = True
+            #                 pass
+            #         # Nếu Bắt chọn Name => Sẽ chọn name ngẫu nhiên 
+            #     elif(pos[2] == 1):
+            #         pos = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+            #         if pos is not None:
+            #             Tap(index, ld_path_console, pos[0], pos[1])
+            #             selectyourname_done = True
+            #             # Kiểm tra nextt nếu chưa hoàn thành
+            #             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                 pass
+            #                 # print("Đang chọn ngày tháng năm sinh")
+            #                 pos3 = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+            #                 if pos3 is not None:
+            #                     ChonNgayThangNamSinh(index, ld_path_console)
+            #                     setDate_done = True
+            #                     if not sett_done:
+            #                         pos = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+            #                         if pos is not None:
+            #                             Tap(index, ld_path_console, pos[0], pos[1])
+            #                             sett_done = True
+            #                             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):         
+            #                                 pass
+            #                         # Nếu ngày tháng năm sinh bị sai => Xóa chọn lại cho đúng 
+            #                     if not isInvalidBirth_done:
+            #                         pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, confidence=0.5, max_attempts=1, check_attempt=True)
+            #                         if(pos != None):
+            #                             Tap(index, ld_path_console, pos[0], pos[1])
+            #                             pos2 = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+            #                             if pos2 is not None:
+            #                                 ChonNgayThangNamSinh(index, ld_path_console)
+            #                                 isInvalidBirth_done = True
+            #                             else:
+            #                                 pass
+            #                         else:
+            #                             pass                                 
+            #     else:
+            #         # Click vào nút Set ngày 
+            #         if random.choice([True, False]):  # Random chọn trường hợp 1 hoặc 2
+            #             pos = TimAnhSauKhiChupVaSoSanhv2(Action.sett_Btn, index, ld_path_console)
+            #             if pos is not None:
+            #                 Tap(index, ld_path_console, pos[0], pos[1])
+            #                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                     pass
+            #                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                         pass
+            #                         pos2 = TimAnhSauKhiChupVaSoSanh(Action.agefield_Btn, index, ld_path_console)
+            #                         if pos2 is not None:
+            #                             randomAge = str(random.randint(18, 36))
+            #                             GoText(index, ld_path_console, randomAge, pos2[0], pos2[1])
+            #                             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                                 pass
+            #                                 pos3 = TimAnhSauKhiChupVaSoSanh(Action.okHideBirthDate_Btn, index, ld_path_console, confidence=0.55)
+            #                                 if pos3 is not None:
+            #                                     Tap(index, ld_path_console, pos3[0], pos3[1])
+            #                                     setDate_done = True
+            #         else:
+            #             pos2 = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+            #             if pos2 is not None:  # Lưu ý: sửa "po2s" thành "pos2" vì có lỗi chính tả
+            #                 ChonNgayThangNamSinh(index, ld_path_console)
+            #                 setDate_done = True
+            #                 pos3 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+            #                 if pos3 is not None:
+            #                     Tap(index, ld_path_console, pos3[0], pos3[1]) 
+            #                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                         pass
+            #                         pos4 = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, confidence=0.5, max_attempts=1, check_attempt=True)
+            #                         if(pos4 != None):
+            #                             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                                 pass
+            #                                 pos5 = TimAnhSauKhiChupVaSoSanh(Action.agefield_Btn, index, ld_path_console)
+            #                                 if pos5 is not None:
+            #                                     randomAge = str(random.randint(18, 36))
+            #                                     GoText(index, ld_path_console, randomAge, pos5[0], pos5[1])
+            #                                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                                         pass
+            #                                         pos6 = TimAnhSauKhiChupVaSoSanh(Action.okHideBirthDate_Btn, index, ld_path_console, confidence=0.55)
+            #                                         if pos6 is not None:
+            #                                             Tap(index, ld_path_console, pos6[0], pos6[1])
+            #                                             setDate_done = True
+
+            # Kiểm tra sett nếu chưa hoàn thành
+
+            # DemThoiGian(20)                       
+            # if not sett_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+            #     if pos is not None:
+            #         Tap(index, ld_path_console, pos[0], pos[1])
+            #         sett_done = True
+            #         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):         
+            #             pass
+            # if not isInvalidBirth_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(Action.isInvalidBirth_Btn, index, ld_path_console, confidence=0.5, max_attempts=1, check_attempt=True)
+            #     if(pos != None):
+            #         Tap(index, ld_path_console, pos[0], pos[1])
+            #         pos2 = TimAnhSauKhiChupVaSoSanh(Action.setDate_Btn, index, ld_path_console)
+            #         if pos2 is not None:
+            #             ChonNgayThangNamSinh(index, ld_path_console)
+            #             isInvalidBirth_done = True
+            #         else:
+            #             pass
+            #     else:
+            #         pass
+
             # Chọn giới tính
             if not gender_done:
                 pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console, confidence=0.6)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
                     gender_done = True
-                    # CLick next
-                    if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                        pass
+
+            # CLick next
+            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                pass
 
             # Nhập sdt 
             if not mobilePhone_done:
@@ -236,39 +358,48 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 # Kiểm tra sdt đã được sử dụng chưa 2 trường hợp 
                 # 1 là số điện thoại đã được sử dụng
                 # 2 là không tìm thấy tài khoản(dựa theo sdt)
-                isPhoneEmailSection = ['The phone number you’re trying to verify was recently used to verify a different account. Please try a different number.', 'Please search by your email or mobile number instead.', 'Looks like your mobile number may be incorrect. Try entering your full number, including the country code.']
-                if not Isaccountexist_done:
-                    pos = TimAnhTheoTextVaSoSanh(isPhoneEmailSection, index, ld_path_console)
-                    if pos is not None and (pos[2] == 0):
-                        # print("Số điện thoại đã được sử dụng")
-                        ## xóa text trong field và nhập lại
-                        pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console, confidence=0.6, max_attempts=2, check_attempt=True)
-                        if pos2 is not None:
-                            Tap(index, ld_path_console, pos2[0], pos2[1])
-                            pos3 = TimAnhTheoTextVaSoSanh('Mobile number', index, ld_path_console)
+                checkPhoneSection = [Action.isphonenumused_Btn, Action.wecounldntfindyouaccount_Btn, Action.wrongphonenumber_Btn]
+                pos = TimAnhSauKhiChupVaSoSanh(template_path=checkPhoneSection, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
+                if pos is not None and (pos[2] == 0):
+                    mobilePhone_done = False
+                    # print("Số điện thoại đã được sử dụng")
+                    ## xóa text trong field và nhập lại
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console, confidence=0.6, max_attempts=2, check_attempt=True)
+                    if pos2 is not None:
+                        Tap(index, ld_path_console, pos2[0], pos2[1])
+                        pos3 = TimAnhSauKhiChupVaSoSanh(Action.phonenumberfield_Btn, index, ld_path_console)
+                        if pos3 is not None:
+                            GoText(index, ld_path_console, GetPhone("USA"), pos[0], pos[1])
+                            mobilePhone_done = True
+                elif pos is not None and (pos[2] == 1):
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.wecoulndfindyouraccountOk_Btn, index, ld_path_console, confidence=0.6, max_attempts=2, check_attempt=True)
+                    if pos2 is not None:
+                        Tap(index, ld_path_console, pos2[0], pos2[1])
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            pass
+                elif pos is not None and (pos[2] == 2):
+                    mobilePhone_done = False
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
+                    if pos2 is not None:
+                        Tap(index, ld_path_console, pos2[0], pos2[1])
+                        if not mobilePhone_done:
+                            pos3 = TimAnhSauKhiChupVaSoSanh(Action.phonenumberfield_Btn, index, ld_path_console)
                             if pos3 is not None:
                                 GoText(index, ld_path_console, GetPhone("USA"), pos3[0], pos3[1])
                                 mobilePhone_done = True
                                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                                    # validateName_done = True
                                     pass
-                    elif pos is not None and (pos[2] == 1):
-                        pos2 = TimAnhTheoTextVaSoSanh('OK', index, ld_path_console)
-                        if pos2 is not None:
-                            Tap(index, ld_path_console, pos2[0], pos2[1])
-                            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                                pass
-                    elif pos is not None and (pos[2] == 2):
-                        pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
-                        if pos2 is not None:
-                            Tap(index, ld_path_console, pos2[0], pos2[1])
-                            pos3 = TimAnhTheoTextVaSoSanh('Mobile number', index, ld_path_console)
-                            if pos3 is not None:
-                                GoText(index, ld_path_console, GetPhone("USA"), pos3[0], pos3[1])
-                                mobilePhone_done = True
-                                if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                                    pass
-                    else:
-                        pass
+                else: 
+                    pass
+            ## Kiểm tra email không họp lệ thì out làm lại 
+            # if not isInvalidEmail_done:
+            #     pos = TimAnhSauKhiChupVaSoSanhv2(Action.isInvalidEmail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            #     if(pos != None):
+            #         print("Email không hợp lệ")
+            #         UninstallFacebook(index, ld_path_console, package_name)
+            #         QuitLD(index, ld_path_console, ld_path_instance)
+            #         continue
 
             if not doyouhaveaccount_done or not continueCreate_done:
                 checkAccountPopupSection = [Action.doyouhaveaccount_Btn, Action.continuecreate_Btn]
@@ -284,6 +415,45 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         if pos is not None:
                             Tap(index, ld_path_console, pos[0], pos[1])
                             doyouhaveaccount_done = True
+
+            # # Kiểm tra popup Do you have account
+            # if not doyouhaveaccount_done:
+            #     ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
+            #     ### Check_attempt=True là cho phép kiểm tra element
+            #     pos = TimAnhSauKhiChupVaSoSanhv2(Action.doyouhaveaccount_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
+            #     if pos is not None:
+            #         pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console)
+            #         if pos is not None:
+            #             Tap(index, ld_path_console, pos[0], pos[1])
+            #             doyouhaveaccount_done = True
+
+            # # Kiểm tra popup Continue Create account
+            # if not continueCreate_done:
+            #     ### Chỗ này có max_attempts để tăng số lần kiểm tra Element (hiện tại là 1)
+            #     ### Check_attempt=True là cho phép kiểm tra element
+            #     pos = TimAnhSauKhiChupVaSoSanhv2(Action.continuecreate_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+            #     if pos is not None:
+            #         Tap(index, ld_path_console, pos[0], pos[1])
+            #         continueCreate_done = True
+
+            # Kiểm tra số điện thoại bị sai format
+            # if not isInvalidPhone_done:
+            #     # Nếu sdt sai format xóa nhập lại 
+            #     pos = TimAnhSauKhiChupVaSoSanh(Action.wrongphonenumber_Btn, index, ld_path_console, confidence=0.45, max_attempts=1, check_attempt=True)
+            #     if(pos != None):
+            #         mobilePhone_done = False
+            #         pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
+            #         if pos2 is not None:
+            #             Tap(index, ld_path_console, pos2[0], pos2[1])
+            #             if not mobilePhone_done:
+            #                 pos3 = TimAnhSauKhiChupVaSoSanh(Action.phonenumberfield_Btn, index, ld_path_console)
+            #                 if pos3 is not None:
+            #                     GoText(index, ld_path_console, GetPhone("USA"), pos3[0], pos3[1])
+            #                     mobilePhone_done = True
+            #                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+            #                         validateName_done = True
+            #                         pass
+
 
             # Nhập password
             if not passwordField_done:
@@ -327,6 +497,18 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue 
 
+            # validateAccountName = [Action.isInvalidAccount_Btn, Action.validateName_Btn]
+            # if not isInvalidaccount_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(template_path=validateAccountName, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
+            #     if pos is not None:
+            #         if pos[2] == 0 or pos[2] == 1:
+            #             UninstallFacebook(index, ld_path_console, package_name)
+            #             QuitLD(index, ld_path_console, ld_path_instance)
+            #             continue
+            #     else:
+            #         isInvalidaccount_done = True
+            #         pass
+
             # Kiểm tra account bị sai => out app làm lại
             if not isInvalidaccount_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.isInvalidAccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
@@ -335,6 +517,12 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
 
+            # if not sendviaSMS_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsField_Btn, index, ld_path_console)
+            #     if(pos != None):
+            #         Tap(index, ld_path_console, pos[0], pos[1])    
+            #         sendviaSMS_done = True
+            
             # Kiểm tra nút gủi SMS => Có 2 nút phải check 2 trường hợp để chọn đúng 
             sendviasmsField_Btn = [Action.sendviasmsField_Btn, Action.sendviasmsFieldv2_Btn]
             if not sendviasmsv2_done:
@@ -481,6 +669,21 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 # print("Đã click skip")
                 pass
                 
+            # if not skip_lan1_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
+            #     if(pos != None):
+            #         Tap(index, ld_path_console, pos[0], pos[1])
+            #         skip_lan1_done = True
+
+            # issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
+            # if not issue282v2_done:
+            #     pos = TimAnhSauKhiChupVaSoSanh(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=1, check_attempt=True)
+            #     if pos is not None and (pos[2] == 0 or pos[2] == 1):
+            #         print(f"Email: {emailText} bị dính 282")
+            #         UninstallFacebook(index, ld_path_console, package_name)
+            #         QuitLD(index, ld_path_console, ld_path_instance)
+            #         continue 
+
             # Click skip lần 1
             if not skip_lan2_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.skip_Btn, index, ld_path_console)

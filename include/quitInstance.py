@@ -111,11 +111,11 @@ def KillApp(index, ld_path_console, package_name):
     return True
 
 def QuitLD(index, ld_path_console, ld_path_instance):
+    RemoveProxy(index, ld_path_console)
+    DemThoiGian(2)
     command = f'{ld_path_console} quit --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     DemThoiGian(1)
-    RemoveProxy(index, ld_path_console)
-    DemThoiGian(2)
     # ClearCache(index, ld_path_instance)
     return True
 
