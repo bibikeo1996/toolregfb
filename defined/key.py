@@ -129,11 +129,17 @@ class Action:
     isInvalidEmail_Btn = os.path.join(base_dir, '..', 'imageAction', 'invalidemail.png')
     isInvalidBirth_Btn = os.path.join(base_dir, '..', 'imageAction', 'validaBirth.png')
     isInvalidAccount_Btn = os.path.join(base_dir, '..', 'imageAction', 'invalidaccount.png')
+
     sendviasmsField_Btn = os.path.join(base_dir, '..', 'imageAction', 'sendviasms.png')
     sendviasmsFieldv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'sendviasmsv2.png')
+    sendviasmsFieldv3_Btn = os.path.join(base_dir, '..', 'imageAction', 'sendviasmsv3.jpg')
+
     ididntgethecode_Btn = os.path.join(base_dir, '..', 'imageAction', 'ididntgethecode.png')
     confimbyemailbtn_Btn = os.path.join(base_dir, '..', 'imageAction', 'confimbyemailbtn.png')
+
     clearField_Btn = os.path.join(base_dir, '..', 'imageAction', 'clearfield.png')
+    clearFieldv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'clearfieldv2.jpg')
+
     agefield_Btn = os.path.join(base_dir, '..', 'imageAction', 'agefield.jpg')
     okHideBirthDate_Btn = os.path.join(base_dir, '..', 'imageAction', 'okHideBirthDate.jpg')
 

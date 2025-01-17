@@ -9,6 +9,10 @@ import string
 import requests
 import adb_shell
 import json
+import re
+import xml.etree.ElementTree as ET
+import threading
+
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'defined'))
@@ -17,14 +21,7 @@ from key import KeyCode, Action
 from PIL import Image
 from io import BytesIO
 
-
-## import function
-# from include.function import *
-# from include.OpenApp import *
-# from include.datepicker import *
-# from include.setUpDevices import *
-# from include.getCookieToken import *
-# from include.quitInstance import *
+lock = threading.Lock()
 
 def ADBKillAndStartServer():
     kill_command = ["adb", "kill-server"]
@@ -39,23 +36,24 @@ def ADBKillAndStartServer():
 def StartLD(template_path, index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    DemThoiGian(15)
+    return True
+    # for _ in range(30):  # Lặp tối đa 30 lần (tương đương với 1 phút nếu sleep 2 giây)
+    #     try:
+    #         pos = TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console)
+    #         if pos is not None:
+    #             print("Start LDPlayer successfully")
+    #             return True  # Thoát khỏi hàm khi tìm thấy
+    #         else:
+    #             time.sleep(2)
+    #     except Exception as e:
+    #         print(f"Lỗi: {e}")
+    #         time.sleep(2)
 
-    for _ in range(30):  # Lặp tối đa 30 lần (tương đương với 1 phút nếu sleep 2 giây)
-        try:
-            pos = TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console)
-            if pos is not None:
-                print("Start LDPlayer successfully")
-                return True  # Thoát khỏi hàm khi tìm thấy
-            else:
-                time.sleep(2)
-        except Exception as e:
-            print(f"Lỗi: {e}")
-            time.sleep(2)
+    # print("Không tìm thấy pos trong thời gian giới hạn.")
+    # return False  # Trả về `False` nếu hết thời gian
 
-    print("Không tìm thấy pos trong thời gian giới hạn.")
-    return False  # Trả về `False` nếu hết thời gian
-
-def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port):
+def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy):
     try: 
         # ADBKillAndStartServer()
         start_command = ["adb", "devices"]
@@ -74,14 +72,15 @@ def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_i
         result = subprocess.run(removeproxy, capture_output=True, text=True)
         # Lệnh ADB để cấu hình proxy
         DemThoiGian(1)
-        command = f'adb -s 127.0.0.1:{port} shell settings put global http_proxy {proxy_ip}:{proxy_port}'
+        command = f'adb -s 127.0.0.1:{port} shell settings put global http_proxy {proxy}'
         result = subprocess.run(command, capture_output=True, text=True)
-        if result.returncode == 0:
-            return True
-            print(f"Proxy set thành công trên {index} (port {port})")
-        else:
-            return False
-            print(f"Lỗi khi set proxy trên emulator {index} (port {port}): {result.stderr}")
+        return True
+        # if result.returncode == 0:
+        #     return True
+        #     print(f"Proxy set thành công trên {index} (port {port})")
+        # else:
+        #     return False
+        #     print(f"Lỗi khi set proxy trên emulator {index} (port {port}): {result.stderr}")
     except FileNotFoundError:
         print(f"Không tìm thấy ldconsole.exe tại: {ldconsole_path}")
     DemThoiGian(2)
@@ -184,8 +183,8 @@ def TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console, confidence
                 time.sleep(delay)
         finally:
             if os.path.exists(local_screenshot_path):
+                os.remove(local_screenshot_path)
                 pass
-                # os.remove(local_screenshot_path)
 
 def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=2, delay=2, check_attempt=False):
     xml_dump_path = f"./window_dump{index}.xml"
@@ -247,7 +246,7 @@ def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=
 
             attempts += 1
             if attempts >= max_attempts:
-                print("\nKhông tìm thấy văn bản sau nhiều lần thử.")
+                print("Không tìm thấy văn bản sau nhiều lần thử.")
                 return None
 
             time.sleep(delay)
@@ -303,7 +302,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
                 time.sleep(delay)
         finally:
             if os.path.exists(local_screenshot_path):
-                # os.remove(local_screenshot_path)
+                os.remove(local_screenshot_path)
                 pass
 
 def ChupAnhTrenManhinh(index, filename, ld_path_console):
@@ -689,8 +688,8 @@ def ChonNgayThangNamSinh(index, ld_path_console):
         },
         "col 3": {
             "direction": "up",
-            "min_swipes": 12,
-            "max_swipes": 18,
+            "min_swipes": 15,
+            "max_swipes": 25,
             "min_delay": 1,
             "max_delay": 1,
         },
@@ -853,102 +852,126 @@ def getAdbData(index, ld_path_console):
     }
     return json.dumps(result_data)
 
-def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, proxy_username, proxy_password, proxy_ip, proxy_port, fileTxtPath):
-    max_iterations = 100  # Số lần lặp tối đa
+
+class RegisterState:
+    def __init__(self):
+        self.createbutton_done = False
+        self.getstarted_done = False 
+        self.firstname_done = False
+        self.lastname_done = False
+        self.selectyourname_done = False
+        self.setDate_done = False
+        self.sett_done = False
+        self.gender_done = False
+        self.signup_done = False
+        self.email_done = False
+        self.doyouhaveaccount_done = False
+        self.password_done = False
+        self.agree_done = False
+        self.verifycode_done = False
+        self.skip_done = False
+        self.successReg_done = False
+        self.notnow_done = False
+        self.passwordField_done = False
+        self.issue282_done = False
+        self.okbtn_done = False
+        self.issue282v2_done = False
+        self.somethingwrongpopup_done = False
+        
+        # New flags
+        self.isFacebookInstall_done = False
+        self.isInvalidEmail_done = False
+        self.isInvalidBirth_done = False
+        self.isInvalidaccount_done = False
+        
+        # Register flags
+        self.sendviaSMS_done = False
+        self.sendViaEmail_done = False
+        self.newEmail_done = False
+        self.phonenumber_done = False
+        self.continueCreate_done = False
+        self.confirmviaemail_done = False
+        self.nextviaEmail_done = False
+        self.sendcodeviaSMS_done = False
+        self.sendviasmsv2_done = False
+        self.smslimitreached_done = False
+        self.validateName_done = False
+        self.incorrectcode_done = False
+        self.mobilePhone_done = False
+        
+        # Skip flags
+        self.skip_lan1_done = False
+        self.skip_lan2_done = False
+        self.skip_lan3_done = False
+        self.skip_lan4_done = False
+        
+        # Other flags
+        self.openapp_done = False
+        self.isConnected_done = False 
+        self.isProxifier_done = False
+        self.Isaccountexist_done = False
+        self.Isaccountexist1_done = False
+        self.isInvalidPhone_done = False
+        self.isStartedLD_done = False
+
+def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, proxy_username, proxy_password, proxy, fileTxtPath, colors):
+    states = {}
+    
+    max_iterations = 100
     counter = 0
     try:
         while counter < max_iterations:
-            createbutton_done = False
-            getstarted_done = False
-            firstname_done = False
-            lastname_done = False
-            selectyourname_done = False
-            setDate_done = False
-            sett_done = False
-            gender_done = False
-            signup_done = False
-            email_done = False
-            doyouhaveaccount_done = False
-            password_done = False
-            agree_done = False
-            verifycode_done = False
-            skip_done = False
-            successReg_done = False
-            notnow_done = False
-            passwordField_done = False
-            agree_done = False
-            issue282_done = False
-            okbtn_done = False
-            issue282v2_done = False
-            somethingwrongpopup_done = False
+            if index not in states:
+                states[index] = RegisterState()
 
-            # New
-            isFacebookInstall_done = False
-            isInvalidEmail_done = False    
-            isInvalidBirth_done = False    
-            isInvalidaccount_done = False
+            
+            state = states[index]
 
-            # New register
-            sendviaSMS_done = False
-            sendViaEmail_done = False
-            newEmail_done = False
-            phonenumber_done = False
-            continueCreate_done = False
-            confirmviaemail_done = False
-            nextviaEmail_done = False
-            sendcodeviaSMS_done = False
-            sendviasmsv2_done = False
-            smslimitreached_done = False
-            validateName_done = False
-            incorrectcode_done = False
+            # validateNameSection = ['Webpage not available', 'we need more information', 'We suspended your account']
+            # pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
+            # print(f"Pos: {pos}")
+            # quit()
 
-            mobilePhone_done = False
+            # issue282Check = ['Webpage not available', 'we need more information', 'We suspended your account']
+            # pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
+            # print(f"Pos: {pos}")
+            # quit()
 
-            skip_lan1_done = False
-            skip_lan2_done = False
-            skip_lan3_done = False
-            skip_lan4_done = False
-
-            openapp_done = False
-
-            isConnected_done = False
-            isProxifier_done = False
-            Isaccountexist_done = False
-            Isaccountexist1_done = False
-
-            isInvalidPhone_done = False
-
-            isStartedLD_done = False
-
+            
+            # Get state for current index
+            # quit()
             emailText = TaoEmail()
             passText = ''.join(random.choice(string.ascii_letters) for i in range(15))
             fieldFirstName = getHoTenRandom(fileTxtPath+'ho.txt')  
             fieldLastName = getHoTenRandom(fileTxtPath+'ten.txt')
             region = "USA"
             
-            print(f"Email: {emailText}, Firstname: {fieldFirstName}, Lastname: {fieldLastName}, Pass: {passText}")
+            print(f"{colors} Email: {emailText}, Firstname: {fieldFirstName}, Lastname: {fieldLastName}, Pass: {passText}")
 
             isSetup = ThietLapThongSoThietbi(index, ld_path_console)
             if isSetup:
                 pass
                 # print(f"Đã thiết lập thông số thiết bị cho LDPlayer ld{index}.")
 
-            if not isStartedLD_done:
+            if not state.isStartedLD_done:
                 isStartLD = StartLD(Action.isStartedLD_Btn, index, ld_path_console)
                 if isStartLD:
-                    isStartedLD_done = True
+                    state.isStartedLD_done = True
+                    # print(f"Instance {index} - isStartedLD_done updated to: {state.isStartedLD_done}")
 
             ## Connect LD với proxy
-            if not isConnected_done:
-                isConnected = ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port)
-                if isConnected is True:
-                    isConnected_done = True
-                    pass
-                else:
-                    print(f"Không thể kết nối proxy {index}")
-                    QuitLD(index, ld_path_console, ld_path_instance)
-                    continue
+            with lock:
+                if not state.isConnected_done:
+                    isConnected = ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy)
+                    if isConnected is True:
+                        state.isConnected_done = True
+                        pass
+                    else:
+                        print(f"Không thể kết nối proxy {index}")
+                        QuitLD(index, ld_path_console, ld_path_instance)
+                        continue
 
+            # quit()
             InstallFacebook(Action.isFacebookExist_Btn, index, ld_path_console, apk_path)
 
             CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name)
@@ -956,124 +979,123 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
             OpenApp(index, ld_path_console, package_name)
 
             # Kiểm tra Facebook đã cài mở chưa
-            if not openapp_done:
+            if not state.openapp_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.isOpenApp_Btn, index, ld_path_console, confidence=0.6)
                 if pos is not None:
-                    openapp_done = True
+                    state.openapp_done = True
                     pass
                 else:
                     OpenApp(Action.isOpenApp_Btn, index, ld_path_console, package_name)
             # quit()
 
             # Tìm nút Create button
-            if not createbutton_done:
+            if not state.createbutton_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.createbutton_Btn, index, ld_path_console)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
-                    createbutton_done = True
+                    state.createbutton_done = True
 
             # Tìm nút get started
-            if not getstarted_done:
+            if not state.getstarted_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.getstarted_Btn, index, ld_path_console)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
-                    getstarted_done = True
+                    state.getstarted_done = True
 
             # Nhập tên 
-            if not firstname_done:
+            if not state.firstname_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.firstname3_Btn, index, ld_path_console)
                 if pos is not None:
                     GoText(index, ld_path_console, fieldFirstName, pos[0], pos[1])
-                    firstname_done = True
+                    state.firstname_done = True
 
             # Nhập họ
-            if not lastname_done:
+            if not state.lastname_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.lastname_Btn, index, ld_path_console, confidence=0.5)
                 if pos is not None:
                     GoText(index, ld_path_console, fieldLastName, pos[0], pos[1])
-                    lastname_done = True
+                    state.lastname_done = True
 
             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                 pass
 
             validateNameSection = ['Select your name', 'We require everyone to use the name they use in everyday life, what their friends call them, on Facebook.', 'Set date']
-            pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
-            if pos is not None and pos[2] == 0:
-                print("Chọn họ tên")
-                pos2 = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console)
-                Tap(index, ld_path_console, pos[0], pos[1])
-            elif pos is not None and pos[2] == 1:
-                print("Xóa text")
-                pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
-                Tap(index, ld_path_console, pos[0], pos[1])
-            else:
-                if random.choice([True, False]):
-                    print("Chọn ngày tháng năm sinh")
-                    ChonNgayThangNamSinh(index, ld_path_console)
-                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
-                    if pos2 is not None:
-                        Tap(index, ld_path_console, pos2[0], pos2[1])
-                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                            pass
+            with lock:
+                pos = TimAnhTheoTextVaSoSanh(validateNameSection, index, ld_path_console)
+                if pos is not None and pos[2] == 0:
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.pickname_Btn, index, ld_path_console)
+                    Tap(index, ld_path_console, pos[0], pos[1])
+                elif pos is not None and pos[2] == 1:
+                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console)
+                    Tap(index, ld_path_console, pos[0], pos[1])
                 else:
-                    print("Nhập ngày tháng năm sinh")
-                    pos2 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
-                    if pos2 is not None:
-                        Tap(index, ld_path_console, pos2[0], pos2[1])
-                        print(pos2)
+                    if random.choice([True, False]):
+                        ChonNgayThangNamSinh(index, ld_path_console)
+                        pos2 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+                        if pos2 is not None:
+                            Tap(index, ld_path_console, pos2[0], pos2[1])
+                            if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                                pass
+                    else:
+                        pos2 = TimAnhSauKhiChupVaSoSanh(Action.sett_Btn, index, ld_path_console)
+                        if pos2 is not None:
+                            Tap(index, ld_path_console, pos2[0], pos2[1])
+                            print(pos2)
 
-                    if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                        print("Click next 1")
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            print(f"{colors} {index} Click next 1")
+                        else:
+                            print(f"{colors} {index} XuLyNextButton returned False at Click next 1")
 
-                    if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                        print("Click next 2")
-                                # pass
-                    pos3 = TimAnhSauKhiChupVaSoSanh(Action.agefield_Btn, index, ld_path_console)
-                    if pos3 is not None:
-                        randomAge = str(random.randint(18, 36))
-                        GoText(index, ld_path_console, randomAge, pos3[0], pos3[1])
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            print(f"{colors} {index} Click next 2")
+                        else:
+                            print(f"{colors} {index} XuLyNextButton returned False at Click next 2")
 
-                    if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                        pos4 = TimAnhSauKhiChupVaSoSanh(Action.okHideBirthDate_Btn, index, ld_path_console, confidence=0.5)
-                        print("Click OK")
+                        pos3 = TimAnhSauKhiChupVaSoSanh(Action.agefield_Btn, index, ld_path_console)
+                        if pos3 is not None:
+                            randomAge = str(random.randint(18, 36))
+                            GoText(index, ld_path_console, randomAge, pos3[0], pos3[1])
 
-                    if pos4 is not None:
-                        Tap(index, ld_path_console, pos4[0], pos4[1])
+                        if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
+                            pos4 = TimAnhSauKhiChupVaSoSanh(Action.okHideBirthDate_Btn, index, ld_path_console, confidence=0.5)
+                            if pos4 is not None:
+                                Tap(index, ld_path_console, pos4[0], pos4[1])
 
             # Click nút next
             # if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
             #     pass
 
             # Chọn giới tính
-            if not gender_done:
+            if not state.gender_done:
                 pos = TimAnhSauKhiChupVaSoSanh(random.choice([Action.female_Btn, Action.male_Btn]), index, ld_path_console, confidence=0.6)
                 if pos is not None:
                     Tap(index, ld_path_console, pos[0], pos[1])
-                    gender_done = True
+                    state.gender_done = True
                     # CLick next
                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                         pass
 
             # Nhập sdt 
-            if not mobilePhone_done:
+            if not state.mobilePhone_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.phonenumberfield_Btn, index, ld_path_console)
                 if pos is not None:
                     GoText(index, ld_path_console, GetPhone(region), pos[0], pos[1])
-                    mobilePhone_done = True    
+                    state.mobilePhone_done = True    
 
             # click next
             if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                 # Kiểm tra sdt đã được sử dụng chưa 2 trường hợp 
                 # 1 là số điện thoại đã được sử dụng
                 # 2 là không tìm thấy tài khoản(dựa theo sdt)
-                pos = TimAnhSauKhiChupVaSoSanhv2(Action.wecounldntfindyouaccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
+                pos = TimAnhSauKhiChupVaSoSanh(Action.wecounldntfindyouaccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                 if pos is not None:
-                    print("Không tìm thấy tài khoản")
+                    print(f"{colors} Không tìm thấy tài khoản")
                     pos2 = TimAnhSauKhiChupVaSoSanh(Action.wecoulndfindyouraccountOk_Btn, index, ld_path_console)
                     if pos2 is not None:
                         Tap(index, ld_path_console, pos2[0], pos2[1])
                         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                            Isaccountexist1_done = True
+                            state.Isaccountexist1_done = True
                             pass
                 else:
                     isPhoneEmailSection = ['The phone number you’re trying to verify was recently used to verify a different account. Please try a different number.',
@@ -1081,8 +1103,8 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                     pos = TimAnhTheoTextVaSoSanh(isPhoneEmailSection, index, ld_path_console)
                     print("Phone Email Section: ", pos)
                     if pos is not None and (pos[2] == 0):
-                        mobilePhone_done = False
-                        print("Số điện thoại đã được sử dụng")
+                        state.mobilePhone_done = False
+                        print(f"{colors} Số điện thoại đã được sử dụng")
                         ## xóa text trong field và nhập lại
                         pos2 = TimAnhSauKhiChupVaSoSanh(Action.clearField_Btn, index, ld_path_console, confidence=0.6, max_attempts=2, check_attempt=True)
                         if pos2 is not None:
@@ -1090,11 +1112,11 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                             pos3 = TimAnhTheoTextVaSoSanh('Mobile number', index, ld_path_console)
                             if pos3 is not None:
                                 GoText(index, ld_path_console, GetPhone(region), pos3[0], pos3[1])
-                                mobilePhone_done = True
+                                state.mobilePhone_done = True
                                 if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                                     pass
                     elif pos is not None and (pos[2] == 1):
-                        print('Số điện thoại không hợp lệ')
+                        print(f'{colors} Số điện thoại không hợp lệ')
                         # UninstallFacebook(index, ld_path_console, package_name)
                         # QuitLD(index, ld_path_console, ld_path_instance)
                         # continue
@@ -1105,33 +1127,32 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         pos3 = TimAnhTheoTextVaSoSanh('Mobile number', index, ld_path_console)
                         if pos3 is not None:
                             GoText(index, ld_path_console, GetPhone(region), pos3[0], pos3[1])
-                            mobilePhone_done = True
+                            state.mobilePhone_done = True
 
                         if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
                             pass
                     else:
                         pass
                     
-
-            if not doyouhaveaccount_done or not continueCreate_done:
+            if not state.doyouhaveaccount_done or not state.continueCreate_done:
                 checkAccountPopupSection = [Action.doyouhaveaccount_Btn, Action.continuecreate_Btn]
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=checkAccountPopupSection, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
                 if pos is not None:
                     if pos[2] == 0:
-                        print("Số điện thoại đã được sử dụng")
+                        print(f"{colors} Số điện thoại đã được sử dụng")
                         pos = TimAnhSauKhiChupVaSoSanh(Action.continuecreate_Btn, index, ld_path_console)
                         if pos is not None:
                             Tap(index, ld_path_console, pos[0], pos[1])
-                            continueCreate_done = True
+                            state.continueCreate_done = True
                     else:
-                        print("Không tìm thấy tài khoản")
+                        print(f"{colors} Không tìm thấy tài khoản")
                         pos = TimAnhSauKhiChupVaSoSanh(Action.doyouhaveaccount_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if pos is not None:
                             Tap(index, ld_path_console, pos[0], pos[1])
-                            doyouhaveaccount_done = True
+                            state.doyouhaveaccount_done = True
 
             # Nhập password
-            if not passwordField_done:
+            if not state.passwordField_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.passwordField_Btn, index, ld_path_console, confidence=0.5)
                 if(pos != None):
                     GoText(index, ld_path_console, passText, pos[0], pos[1])      
@@ -1141,91 +1162,93 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
 
             ## Chỗ này sẽ xuất hiện TH trùng account do sdt bị trùng từ trước => phải xử lý ở đây => Thoát app làm lại
             isAccountExist = ['Try another way', 'i don’t see my account', 'Choose your account']
-            if not Isaccountexist_done:
+            if not state.Isaccountexist_done:
                 pos = TimAnhTheoTextVaSoSanh(isAccountExist, index, ld_path_console, max_attempts=2, check_attempt=True)
                 if pos is not None:
-                    print("Kiểm tra account đã tồn tại")
+                    print(f"{colors} Kiểm tra account đã tồn tại")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
 
             # Click not now hoặc save account 
-            if not notnow_done:
+            if not state.notnow_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.notnow_Btn, index, ld_path_console, confidence=0.5)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])  
 
             # time.sleep(2)
             # Click agree
-            if not agree_done:
+            if not state.agree_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.agree_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])                    
 
             # time.sleep(2)   
             # Kiểm tra có dính 282 không => Có thì out app 
-            issue282Check = [Action.issue282_Btn, Action.issue282v3_Btn, Action.isInvalidAccount_Btn, Action.wecounldntfindyouaccountv2_Btn]
-            if not issue282_done:
-                is282 = TimAnhSauKhiChupVaSoSanhv2(template_path=issue282Check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
-                if is282 is not None and (is282[2] == 0 or is282[2] == 1):
-                    print(f"Email: {emailText} bị dính 282")
+            if not state.issue282_done:
+                issue282Check = [Action.isInvalidAccount_Btn, Action.wecounldntfindyouaccountv2_Btn]
+                issue282CheckText = ['Webpage not available', 'we need more information', 'We suspended your account']
+                pos = TimAnhTheoTextVaSoSanh(issue282CheckText, index, ld_path_console, max_attempts=2, check_attempt=True)
+                pos2 = TimAnhSauKhiChupVaSoSanhv2(template_path=issue282Check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
+                if (pos is not None and pos[2] in [0, 1]) or (pos2 is not None and pos2[2] in [0, 1]):
+                    UninstallFacebook(index, ld_path_console, package_name)
+                    QuitLD(index, ld_path_console, ld_path_instance)
+                    continue
                 else:
-                    print(f"Ko thể tạo tài khoản với email: {emailText}")
-                UninstallFacebook(index, ld_path_console, package_name)
-                QuitLD(index, ld_path_console, ld_path_instance)
-                continue                                           
+                    pass
+                
 
             # Kiểm tra nút gủi SMS => Có 2 nút phải check 2 trường hợp để chọn đúng 
-            sendviasmsField_Btn = [Action.sendviasmsField_Btn, Action.sendviasmsFieldv2_Btn]
-            if not sendviasmsv2_done:
+            sendviasmsField_Btn = [Action.sendviasmsField_Btn, Action.sendviasmsFieldv2_Btn, Action.sendviasmsFieldv3_Btn]
+            if not state.sendviasmsv2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(template_path=sendviasmsField_Btn, index=index, ld_path_console=ld_path_console)
                 # Nếu là trường hợp 1 
                 if(pos[2] == 0):
                     Tap(index, ld_path_console, pos[0], pos[1])
-                    sendviasmsv2_done = True
-                    if not issue282_done:
+                    state.sendviasmsv2_done = True
+                    if not state.issue282_done:
                         # Kiểm tra die thì out app 
                         is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if(is282 != None):
-                            print(f"Email: {emailText} bị dính 282")
+                            print(f"{colors} Email: {emailText} bị dính 282")
                             UninstallFacebook(index, ld_path_console, package_name)
                             QuitLD(index, ld_path_console, ld_path_instance)
                             continue
 
                     # Kiểm tra đã chọn gửi SMS chưa
-                    if not sendcodeviaSMS_done:
+                    if not state.sendcodeviaSMS_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.sendcodeviasms_Btn, index, ld_path_console)
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
-                            sendcodeviaSMS_done = True
+                            state.sendcodeviaSMS_done = True
 
                     # Kiểm tra đã click vào button verify via email
-                    if not confirmviaemail_done:
+                    if not state.confirmviaemail_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemail_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
-                            confirmviaemail_done = True
+                            state.confirmviaemail_done = True
 
                     # Kiểm tra đã click vào button verify by email 
-                    if not confirmviaemail_done:
+                    if not state.confirmviaemail_done:
                         pos = TimAnhSauKhiChupVaSoSanh(Action.confirmviaemailv2_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                         if(pos != None):
                             Tap(index, ld_path_console, pos[0], pos[1])    
-                            confirmviaemail_done = True
+                            state.confirmviaemail_done = True
 
                     # Tìm thấy field email => nhập email
-                    if not newEmail_done:
+                    if not state.newEmail_done:
                         pos1 = TimAnhSauKhiChupVaSoSanh(Action.newEmailField_Btn, index, ld_path_console)
                         if(pos1 != None):
                             GoText(index, ld_path_console, emailText, pos1[0], pos1[1])
-                            newEmail_done = True
+                            state.newEmail_done = True
 
                     # Click next 
-                    if not nextviaEmail_done:
+                    if not state.nextviaEmail_done:
                         pos2 = TimAnhSauKhiChupVaSoSanh(Action.nextviaemail_Btn, index, ld_path_console)
                         if(pos2 != None):
                             Tap(index, ld_path_console, pos2[0], pos2[1])    
-                            nextviaEmail_done = True
+                            state.nextviaEmail_done = True
                 else:
                     # Trường hợp 2
                     pos2 = TimAnhSauKhiChupVaSoSanh(Action.sendviasmsFieldv2_Btn, index, ld_path_console)
@@ -1245,22 +1268,22 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                                     GoText(index, ld_path_console, emailText, pos[0], pos[1])
                                     # Click next
                                     if XuLyNextButton(index, ld_path_console, Action.nextt_Btn):
-                                        sendviasmsv2_done = True
+                                        state.sendviasmsv2_done = True
 
             # DemThoiGian(30)
                            
             # Check die or live
-            if not issue282_done:
+            if not state.issue282_done:
                 is282 = TimAnhSauKhiChupVaSoSanh(Action.issue282_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(is282 != None):
-                    print(f"Email: {emailText} bị dính 282")
+                    print(f"{colors} Email: {emailText} bị dính 282")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
             # time.sleep(2)
 
             # Check dính sms limit => gõ lại email
-            if not smslimitreached_done:
+            if not state.smslimitreached_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.smslimitreached_Btn, index, ld_path_console, max_attempts=2, check_attempt=True)
                 if pos is not None:
                     pos2 = TimAnhSauKhiChupVaSoSanh(Action.smsreachlimitfield_Btn, index, ld_path_console)
@@ -1269,43 +1292,43 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         pos3 = TimAnhSauKhiChupVaSoSanh(Action.smsreachlimitAdd_Btn, index, ld_path_console)
                         if pos3 is not None:
                             Tap(index, ld_path_console, pos3[0], pos3[1])
-                            smslimitreached_done = True
+                            state.smslimitreached_done = True
 
             # Check verify code field => Có nhập code
-            if not verifycode_done:
+            if not state.verifycode_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.verifycodefield_Btn, index, ld_path_console, confidence=0.75)
                 if pos is not None:
                     # Chỗ này phải đảm bảo verify code đã được lấy mới chạy tiếp
                     verifycode = GetOTP(email=emailText)
-                    print(f"Verify code {index} {emailText}: {verifycode}")
+                    print(f"{colors} Verify code {index} {emailText}: {verifycode}")
                     DemThoiGian(1)
                     # Ko tìm được code out thoát app
                     if verifycode is None:
-                        print("Không lấy được mã code == Reboot và xóa cache")
+                        print(f"{colors} Không lấy được mã code == Reboot và xóa cache")
                         UninstallFacebook(index, ld_path_console, package_name)
                         QuitLD(index, ld_path_console, ld_path_instance)
                         continue
                     GoText(index, ld_path_console, verifycode, pos[0], pos[1])
                     DemThoiGian(1)
-                    verifycode_done = True
+                    state.verifycode_done = True
             
             # time.sleep(2)
 
             ## CLick submit code  
-            if not okbtn_done:
+            if not state.okbtn_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.ok_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])   
-                    okbtn_done = True 
+                    state.okbtn_done = True 
 
             # time.sleep(2)
             # DemThoiGian(2)
 
             # Chcek code sai => out app
-            if not incorrectcode_done:
+            if not state.incorrectcode_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.incorrectemail_Btn, index, ld_path_console, max_attempts=1, check_attempt=True)
                 if(pos != None):
-                    print("Mã code không chính xác")
+                    print(f"{colors} Mã code không chính xác")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
@@ -1316,7 +1339,7 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                 pass
                 
             # Click skip lần 1
-            if not skip_lan2_done:
+            if not state.skip_lan2_done:
                 pos = TimAnhSauKhiChupVaSoSanh(Action.skip_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])
@@ -1324,16 +1347,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
 
             # Check die or live 
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
-            if not issue282v2_done:
+            if not state.issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
                 if pos is not None and (pos[2] == 0 or pos[2] == 1):
-                    print(f"Email: {emailText} bị dính 282")
+                    print(f"{colors} Email: {emailText} bị dính 282")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue 
 
             # Click skip lần 2
-            if not skip_lan3_done:
+            if not state.skip_lan3_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.skip1_Btn, index, ld_path_console)
                 if(pos != None):
                     Tap(index, ld_path_console, pos[0], pos[1])
@@ -1341,16 +1364,16 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
 
             # Check die or live 
             issue282v2_btn_check = [Action.somethingwrongpopup_Btn, Action.issue282v2_Btn]
-            if not issue282v2_done:
+            if not state.issue282v2_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(template_path=issue282v2_btn_check, index=index, ld_path_console=ld_path_console, max_attempts=2, check_attempt=True)
                 if pos is not None and (pos[2] == 0 or pos[2] == 1):
-                    print(f"Email: {emailText} bị dính 282")
+                    print(f"{colors} Email: {emailText} bị dính 282")
                     UninstallFacebook(index, ld_path_console, package_name)
                     QuitLD(index, ld_path_console, ld_path_instance)
                     continue
 
             # Check thành công thì get cookie => in vào file txt => out app
-            if not successReg_done:
+            if not state.successReg_done:
                 pos = TimAnhSauKhiChupVaSoSanhv2(Action.successReg3_Btn, index, ld_path_console)
                 if pos is not None:
                     isSuccess = KiemTraDangKyThanhCong(index, pos[0], pos[1])
@@ -1363,11 +1386,12 @@ def RunLD(index, apk_path, package_name, ld_path_console, ld_path_instance, prox
                         print(account)
                         print(uid)
                         if account is not None:
-                            with open('success.txt', 'a') as file:
-                                file.write(account + '\n')
-                            with open('uid.txt', 'a') as file2:
-                                file2.write(uid + '\n')
-                        successReg_done = True
+                            with lock:  # Bảo vệ quá trình ghi dữ liệu vào file
+                                with open('success.txt', 'a') as file:
+                                    file.write(account + '\n')
+                                with open('uid.txt', 'a') as file2:
+                                    file2.write(uid + '\n')
+                        state.successReg_done = True
                         DemThoiGian(2)
                         UninstallFacebook(index, ld_path_console, package_name)
                         QuitLD(index, ld_path_console, ld_path_instance)
