@@ -88,7 +88,7 @@ def ThoatInstance(index, ld_path_console):
 
 def DemThoiGian(seconds):
     for remaining in range(seconds, 0, -1):
-        sys.stdout.write(f"\rThời gian đợi: {remaining} giây")
+        sys.stdout.write(f"\nThời gian đợi: {remaining} giây")
         sys.stdout.flush()
         time.sleep(1)
     sys.stdout.write("\n")

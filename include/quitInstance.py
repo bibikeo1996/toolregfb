@@ -19,11 +19,24 @@ def ADBKillAndStartServer():
     time.sleep(2)
 
 ## Khởi dộng LDPlayer
-def StartLD(index, ld_path_console):
+def StartLD(template_path, index, ld_path_console):
     command = f'{ld_path_console} launch --index {index}'
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
-    DemThoiGian(12)
-    return False
+
+    for _ in range(30):  # Lặp tối đa 30 lần (tương đương với 1 phút nếu sleep 2 giây)
+        try:
+            pos = TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console)
+            if pos is not None:
+                print("Start LDPlayer successfully")
+                return True  # Thoát khỏi hàm khi tìm thấy
+            else:
+                time.sleep(2)
+        except Exception as e:
+            print(f"Lỗi: {e}")
+            time.sleep(2)
+
+    print("Không tìm thấy pos trong thời gian giới hạn.")
+    return False  # Trả về `False` nếu hết thời gian
 
 def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_ip, proxy_port):
     try: 
@@ -40,8 +53,10 @@ def ConnectProxy(index, ld_path_console, proxy_username, proxy_password, proxy_i
         """
         # Tính port dựa trên index
         port = 5555 + index * 2
-        
+        removeproxy = f'adb -s 127.0.0.1:{port} shell settings put global http_proxy :0'
+        result = subprocess.run(removeproxy, capture_output=True, text=True)
         # Lệnh ADB để cấu hình proxy
+        DemThoiGian(1)
         command = f'adb -s 127.0.0.1:{port} shell settings put global http_proxy {proxy_ip}:{proxy_port}'
         result = subprocess.run(command, capture_output=True, text=True)
         if result.returncode == 0:

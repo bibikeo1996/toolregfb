@@ -112,12 +112,17 @@ class Action:
     successReg_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg.png')
     successReg2_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg2.png')
     successReg3_Btn = os.path.join(base_dir, '..', 'imageAction', 'successReg3.png')
+
     issue282_Btn = os.path.join(base_dir, '..', 'imageAction', 'err282.png')
     issue282v2_Btn = os.path.join(base_dir, '..', 'imageAction', 'err282v2.png')
+    issue282v3_Btn = os.path.join(base_dir, '..', 'imageAction', 'err282v3.jpg')
+
     somethingwrongpopup_Btn = os.path.join(base_dir, '..', 'imageAction', 'somethingwrongpopup.png')
     wrongdate_Btn = os.path.join(base_dir, '..', 'imageAction', 'wrongdate.png')
     validateName_Btn = os.path.join(base_dir, '..', 'imageAction', 'validateName.png')
-    isStartedApp_Btn = os.path.join(base_dir, '..', 'imageAction', 'isStarted.png')
+
+    isStartedLD_Btn = os.path.join(base_dir, '..', 'imageAction', 'isStarted.png')
+
     isLDRunning_Btn = os.path.join(base_dir, '..', 'imageAction', 'isLDRunning.png')
     isFacebookExist_Btn = os.path.join(base_dir, '..', 'imageAction', 'facebook.png')
     isOpenApp_Btn = os.path.join(base_dir, '..', 'imageAction', 'openapp.png')
@@ -159,5 +164,6 @@ class Action:
 
 
     wecounldntfindyouaccount_Btn = os.path.join(base_dir, '..', 'imageAction', 'wecounldntfindyouaccount.png')
+    wecounldntfindyouaccountv2_Btn = os.path.join(base_dir, '..', 'imageAction', 'wecouldntcreateaccountforyou.jpg')
     wecoulndfindyouraccountOk_Btn = os.path.join(base_dir, '..', 'imageAction', 'wecoulndfindyouraccountOk.png')
 

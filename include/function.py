@@ -27,6 +27,7 @@ ld_path_exe = os.getenv('LD_PATH_EXE')
 adb_path = os.getenv('ADB_PATH')
 apk_path = os.getenv('APK_PATH')
 package_name = os.getenv('PACKAGE_NAME')
+
 def TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=0.25, check_attempt=False):
     """
     Hàm này so sánh ảnh chụp màn hình với 1 hoặc nhiều template. Nếu bất kỳ template nào đạt độ chính xác yêu cầu,
@@ -69,7 +70,7 @@ def TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console, confidence
                 result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
                 file_name = os.path.basename(template_path)
-                print(f"Độ khớp instance {index} {file_name}: {max_val * 100:.2f}%")
+                print(f"\nĐộ khớp v2 instance {index} {file_name}: {max_val * 100:.2f}%")
                 
                 if max_val >= confidence:
                     # Nếu khớp, trả về chỉ số template và tọa độ
@@ -80,7 +81,7 @@ def TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console, confidence
 
             # Nếu không có template nào khớp
             if check_attempt:
-                sys.stdout.write(f"\rKhông tìm thấy template phù hợp. Thử lại lần {attempts + 1}/{max_attempts}")
+                sys.stdout.write(f"\nKhông tìm thấy template phù hợp. Thử lại lần {attempts + 1}/{max_attempts}")
                 sys.stdout.flush()
                 attempts += 1
                 if attempts >= max_attempts:
@@ -89,10 +90,8 @@ def TimAnhSauKhiChupVaSoSanhv2(template_path, index, ld_path_console, confidence
                 time.sleep(delay)
         finally:
             if os.path.exists(local_screenshot_path):
-                # os.remove(local_screenshot_path)
                 pass
-
-
+                # os.remove(local_screenshot_path)
 
 def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=2, delay=2, check_attempt=False):
     """
@@ -123,11 +122,10 @@ def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=
         """
         Hàm dump file XML từ LDPlayer.
         """
-        port = 5555 + index * 2
         command = f'{ld_path_console} adb --index {index} --command "shell uiautomator dump /sdcard/window_dump.xml"'
-        os.system(command)
+        subprocess.run(command, shell=True, stderr=subprocess.DEVNULL)
         pull_command = f'{ld_path_console} adb --index {index} --command "pull /sdcard/window_dump.xml {xml_path}"'
-        os.system(pull_command)
+        subprocess.run(pull_command, shell=True, stderr=subprocess.DEVNULL)
 
     attempts = 0
     while True:
@@ -165,7 +163,7 @@ def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=
 
             # Nếu không tìm thấy text
             if check_attempt:
-                sys.stdout.write(f"\rKhông tìm thấy văn bản phù hợp. Thử lại lần {attempts + 1}/{max_attempts}")
+                sys.stdout.write(f"\nKhông tìm thấy văn bản phù hợp. Thử lại lần {attempts + 1}/{max_attempts}")
                 sys.stdout.flush()
 
             attempts += 1
@@ -179,7 +177,6 @@ def TimAnhTheoTextVaSoSanh(multiple_texts, index, ld_path_console, max_attempts=
             if os.path.exists(xml_dump_path):
                 # os.remove(xml_dump_path)  # Bỏ comment nếu muốn tự động xóa file dump
                 pass
-
 
 def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0.7, max_attempts=2, delay=2, check_attempt=False):
     """
@@ -223,7 +220,7 @@ def TimAnhSauKhiChupVaSoSanh(template_path, index, ld_path_console, confidence=0
                 result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
                 file_name = os.path.basename(template_path)
-                print(f"Độ khớp instance {index} {file_name}: {max_val * 100:.2f}%")
+                print(f"\nĐộ khớp instance {index} {file_name}: {max_val * 100:.2f}%")
                 
                 if max_val >= confidence:
                     # Nếu khớp, trả về chỉ số template và tọa độ
@@ -321,7 +318,6 @@ def CapQuyenTruyCapChoFacebookLite(index, ld_path_console, package_name):
         # print(f"Đang cấp quyền {permission}: {result.stderr}")
         if result.returncode != 0:
             print(f"Failed to grant {permission}: {result.stderr}")
-
 
 # Xử lý hành động của user 
 def GoText(index, ld_path_console, text, x, y):
@@ -446,8 +442,6 @@ def TaoEmail():
         "max_name_length": 10
     }
     response = requests.post("https://api.internal.temp-mail.io/api/v3/email/new", headers=headers, json=payload)
-    print(response.text)
-
     if response.status_code == 200:
         EmailAdd = response.json().get("email")
         return EmailAdd
